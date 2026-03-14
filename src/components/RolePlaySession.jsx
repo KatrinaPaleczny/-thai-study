@@ -39,7 +39,7 @@ export function RolePlaySession({ scenario, scenarioIndex, onExit }) {
       setTurnPhase("show");
       // Auto-speak teacher's Thai after a short delay
       const timer = setTimeout(() => {
-        speakThai(turn.thai_hint);
+        speakThai(turn.thai || turn.thai_hint);
       }, 400);
       return () => clearTimeout(timer);
     }
@@ -204,7 +204,7 @@ export function RolePlaySession({ scenario, scenarioIndex, onExit }) {
             <div className="rp-prompt">{turn.prompt_en}</div>
             <div className="rp-thai">
               {turn.thai_hint}
-              <button className="conv-speak" onClick={() => speakThai(turn.thai_hint)} title="Listen again">🔊</button>
+              <button className="conv-speak" onClick={() => speakThai(turn.thai || turn.thai_hint)} title="Listen again">🔊</button>
             </div>
           </div>
           <button className="btn btn-pri" onClick={advanceTurn} style={{ marginTop: 12 }}>
@@ -257,7 +257,7 @@ export function RolePlaySession({ scenario, scenarioIndex, onExit }) {
                   <div className="rp-fb-icon">🟡 Close!</div>
                   <div className="rp-fb-detail">Your answer: <strong>{userInput}</strong></div>
                   <div className="rp-fb-expected">Expected: <strong>{turn.thai_hint}</strong></div>
-                  <button className="conv-speak" onClick={() => speakThai(turn.thai_hint)} title="Listen">🔊</button>
+                  <button className="conv-speak" onClick={() => speakThai(turn.thai || turn.thai_hint)} title="Listen">🔊</button>
                 </>
               )}
               {feedback.level === "wrong" && (
@@ -265,7 +265,7 @@ export function RolePlaySession({ scenario, scenarioIndex, onExit }) {
                   <div className="rp-fb-icon">❌ Not quite</div>
                   <div className="rp-fb-detail">Your answer: <strong>{userInput}</strong></div>
                   <div className="rp-fb-expected">Correct answer: <strong>{turn.thai_hint}</strong></div>
-                  <button className="conv-speak" onClick={() => speakThai(turn.thai_hint)} title="Listen">🔊</button>
+                  <button className="conv-speak" onClick={() => speakThai(turn.thai || turn.thai_hint)} title="Listen">🔊</button>
                 </>
               )}
 

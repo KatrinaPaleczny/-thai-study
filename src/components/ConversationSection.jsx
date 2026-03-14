@@ -22,7 +22,7 @@ export function ConversationSection({ scenario }) {
   };
 
   const speakAll = () => {
-    const texts = scenario.turns.map(t => t.thai_hint).filter(Boolean);
+    const texts = scenario.turns.map(t => t.thai || t.thai_hint).filter(Boolean);
     speakSequence(texts, { gap: 800 });
   };
 
@@ -75,7 +75,7 @@ export function ConversationSection({ scenario }) {
                 <div className="conv-hint">
                   {turn.thai_hint}
                   {step >= 1 && (
-                    <button className="conv-speak" onClick={() => speakThai(turn.thai_hint)} title="Listen">
+                    <button className="conv-speak" onClick={() => speakThai(turn.thai || turn.thai_hint)} title="Listen">
                       🔊
                     </button>
                   )}
