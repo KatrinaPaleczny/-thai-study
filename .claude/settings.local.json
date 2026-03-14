@@ -18,7 +18,15 @@
       "Bash(curl -L https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_macOS_arm64.zip -o /tmp/gh.zip)",
       "Bash(unzip -o /tmp/gh.zip -d /tmp/gh)",
       "Bash(/tmp/gh/gh_2.67.0_macOS_arm64/bin/gh --version)",
-      "Bash(/tmp/gh/gh_2.67.0_macOS_arm64/bin/gh auth:*)"
+      "Bash(/tmp/gh/gh_2.67.0_macOS_arm64/bin/gh auth:*)",
+      "Bash(find /Users/katrina.paleczny/thai-study -type f -name package.json -o -name .env* -o -name *.config.*)",
+      "Bash(grep -r \"localhost\\\\|3000\\\\|backend\\\\|server\" /Users/katrina.paleczny/thai-study/src --include=*.jsx --include=*.js)",
+      "Bash(wc -l /Users/katrina.paleczny/thai-study/src/data/*.js)",
+      "Bash(grep -r \"onboarding\\\\|welcome\\\\|tutorial\\\\|firstTime\\\\|hasSeenWelcome\" /Users/katrina.paleczny/thai-study/src --include=*.jsx --include=*.js)",
+      "Bash(npm install:*)",
+      "Bash(kill 60497)",
+      "Bash(ls -1 /Users/katrina.paleczny/thai-study/src/pages/*.jsx)",
+      "Bash(xargs -I {} basename {} .jsx)"
     ]
   }
 }
