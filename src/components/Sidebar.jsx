@@ -38,7 +38,7 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
   let vocabUnitNum = 0;
 
   // Find current page label for mobile header
-  const pageLabels = { mypath:"My Path", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", unit:"My Path" };
+  const pageLabels = { mypath:"My Path", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", unit:"My Path" };
   const currentLabel = pageLabels[page] || "My Path";
 
   return (
@@ -115,6 +115,9 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
       {btn("scenes","🖼️","Scenes")}
       {btn("stories","📚","Stories")}
       {btn("pronunciation","🎙️","Pronunciation")}
+      {btn("listening","👂","Listening")}
+      {btn("match","🔗","Match Pairs")}
+      {btn("imagevocab","🖼️","Image Vocab")}
       <div className="sb-lbl">Review</div>
       {btn("daily","⭐","Daily Word")}
       {btn("mistakes","📝","Mistakes", unreviewedMistakes)}

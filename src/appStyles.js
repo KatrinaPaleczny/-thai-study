@@ -1298,4 +1298,72 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
   .mp-paths-grid{grid-template-columns:repeat(2,1fr)}
   .mp-weak-cat{min-width:70px;font-size:12px}
 }
+
+/* ══════════════════════════════════════════════════
+   Listening Dictation Page
+   ══════════════════════════════════════════════════ */
+.ld-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px}
+.ld-mode-toggle{display:flex;gap:4px}
+.ld-score{font-size:13px;font-weight:600;color:var(--olive);margin-left:auto}
+.ld-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--radius);padding:24px;text-align:center;box-shadow:var(--shadow-sm);max-width:520px;margin:0 auto}
+.ld-emoji{font-size:48px;margin-bottom:8px}
+.ld-hint{font-size:13px;color:var(--t3);margin-bottom:16px}
+.ld-play-area{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:20px}
+.ld-play-btn{background:var(--olive);color:#fff;border:none;border-radius:var(--radius-sm);padding:12px 24px;font-size:16px;cursor:pointer;font-weight:600;transition:background .15s}
+.ld-play-btn:hover{background:var(--walnut)}
+.ld-speed-toggle{display:flex;gap:4px}
+.ld-input-area{display:flex;flex-direction:column;align-items:center;gap:8px}
+.ld-btn-row{display:flex;gap:8px;margin-top:8px}
+.ld-answer-reveal{margin-top:16px;padding:12px;background:rgba(94,107,65,.08);border-radius:var(--radius-sm)}
+.ld-answer-thai{font-size:24px;font-weight:600;color:var(--t1);font-family:var(--disp)}
+.ld-answer-phon{font-size:13px;color:var(--t3);margin-top:4px}
+.ld-result{margin-top:16px;padding:14px;border-radius:var(--radius-sm);text-align:center}
+.ld-result.correct{background:rgba(102,187,106,.12);border:1px solid rgba(102,187,106,.3)}
+.ld-result.close{background:rgba(255,167,38,.12);border:1px solid rgba(255,167,38,.3)}
+.ld-result.wrong{background:rgba(239,83,80,.12);border:1px solid rgba(239,83,80,.3)}
+.ld-result-icon{font-size:16px;font-weight:600;margin-bottom:4px}
+.ld-result-answer{font-size:14px;color:var(--t1)}
+
+/* ══════════════════════════════════════════════════
+   Match Pairs Page
+   ══════════════════════════════════════════════════ */
+.mp-setup{max-width:420px;margin:0 auto;background:var(--sur);border:1px solid var(--bdr);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)}
+.mp-setup-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mp-setup-row label{font-size:14px;font-weight:600;color:var(--t1)}
+.match-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.match-timer{font-size:14px;font-weight:600;color:var(--t2);font-family:monospace}
+.match-progress{font-size:13px;color:var(--t3);margin-left:auto}
+.match-board{display:flex;gap:16px;max-width:600px;margin:0 auto}
+.match-col{flex:1;display:flex;flex-direction:column;gap:8px}
+.match-col-label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;text-align:center;margin-bottom:4px}
+.match-card{padding:12px 10px;border:2px solid var(--bdr);border-radius:var(--radius-sm);background:var(--sur);font-size:14px;cursor:pointer;transition:all .15s;text-align:center;font-weight:500}
+.match-card:hover:not(:disabled){border-color:var(--olive);background:rgba(94,107,65,.06)}
+.match-card.selected{border-color:var(--olive);background:rgba(94,107,65,.12);box-shadow:0 0 0 2px rgba(94,107,65,.2)}
+.match-card.matched{border-color:#66bb6a;background:rgba(102,187,106,.1);opacity:.6;cursor:default}
+.match-card.wrong{border-color:#ef5350;background:rgba(239,83,80,.1);animation:shake .3s}
+.match-card.thai{font-family:var(--disp);font-size:16px}
+.match-done{text-align:center;padding:32px 24px;max-width:400px;margin:0 auto}
+.match-done-time{font-family:var(--disp);font-size:36px;font-weight:700;color:var(--olive);margin-bottom:8px}
+.match-done-stats{font-size:14px;color:var(--t2)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ══════════════════════════════════════════════════
+   Image Vocab Page
+   ══════════════════════════════════════════════════ */
+.iv-desc{font-size:13px;color:var(--t3);line-height:1.5;margin-top:12px}
+.iv-streak{font-size:14px;font-weight:600;color:#ff6b35}
+.iv-prompt{text-align:center;margin-bottom:20px}
+.iv-thai{font-family:var(--disp);font-size:28px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.iv-phonetic{font-size:13px;color:var(--t3);margin-bottom:12px}
+.iv-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:400px;margin:0 auto 20px}
+.iv-option{display:flex;flex-direction:column;align-items:center;gap:6px;padding:20px 12px;border:2px solid var(--bdr);border-radius:var(--radius);background:var(--sur);cursor:pointer;transition:all .15s}
+.iv-option.selectable:hover{border-color:var(--olive);background:rgba(94,107,65,.06);transform:translateY(-2px)}
+.iv-option.correct{border-color:#66bb6a;background:rgba(102,187,106,.12)}
+.iv-option.wrong{border-color:#ef5350;background:rgba(239,83,80,.1);animation:shake .3s}
+.iv-option-emoji{font-size:40px}
+.iv-option-label{font-size:12px;color:var(--t2);font-weight:500}
+.iv-after{text-align:center}
+.iv-feedback{font-size:15px;font-weight:600;padding:10px;border-radius:var(--radius-sm)}
+.iv-feedback.correct{color:#388e3c}
+.iv-feedback.wrong{color:#d32f2f}
 `;

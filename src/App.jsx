@@ -24,6 +24,9 @@ import { DailyChallengePage } from "./pages/DailyChallengePage";
 import { AIConversationPage } from "./pages/AIConversationPage";
 import { HandwritingPage } from "./pages/HandwritingPage";
 import { StoryPage } from "./pages/StoryPage";
+import { ListeningPage } from "./pages/ListeningPage";
+import { MatchPage } from "./pages/MatchPage";
+import { ImageVocabPage } from "./pages/ImageVocabPage";
 import { DailySession } from "./components/DailySession";
 
 export default function App() {
@@ -118,6 +121,9 @@ export default function App() {
       case "aichat": return <AIConversationPage/>;
       case "handwriting": return <HandwritingPage/>;
       case "stories": return <StoryPage/>;
+      case "listening": return <ListeningPage allVocab={allVocab}/>;
+      case "match": return <MatchPage allVocab={allVocab}/>;
+      case "imagevocab": return <ImageVocabPage allVocab={allVocab}/>;
       default: return <div className="page"><div className="empty">Coming soon</div></div>;
     }
   };
