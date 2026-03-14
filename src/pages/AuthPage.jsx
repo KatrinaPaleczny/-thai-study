@@ -42,14 +42,18 @@ export function AuthPage() {
         setMsg({ type: "success", text: "Password reset email sent! Check your inbox." });
       } else if (mode === "signup") {
         await signUp(email, password);
-        setMsg({ type: "success", text: "Account created! Check your email to confirm, then sign in." });
+        setMsg({ type: "success", text: "Account created! You can now sign in." });
         setMode("signin");
       } else {
         await signIn(email, password);
         navigate("/", { replace: true });
       }
-    } catch {
-      // Error is already set in AuthContext
+    } catch (err) {
+      // Show detailed error for debugging
+      console.error("Auth error:", err);
+      if (err?.message === "Failed to fetch") {
+        setMsg({ type: "error", text: `Network error: could not reach Supabase. Check your internet connection or try disabling ad blockers / VPN.` });
+      }
     } finally {
       setLoading(false);
     }
