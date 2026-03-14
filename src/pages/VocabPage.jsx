@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { HeartIcon, CheckIcon, SearchIcon, PlusIcon, XIcon, PinIcon, SpeakerIcon } from "../components/Icons";
 import { saveLS, K_CUSTOM } from "../utils/storage";
+import { useApp } from "../context/AppContext";
 
 function AddWordModal({ cats, onSave, onClose }) {
   const [form, setForm] = useState({
@@ -88,7 +89,8 @@ function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, to
   );
 }
 
-export function VocabPage({ allVocab, customWords, setCustomWords, hideWord, cats, favs, toggleFav, studied, toggleStudied, pinned, togglePin }) {
+export function VocabPage() {
+  const { allVocab, customWords, setCustomWords, hideWord, cats, favs, toggleFav, studied, toggleStudied, pinned, togglePin } = useApp();
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("All");
   const [expandedId, setExpandedId] = useState(null);

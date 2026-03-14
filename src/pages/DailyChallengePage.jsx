@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useApp } from "../context/AppContext";
 import { loadLS, saveLS } from "../utils/storage";
 import { awardXP } from "../utils/xp";
 import { speakThai } from "../utils/speech";
@@ -33,7 +34,8 @@ function pickDailyWord(allVocab, date) {
   return allVocab[idx];
 }
 
-export function DailyChallengePage({ allVocab }) {
+export function DailyChallengePage() {
+  const { allVocab } = useApp();
   const [data, setData] = useState(() => loadLS(K_DAILY, { date: null, wordId: null, completed: false, quizCorrect: null, history: [] }));
   const [quizAnswer, setQuizAnswer] = useState(null);
   const [quizOptions, setQuizOptions] = useState([]);

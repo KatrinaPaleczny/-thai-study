@@ -3,7 +3,7 @@
 
 export const SCRIPT_LESSONS = [
   {
-    id: "script-u1", title: "Thai Script 1: Common Consonants", icon: "🔤", type: "script",
+    id: "script-u1", title: "Thai Script 1: Common Consonants", icon: "กอ", type: "script",
     description: "The 10 consonants you'll see everywhere",
     lessons: [{
       id: "script-1", type: "script", title: "10 Most Common Consonants",
@@ -23,7 +23,7 @@ export const SCRIPT_LESSONS = [
     }]
   },
   {
-    id: "script-u2", title: "Thai Script 2: Vowels", icon: "🔤", type: "script",
+    id: "script-u2", title: "Thai Script 2: Vowels", icon: "สระ", type: "script",
     description: "Short & long vowel pairs — the building blocks of every syllable",
     lessons: [{
       id: "script-2", type: "script", title: "8 Essential Vowel Pairs",
@@ -41,7 +41,7 @@ export const SCRIPT_LESSONS = [
     }]
   },
   {
-    id: "script-u3", title: "Thai Script 3: Tone Rules", icon: "🔤", type: "script",
+    id: "script-u3", title: "Thai Script 3: Tone Rules", icon: "วรรณ", type: "script",
     description: "How consonant class + vowel length + marks = the right tone",
     lessons: [{
       id: "script-3", type: "script", title: "The 5 Tones & 4 Tone Marks",
@@ -60,7 +60,7 @@ export const SCRIPT_LESSONS = [
     }]
   },
   {
-    id: "script-u4", title: "Thai Script 4: More Consonants", icon: "🔤", type: "script",
+    id: "script-u4", title: "Thai Script 4: More Consonants", icon: "ขอ", type: "script",
     description: "12 more high-frequency consonants to expand your reading",
     lessons: [{
       id: "script-4", type: "script", title: "12 More Essential Consonants",
@@ -82,7 +82,7 @@ export const SCRIPT_LESSONS = [
     }]
   },
   {
-    id: "script-u5", title: "Thai Script 5: Complex Vowels", icon: "🔤", type: "script",
+    id: "script-u5", title: "Thai Script 5: Complex Vowels", icon: "เ◌", type: "script",
     description: "Multi-part vowels and special forms",
     lessons: [{
       id: "script-5", type: "script", title: "Complex Vowels & Special Forms",
@@ -100,7 +100,7 @@ export const SCRIPT_LESSONS = [
     }]
   },
   {
-    id: "script-u6", title: "Thai Script 6: Reading Practice", icon: "🔤", type: "script",
+    id: "script-u6", title: "Thai Script 6: Reading Practice", icon: "อ่าน", type: "script",
     description: "Put it all together — decode real words you already know",
     lessons: [{
       id: "script-6", type: "script", title: "Reading Words You Already Know",

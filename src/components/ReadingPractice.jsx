@@ -116,7 +116,7 @@ function ReadingWord({ seg, level, activeWord, onTap }) {
   );
 }
 
-function PassageCard({ passage, level }) {
+export function PassageCard({ passage, level }) {
   const [activeWord, setActiveWord] = useState(null);
   const [showTranslation, setShowTranslation] = useState(false);
 

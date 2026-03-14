@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { useApp } from "../context/AppContext";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 
@@ -11,7 +12,8 @@ function shuffle(arr) {
   return a;
 }
 
-export function ImageVocabPage({ allVocab }) {
+export function ImageVocabPage() {
+  const { allVocab } = useApp();
   const [cat, setCat] = useState("All");
   const [questionIdx, setQuestionIdx] = useState(0);
   const [selected, setSelected] = useState(null);

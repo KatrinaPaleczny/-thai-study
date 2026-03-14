@@ -12,6 +12,9 @@ import { FlashcardDeck } from "../components/FlashcardDeck";
 import { ScriptFlashcardDeck } from "../components/ScriptFlashcardDeck";
 import { CulturalNotes } from "../components/CulturalNotes";
 import { CULTURAL_NOTES } from "../data/culturalNotes";
+import { PassageCard } from "../components/ReadingPractice";
+import { UNIT_READINGS } from "../data/unitReadingData";
+import { loadUnitTests } from "../utils/unitTests";
 
 /* ── Section divider (accordion) ── */
 function Section({ icon, title, children, defaultOpen = false }) {
@@ -110,6 +113,16 @@ function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confiden
           <ConversationSection scenario={scenario} />
         </Section>
       )}
+
+      {/* Reading section */}
+      {UNIT_READINGS[lesson.id] && (
+        <Section icon="📖" title="Reading Practice">
+          <div className="unit-reading-intro">Read the Thai text below. Tap any word to see its meaning.</div>
+          {UNIT_READINGS[lesson.id].map(passage => (
+            <PassageCard key={passage.id} passage={passage} level={1} />
+          ))}
+        </Section>
+      )}
     </div>
   );
 }
@@ -144,6 +157,7 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
 export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied, toggleScriptStudied, confidence, updateConfidence, onBack }) {
   const [activeTab, setActiveTab] = useState(0);
   const isScript = unit.type === "script";
+  const testResults = isScript ? null : loadUnitTests()[unit.id];
   const lessons = unit.lessons || [];
   const lesson = lessons[activeTab];
 
@@ -247,6 +261,24 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
         <Section icon="🏛️" title="Culture & Customs">
           <CulturalNotes notes={CULTURAL_NOTES[unit.id]} />
         </Section>
+      )}
+
+      {/* Unit Test Section */}
+      {!isScript && (
+        <div className="ut-section">
+          {testResults?.passed ? (
+            <div className="ut-passed-row">
+              <span className="ut-passed-badge">✅ Passed ({testResults.bestPct}%)</span>
+              <a className="btn btn-sec btn-sm" href={`/unit-test/${unit.id}`}>Retake</a>
+            </div>
+          ) : progress.pct === 100 || testResults ? (
+            <a className="btn btn-pri ut-test-btn" href={`/unit-test/${unit.id}`}>
+              📝 Take Unit Test
+            </a>
+          ) : (
+            <div className="ut-locked-msg">Study all words to unlock the unit test</div>
+          )}
+        </div>
       )}
     </div>
   );

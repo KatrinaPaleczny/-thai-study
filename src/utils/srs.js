@@ -1,6 +1,7 @@
 import { loadLS, saveLS } from "./storage";
 
 export const K_SRS = "katthai_srs_v1";
+const K_SRS_SETTINGS = "katthai_srs_settings_v1";
 
 /**
  * SRS data schema per word:
@@ -29,6 +30,15 @@ export function loadSRS() {
 
 export function saveSRS(data) {
   saveLS(K_SRS, data);
+}
+
+/** SRS settings (daily new card limit) */
+export function loadSRSSettings() {
+  return loadLS(K_SRS_SETTINGS, { dailyNewLimit: 10 });
+}
+
+export function saveSRSSettings(settings) {
+  saveLS(K_SRS_SETTINGS, settings);
 }
 
 /**
@@ -82,6 +92,63 @@ export function recordReview(wordId, quality) {
   data[wordId] = entry;
   saveSRS(data);
   return entry;
+}
+
+/**
+ * Get words due for review, respecting daily new-card limit.
+ * Returns { reviewIds, newIds, newToday, dailyNewLimit }
+ * - reviewIds: words with reviewCount > 0 that are due (always all shown)
+ * - newIds: words with reviewCount === 0, limited to daily cap
+ */
+export function getDueWordsWithLimit(allVocab) {
+  const data = loadSRS();
+  const settings = loadSRSSettings();
+  const now = Date.now();
+  const today = new Date().toDateString();
+
+  const reviews = [];
+  const newCards = [];
+
+  for (const word of allVocab) {
+    const entry = data[word.id];
+    if (!entry) continue;
+    if (!entry.nextReview) continue;
+    if (new Date(entry.nextReview).getTime() > now) continue;
+
+    const overdue = now - new Date(entry.nextReview).getTime();
+    if (entry.reviewCount > 0) {
+      reviews.push({ wordId: word.id, overdue });
+    } else {
+      newCards.push({ wordId: word.id, overdue });
+    }
+  }
+
+  reviews.sort((a, b) => b.overdue - a.overdue);
+  newCards.sort((a, b) => b.overdue - a.overdue);
+
+  // Count how many new cards were already reviewed today
+  let newReviewedToday = 0;
+  for (const word of allVocab) {
+    const entry = data[word.id];
+    if (!entry || entry.reviewCount === 0) continue;
+    if (entry.lastReview && new Date(entry.lastReview).toDateString() === today) {
+      // Was this card's first-ever review today? Check reviewCount === 1 and reviewed today
+      if (entry.reviewCount === 1) {
+        newReviewedToday++;
+      }
+    }
+  }
+
+  const remainingNew = Math.max(0, settings.dailyNewLimit - newReviewedToday);
+  const limitedNew = newCards.slice(0, remainingNew);
+
+  return {
+    reviewIds: reviews.map(d => d.wordId),
+    newIds: limitedNew.map(d => d.wordId),
+    newToday: newReviewedToday,
+    dailyNewLimit: settings.dailyNewLimit,
+    totalNewDue: newCards.length,
+  };
 }
 
 /**

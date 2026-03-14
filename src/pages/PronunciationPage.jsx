@@ -1,20 +1,28 @@
 import { useState, useRef, useEffect } from "react";
+import { useApp } from "../context/AppContext";
 import { VOCAB_DATA } from "../data/vocabData";
+import { PRONUNCIATION_DATA, TONE_INFO } from "../data/pronunciationData";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
+import { ToneContour, ToneChart, WordToneBreakdown } from "../components/ToneVisualizer";
 
-export function PronunciationPage({ allVocab }) {
+export function PronunciationPage() {
+  const { allVocab } = useApp();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [result, setResult] = useState(null); // null | { match, confidence }
   const [wordIdx, setWordIdx] = useState(0);
   const [cat, setCat] = useState("All");
   const [sessionScore, setSessionScore] = useState({ attempts: 0, good: 0 });
+  const [showToneGuide, setShowToneGuide] = useState(false);
   const recognitionRef = useRef(null);
 
   const cats = ["All", ...new Set(allVocab.map(w => w.category))];
   const words = cat === "All" ? allVocab : allVocab.filter(w => w.category === cat);
   const word = words[wordIdx] || words[0];
+
+  // Get pronunciation/tone data for this word
+  const pronData = word ? PRONUNCIATION_DATA[word.id] : null;
 
   const hasRecognition = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
 
@@ -118,6 +126,35 @@ export function PronunciationPage({ allVocab }) {
         <div className="ph-s">Speak Thai and get instant feedback on your pronunciation</div>
       </div>
 
+      {/* Tone Guide Toggle */}
+      <div className="pron-tone-toggle-row">
+        <button
+          className={`btn btn-sm ${showToneGuide ? "btn-pri" : "btn-sec"}`}
+          onClick={() => setShowToneGuide(!showToneGuide)}
+        >
+          {showToneGuide ? "Hide" : "Show"} Tone Guide
+        </button>
+      </div>
+
+      {/* Tone Guide */}
+      {showToneGuide && (
+        <div className="pron-tone-guide">
+          <div className="pron-tone-guide-title">Thai Tone Contours</div>
+          <div className="pron-tone-guide-desc">
+            Thai has 5 tones. The pitch contour shows how your voice should move.
+          </div>
+          <ToneChart />
+          <div className="pron-tone-legend">
+            {Object.entries(TONE_INFO).map(([key, info]) => (
+              <div key={key} className="pron-tone-legend-item">
+                <ToneContour tone={key} size={56} label={false} />
+                <span style={{ color: info.color, fontWeight: 600 }}>{info.symbol} {info.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Category Filter */}
       <div className="pron-cats">
         <select className="pron-cat-select" value={cat} onChange={e => { setCat(e.target.value); setWordIdx(0); setResult(null); }}>
@@ -137,6 +174,13 @@ export function PronunciationPage({ allVocab }) {
         <div className="pron-card-thai">{word.thai}</div>
         <div className="pron-card-phon">{word.phonetics}</div>
         <div className="pron-card-eng">{word.english}</div>
+
+        {/* Tone Visualization for this word */}
+        {pronData && (
+          <div className="pron-tone-viz">
+            <WordToneBreakdown syllables={pronData.syllables} />
+          </div>
+        )}
 
         <div className="pron-listen-row">
           <button className="btn btn-sec btn-sm" onClick={() => speakThai(word.thai)}>

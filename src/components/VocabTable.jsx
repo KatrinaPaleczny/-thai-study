@@ -1,7 +1,7 @@
 import { speakThai } from "../utils/speech";
 import { SpeakerIcon } from "./Icons";
 
-const CONF_COLORS = ["var(--t3)", "#c29b3f", "#6b9e5a", "#3d8b37"];
+const CONF_COLORS = ["var(--t3)", "#D4BA6E", "#0A8A7A", "#087068"];
 
 export function VocabTable({ words, studied, onToggle, confidence = {} }) {
   if (!words?.length) {

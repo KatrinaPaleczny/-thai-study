@@ -1,36 +1,36 @@
 import { useState, useEffect, useCallback } from "react";
-import { VOCAB_DATA } from "../data/vocabData";
-import { getDueWords, recordReview, getSRSStats, addToSRS, loadSRS } from "../utils/srs";
+import { useApp } from "../context/AppContext";
+import { getDueWordsWithLimit, recordReview, getSRSStats, loadSRSSettings, saveSRSSettings } from "../utils/srs";
 import { awardXP } from "../utils/xp";
 import { recordMistake } from "../utils/mistakes";
 import { speakThai } from "../utils/speech";
 
-export function SRSPage({ allVocab }) {
+const LIMIT_OPTIONS = [5, 10, 15, 20];
+
+export function SRSPage() {
+  const { allVocab } = useApp();
   const [dueIds, setDueIds] = useState([]);
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [stats, setStats] = useState({ total: 0, dueNow: 0, mastered: 0, learning: 0 });
   const [sessionDone, setSessionDone] = useState(false);
   const [sessionResults, setSessionResults] = useState([]);
+  const [dueInfo, setDueInfo] = useState({ reviewIds: [], newIds: [], newToday: 0, dailyNewLimit: 10, totalNewDue: 0 });
+  const [dailyLimit, setDailyLimit] = useState(() => loadSRSSettings().dailyNewLimit);
 
   const refresh = useCallback(() => {
-    const due = getDueWords(allVocab);
-    setDueIds(due);
+    const info = getDueWordsWithLimit(allVocab);
+    setDueInfo(info);
+    // Show reviews first, then new cards
+    setDueIds([...info.reviewIds, ...info.newIds]);
     setStats(getSRSStats(allVocab));
   }, [allVocab]);
 
   useEffect(() => { refresh(); }, [refresh]);
 
-  const addAllStudied = () => {
-    // Add all vocab to SRS that hasn't been added yet
-    const srsData = loadSRS();
-    let added = 0;
-    for (const w of allVocab) {
-      if (!srsData[w.id]) {
-        addToSRS(w.id);
-        added++;
-      }
-    }
+  const handleLimitChange = (newLimit) => {
+    setDailyLimit(newLimit);
+    saveSRSSettings({ dailyNewLimit: newLimit });
     refresh();
   };
 
@@ -75,10 +75,21 @@ export function SRSPage({ allVocab }) {
         <div className="srs-empty">
           <div className="srs-empty-icon">🧠</div>
           <h3>Get Started with SRS</h3>
-          <p>Add your vocabulary to the spaced repetition system. Words will be scheduled for review based on how well you know them.</p>
-          <button className="btn btn-pri" onClick={addAllStudied}>
-            Add All {allVocab.length} Words to SRS
-          </button>
+          <p>Words are automatically added to SRS as you study them in each unit. Go study some vocabulary and your first cards will appear here!</p>
+          <div className="srs-limit-setting" style={{ marginTop: 16 }}>
+            <span className="srs-limit-label">Daily new cards:</span>
+            <div className="srs-limit-btns">
+              {LIMIT_OPTIONS.map(n => (
+                <button
+                  key={n}
+                  className={`srs-limit-btn${dailyLimit === n ? " on" : ""}`}
+                  onClick={() => handleLimitChange(n)}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -119,7 +130,10 @@ export function SRSPage({ allVocab }) {
           {sessionResults.length > 0 && (
             <p>{correct}/{sessionResults.length} correct — come back later for more reviews</p>
           )}
-          {sessionResults.length === 0 && (
+          {sessionResults.length === 0 && dueInfo.totalNewDue > 0 && (
+            <p>You've hit your daily limit of {dailyLimit} new cards. {dueInfo.totalNewDue} new cards waiting for tomorrow.</p>
+          )}
+          {sessionResults.length === 0 && dueInfo.totalNewDue === 0 && (
             <p>No words are due for review right now. Check back soon!</p>
           )}
           <button className="btn btn-sec" onClick={() => {
@@ -132,16 +146,40 @@ export function SRSPage({ allVocab }) {
             Refresh
           </button>
         </div>
+
+        <div className="srs-limit-setting" style={{ marginTop: 20 }}>
+          <span className="srs-limit-label">Daily new cards:</span>
+          <div className="srs-limit-btns">
+            {LIMIT_OPTIONS.map(n => (
+              <button
+                key={n}
+                className={`srs-limit-btn${dailyLimit === n ? " on" : ""}`}
+                onClick={() => handleLimitChange(n)}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   // ─── Review Card ───
+  const isNewCard = dueInfo.newIds.includes(dueIds[idx]);
+
   return (
     <div className="page">
       <div className="ph">
         <div className="ph-t">Spaced Repetition</div>
-        <div className="ph-s">{dueIds.length - idx} cards remaining</div>
+        <div className="ph-s">
+          {dueIds.length - idx} cards remaining
+          {dueInfo.newIds.length > 0 && (
+            <span style={{ marginLeft: 8, fontSize: 11, opacity: 0.7 }}>
+              ({dueInfo.reviewIds.length} reviews + {dueInfo.newIds.length} new)
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="srs-stats-bar">
@@ -157,9 +195,14 @@ export function SRSPage({ allVocab }) {
           <div className="srs-stat-num">{idx}</div>
           <div className="srs-stat-lbl">Reviewed</div>
         </div>
+        <div className="srs-stat">
+          <div className="srs-stat-num">{dueInfo.newToday + dueInfo.newIds.length}/{dailyLimit}</div>
+          <div className="srs-stat-lbl">New Today</div>
+        </div>
       </div>
 
       <div className="srs-card-area">
+        {isNewCard && <div className="srs-new-badge">NEW</div>}
         <div className={`srs-card ${flipped ? "flipped" : ""}`} onClick={() => setFlipped(true)}>
           {!flipped ? (
             <div className="srs-front">

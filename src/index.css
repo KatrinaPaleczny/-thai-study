@@ -4,8 +4,8 @@
   font-weight: 400;
 
   color-scheme: light;
-  color: #1a1512;
-  background-color: #f8f7f5;
+  color: #1A1A1A;
+  background-color: #FAFAF8;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -42,7 +42,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #0A8A7A;
   cursor: pointer;
   transition: border-color 0.25s;
 }

@@ -1,0 +1,34 @@
+/* ── Flashcard (Duolingo-style) ── */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;padding-top:8px}
+.fc-prog{font-size:12px;color:var(--t3);margin-bottom:18px;letter-spacing:.05em;font-weight:700}
+.fc{width:100%;max-width:480px;min-height:280px;background:var(--sur);border:2px solid var(--bdr);border-bottom:5px solid var(--bdr);border-radius:var(--radius-xl);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;cursor:pointer;position:relative;text-align:center;transition:all .15s ease}
+.fc:hover{transform:translateY(-3px);border-color:var(--olive-mid);box-shadow:var(--shadow-md)}
+.fc:active{transform:translateY(0);border-bottom-width:2px}
+.fc-cat{font-size:11px;color:var(--t3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;font-weight:800}
+.fc-ej{font-size:28px;margin-bottom:10px}
+.fc-front-ph{font-size:24px;font-weight:700;margin-bottom:4px}
+.fc-front-lbl{font-size:11px;color:var(--t3);font-weight:600}
+.fc-rev{animation:fadeUp .25s ease;width:100%;text-align:center;margin-top:12px}
+.fc-rev-ph{font-size:13px;color:var(--t3);font-style:italic;margin-bottom:8px;font-weight:500}
+.fc-thai{font-family:var(--thai);font-size:44px;font-weight:600;line-height:1.3;margin-bottom:8px}
+.fc-en{font-size:18px;color:var(--t2);font-weight:600}
+.fc-hint-lbl{font-size:11px;color:var(--t3);position:absolute;bottom:14px;font-weight:600}
+.fc-btns{display:flex;align-items:center;gap:10px;margin-top:20px}
+.fc-btn{padding:10px 22px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);transition:all .1s ease;text-transform:uppercase;letter-spacing:.03em}
+.fc-btn:active{transform:translateY(2px);border-bottom-width:2px}
+.fc-btn.nav{background:var(--sur);color:var(--t2)}.fc-btn.nav:hover{border-color:var(--olive);color:var(--olive)}
+.fc-btn.easy{background:var(--success);color:#fff;border-color:var(--success-dark);border-bottom-color:var(--success-dark)}.fc-btn.easy:hover{filter:brightness(1.05)}
+.fc-btn.rev{background:var(--info-soft);color:var(--info);border-color:var(--info);border-bottom-color:#0D8BD9}.fc-btn.rev:hover{filter:brightness(1.05)}
+.fc-btn:disabled{opacity:.4;cursor:default;transform:none}
+.fc-speak-btn{background:none;border:none;cursor:pointer;font-size:22px;margin-top:12px;padding:6px 10px;border-radius:var(--radius-sm);transition:all .15s ease}
+.fc-speak-btn:hover{background:var(--sur2);transform:scale(1.15)}
+.fc-keys{font-size:11px;color:var(--t3);text-align:center;margin-top:8px;opacity:.6;font-weight:600}
+.fc-toggle-thai{margin-left:10px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;cursor:pointer;border:2px solid var(--bdr);background:var(--sur);color:var(--t3);transition:all .15s ease;font-family:var(--body)}
+.fc-toggle-thai:hover{border-color:var(--olive);color:var(--olive)}
+.fc-toggle-thai.on{background:var(--olive);border-color:var(--olive-dark);color:#fff}
+.fc-ex{margin-top:18px;max-width:480px;width:100%}
+.fc-ex-in{background:var(--sur);border:2px solid var(--bdr);border-radius:var(--radius-md);padding:14px 16px}
+.fc-ex-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;font-weight:800}
+.fc-ex-th{font-family:var(--thai);font-size:15px;font-weight:500;margin-bottom:2px}
+.fc-ex-ph{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:2px}
+.fc-ex-en{font-size:12px;color:var(--t2);font-weight:500}

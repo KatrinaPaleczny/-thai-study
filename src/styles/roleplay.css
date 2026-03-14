@@ -1,0 +1,66 @@
+/* ── Role-Play (Duolingo-style) ── */
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.rp-card{background:var(--sur);border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);border-radius:var(--radius-md);padding:18px 20px;cursor:pointer;transition:all .15s ease;text-align:left;width:100%;font-family:var(--body)}
+.rp-card:hover{border-color:var(--olive-mid);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.rp-card:active{transform:translateY(0);border-bottom-width:2px}
+.rp-card.completed{border-color:var(--success);background:rgba(88,204,2,.04)}
+.rp-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.rp-card-title{font-family:var(--disp);font-size:15px;font-weight:700;color:var(--t1)}
+.rp-card-badge{font-size:12px;color:var(--success);font-weight:700;white-space:nowrap}
+.rp-card-goal{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:8px;font-weight:500}
+.rp-card-meta{display:flex;gap:14px;font-size:11px;color:var(--t3);font-weight:600}
+
+.rp-container{max-width:640px;margin:0 auto}
+.rp-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.rp-header-title{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--t2)}
+
+.rp-intro{text-align:center;padding:32px 24px}
+.rp-intro-icon{font-size:52px;margin-bottom:14px}
+.rp-intro-title{font-family:var(--disp);font-size:24px;font-weight:800;margin-bottom:8px}
+.rp-intro-goal{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:16px;max-width:420px;margin-left:auto;margin-right:auto;font-weight:500}
+.rp-intro-info{display:flex;gap:16px;justify-content:center;margin-bottom:14px;font-size:13px;color:var(--t3);font-weight:600}
+.rp-intro-tip{font-size:12px;color:var(--t3);font-style:italic;line-height:1.5;max-width:380px;margin:0 auto;padding:10px 14px;background:var(--sur2);border-radius:var(--radius-sm);border:2px solid var(--bdr);font-weight:500}
+
+.rp-prog-label{font-size:12px;color:var(--t3);margin-bottom:6px;text-align:center;font-weight:700}
+.rp-prog{background:var(--sur2);border-radius:20px;height:10px;margin-bottom:24px;overflow:hidden;border:2px solid var(--bdr)}
+.rp-prog-fill{height:100%;background:linear-gradient(90deg,#FFD54F 0%,#FF9800 100%);border-radius:20px;transition:width .4s ease}
+
+.rp-turn{animation:fadeUp .3s ease}
+.rp-role{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding:4px 14px;border-radius:20px;display:inline-block}
+.rp-role.teacher{background:var(--sur2);color:var(--t3);border:2px solid var(--bdr)}
+.rp-role.you{background:var(--olive-soft);color:var(--olive-dark);border:2px solid var(--olive-mid)}
+.rp-prompt{font-size:15px;color:var(--t2);line-height:1.55;font-weight:500}
+
+.rp-teacher-bub{background:var(--sur);border:2px solid var(--bdr);border-radius:var(--radius-md);padding:18px 20px}
+.rp-thai{font-family:var(--thai);font-size:19px;font-weight:600;color:var(--olive);margin-top:10px;display:flex;align-items:center;gap:4px}
+
+.rp-prompt-card{background:var(--olive-soft);border:2px solid var(--olive-mid);border-radius:var(--radius-md);padding:18px 20px;margin-bottom:6px}
+.rp-input-area{margin-top:12px}
+.rp-input{width:100%;padding:14px 16px;border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);border-radius:var(--radius-sm);font-size:17px;font-weight:600;font-family:var(--thai);background:var(--sur);color:var(--t1);transition:all .15s ease}
+.rp-input:focus{border-color:var(--olive);border-bottom-color:var(--olive-dark);outline:none}
+.rp-input::placeholder{color:var(--t3);font-family:var(--body);font-size:14px;font-weight:500}
+
+.rp-fb{border-radius:var(--radius-md);padding:18px 20px;margin-top:14px;animation:fadeUp .25s ease;font-weight:600}
+.rp-fb.perfect{background:rgba(88,204,2,.08);border:2px solid var(--success)}
+.rp-fb.close{background:var(--olive-soft);border:2px solid var(--olive-mid)}
+.rp-fb.wrong{background:var(--danger-soft);border:2px solid var(--danger)}
+.rp-fb-icon{font-size:16px;font-weight:800;margin-bottom:8px}
+.rp-fb-detail{font-size:14px;color:var(--t2);margin-bottom:4px;font-weight:500}
+.rp-fb-expected{font-size:14px;color:var(--t2);margin-bottom:8px;font-weight:500}
+.rp-fb-actions{display:flex;gap:8px;margin-top:12px}
+
+.rp-summary{text-align:center;padding:24px 0}
+.rp-stars{font-size:38px;margin-bottom:8px}
+.rp-score-big{font-family:var(--disp);font-size:56px;font-weight:800;color:var(--olive);line-height:1.1}
+.rp-score-label{font-size:15px;color:var(--t2);margin-top:8px;margin-bottom:28px;font-weight:600}
+.rp-breakdown{text-align:left;max-width:500px;margin:0 auto}
+.rp-breakdown h3{font-family:var(--disp);font-size:16px;font-weight:800;margin-bottom:12px;color:var(--t1)}
+.rp-breakdown-row{background:var(--sur);border:2px solid var(--bdr);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:8px}
+.rp-breakdown-row.perfect{border-left:4px solid var(--success)}
+.rp-breakdown-row.close{border-left:4px solid var(--olive)}
+.rp-breakdown-row.wrong{border-left:4px solid var(--danger)}
+.rp-breakdown-prompt{font-size:12px;color:var(--t3);margin-bottom:6px;font-weight:600}
+.rp-breakdown-detail{display:flex;flex-direction:column;gap:2px;font-size:13px;margin-bottom:4px}
+.rp-breakdown-yours{color:var(--t1);font-weight:600}
+.rp-breakdown-expected{color:var(--t3);font-style:italic;font-weight:500}
+.rp-breakdown-score{font-size:11px;font-weight:700;color:var(--t2)}

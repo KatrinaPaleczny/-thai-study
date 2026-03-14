@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 import { recordMistake } from "../utils/mistakes";
+import { getProxyUrl } from "../utils/storage";
 
 const SCENARIOS = [
   { id: "vendor", emoji: "🛒", title: "Street Vendor", desc: "Buy food at a Thai market stall", sysPrompt: "You are a friendly Thai street vendor selling grilled meats, sticky rice, and som tam. Speak naturally in Thai (with English translations in parentheses). Start simple and match the user's level. If they make grammar mistakes, gently model the correct form in your reply." },
@@ -16,13 +17,15 @@ const API_HELP = `To use AI Conversations, you need a Claude API key.
 
 1. Go to console.anthropic.com
 2. Create an API key
-3. Paste it below
+3. Paste it below`;
 
-Your key stays in your browser only — it's never sent anywhere except directly to the Claude API.`;
+const API_SECURITY_NOTE = "Your API key is stored in your browser's local storage as plain text. Anyone with access to this computer's browser developer tools could see it. Only use this on your personal computer, and consider setting a spending limit on your Anthropic account.";
 
 export function AIConversationPage() {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem("katthai_claude_key") || "");
+  const proxyUrl = getProxyUrl();
+  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem("katthai_claude_key") || localStorage.getItem("katthai_claude_key") || "");
   const [keyInput, setKeyInput] = useState("");
+  const [sessionOnly, setSessionOnly] = useState(false);
   const [scenario, setScenario] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -43,7 +46,11 @@ export function AIConversationPage() {
   const saveKey = () => {
     const k = keyInput.trim();
     if (k.startsWith("sk-ant-")) {
-      localStorage.setItem("katthai_claude_key", k);
+      if (sessionOnly) {
+        sessionStorage.setItem("katthai_claude_key", k);
+      } else {
+        localStorage.setItem("katthai_claude_key", k);
+      }
       setApiKey(k);
       setError(null);
     } else {
@@ -53,6 +60,7 @@ export function AIConversationPage() {
 
   const clearKey = () => {
     localStorage.removeItem("katthai_claude_key");
+    sessionStorage.removeItem("katthai_claude_key");
     setApiKey("");
     setKeyInput("");
   };
@@ -89,21 +97,29 @@ IMPORTANT INSTRUCTIONS:
     }
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 300,
-          system: systemPrompt,
-          messages: apiMessages.length > 0 ? apiMessages : [{ role: "user", content: "สวัสดีครับ" }],
-        }),
-      });
+      const payload = {
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 300,
+        system: systemPrompt,
+        messages: apiMessages.length > 0 ? apiMessages : [{ role: "user", content: "สวัสดีครับ" }],
+      };
+
+      const res = proxyUrl
+        ? await fetch(proxyUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+        : await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true",
+            },
+            body: JSON.stringify(payload),
+          });
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
@@ -155,8 +171,8 @@ IMPORTANT INSTRUCTIONS:
     }
   };
 
-  // No API key — show setup
-  if (!apiKey) {
+  // No API key and no proxy — show setup
+  if (!apiKey && !proxyUrl) {
     return (
       <div className="page">
         <div className="ph">
@@ -177,7 +193,12 @@ IMPORTANT INSTRUCTIONS:
             />
             <button className="btn btn-pri" onClick={saveKey}>Save Key</button>
           </div>
+          <label className="aic-session-toggle">
+            <input type="checkbox" checked={sessionOnly} onChange={e => setSessionOnly(e.target.checked)} />
+            <span>Session only (key is forgotten when you close the tab)</span>
+          </label>
           {error && <div className="aic-error">{error}</div>}
+          <div className="aic-security-warning">{API_SECURITY_NOTE}</div>
         </div>
       </div>
     );
@@ -200,9 +221,16 @@ IMPORTANT INSTRUCTIONS:
             </button>
           ))}
         </div>
-        <button className="btn btn-sec btn-sm" onClick={clearKey} style={{ marginTop: 20 }}>
-          Change API Key
-        </button>
+        <div className="aic-key-footer">
+          {proxyUrl ? (
+            <span className="aic-key-note">Using secure proxy — API key is not stored in browser.</span>
+          ) : (
+            <>
+              <button className="btn btn-sec btn-sm" onClick={clearKey}>Change API Key</button>
+              <span className="aic-key-note">Your key is stored locally in this browser.</span>
+            </>
+          )}
+        </div>
       </div>
     );
   }

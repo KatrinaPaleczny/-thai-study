@@ -1,0 +1,36 @@
+/* ── Grammar Reference (Duolingo-style) ── */
+.gram-list{display:flex;flex-direction:column;gap:8px}
+.gram-card{background:var(--sur);border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);border-radius:var(--radius-md);overflow:hidden;transition:all .15s ease}
+.gram-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.gram-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background .15s ease}
+.gram-hdr:hover{background:var(--sur2)}
+.gram-ic{font-size:18px;width:26px;text-align:center;flex-shrink:0}
+.gram-tt{font-family:var(--disp);font-size:15px;font-weight:700;flex:1}
+.gram-lv{font-size:10px;color:var(--concrete);background:var(--concrete-soft);border:2px solid var(--bdr);padding:3px 10px;border-radius:20px;white-space:nowrap;font-weight:700}
+.gram-body{padding:0 16px 16px;border-top:2px solid var(--bdr)}
+.gram-sum{font-size:14px;color:var(--t2);margin:13px 0;line-height:1.6;font-weight:500}
+.gram-exs{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
+.gram-ex{background:var(--sur2);border-radius:var(--radius-sm);padding:12px 14px;border:2px solid var(--bdr)}
+.gram-ex-th{font-family:var(--thai);font-size:17px;font-weight:500;margin-bottom:2px}
+.gram-ex-ph{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:2px;font-weight:500}
+.gram-ex-en{font-size:12px;color:var(--t2);font-weight:500}
+.gram-note{font-size:12px;color:var(--olive-dark);background:var(--olive-soft);border-left:4px solid var(--olive);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;font-weight:600}
+
+/* ── Grammar Learn ── */
+.glearn{display:flex;flex-direction:column;gap:16px}
+.glearn-card{background:var(--sur);border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);border-radius:var(--radius-md);padding:20px;transition:all .15s ease}
+.glearn-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.glearn-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.glearn-ic{font-size:18px}
+.glearn-title{font-family:var(--disp);font-size:16px;font-weight:800;color:var(--t1)}
+.glearn-formula{font-size:14px;font-weight:700;color:var(--olive-dark);background:var(--olive-soft);border:2px solid var(--olive-mid);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px}
+.glearn-summary{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:12px;font-weight:500}
+.glearn-examples{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.glearn-ex{background:var(--sur2);border-radius:var(--radius-sm);padding:10px 14px;border:2px solid var(--bdr)}
+.glearn-ex-th{font-family:var(--thai);font-size:16px;font-weight:500;margin-bottom:1px}
+.glearn-ex-ph{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:1px;font-weight:500}
+.glearn-ex-en{font-size:12px;color:var(--t2);font-weight:500}
+.glearn-note{font-size:12px;color:var(--olive-dark);background:var(--olive-soft);border-left:4px solid var(--olive);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:10px 14px;margin-bottom:12px;font-weight:600}
+.glearn-why{background:var(--sur2);border-radius:var(--radius-sm);padding:14px 16px;border-left:4px solid var(--olive);border:2px solid var(--bdr);border-left:4px solid var(--olive)}
+.glearn-why-t{font-size:11px;font-weight:800;color:var(--olive);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.glearn-why-body{font-size:13px;color:var(--t2);line-height:1.7;font-weight:500}

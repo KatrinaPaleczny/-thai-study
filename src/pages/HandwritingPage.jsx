@@ -2,11 +2,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { HANDWRITING_SETS } from "../data/handwritingData";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
+import { StrokeAnimation } from "../components/StrokeAnimation";
 
 export function HandwritingPage() {
   const [setIdx, setSetIdx] = useState(null);
   const [charIdx, setCharIdx] = useState(0);
   const [showGuide, setShowGuide] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(false);
   const [strokes, setStrokes] = useState([]);
   const [currentStroke, setCurrentStroke] = useState([]);
   const [drawing, setDrawing] = useState(false);
@@ -51,7 +53,7 @@ export function HandwritingPage() {
     ctx.stroke();
     ctx.setLineDash([]);
     // Draw completed strokes
-    ctx.strokeStyle = "#362d27";
+    ctx.strokeStyle = "#0A8A7A";
     ctx.lineWidth = 4;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -64,7 +66,7 @@ export function HandwritingPage() {
     }
     // Draw current stroke
     if (currentStroke.length > 1) {
-      ctx.strokeStyle = "#5e6b41";
+      ctx.strokeStyle = "#C5A347";
       ctx.beginPath();
       ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
       for (let i = 1; i < currentStroke.length; i++) ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
@@ -120,18 +122,13 @@ export function HandwritingPage() {
   };
 
   const checkDrawing = () => {
-    // Calculate coverage: how much of the canvas was drawn on
-    // vs. expected area based on the guide character
     const totalPoints = strokes.reduce((sum, s) => sum + s.length, 0);
-    const set = HANDWRITING_SETS[setIdx];
-    const char = set.characters[charIdx];
 
     if (totalPoints < 10) {
       setScore("try-again");
       return;
     }
 
-    // Check if strokes cover roughly the right area
     const bounds = { minX: CANVAS_SIZE, maxX: 0, minY: CANVAS_SIZE, maxY: 0 };
     for (const stroke of strokes) {
       for (const pt of stroke) {
@@ -145,7 +142,6 @@ export function HandwritingPage() {
     const height = bounds.maxY - bounds.minY;
     const area = width * height;
 
-    // Reasonable character should use at least 15% of canvas and be somewhat centered
     const centerX = (bounds.minX + bounds.maxX) / 2;
     const centerY = (bounds.minY + bounds.maxY) / 2;
     const centered = Math.abs(centerX - CANVAS_SIZE / 2) < CANVAS_SIZE * 0.3 &&
@@ -170,12 +166,14 @@ export function HandwritingPage() {
       setCharIdx(0);
     }
     clearCanvas();
+    setShowAnimation(false);
   };
 
   const handlePrev = () => {
     if (charIdx > 0) {
       setCharIdx(charIdx - 1);
       clearCanvas();
+      setShowAnimation(false);
     }
   };
 
@@ -185,7 +183,7 @@ export function HandwritingPage() {
       <div className="page">
         <div className="ph">
           <div className="ph-t">Thai Handwriting</div>
-          <div className="ph-s">Practice drawing Thai characters on a canvas with stroke guides</div>
+          <div className="ph-s">Practice drawing Thai characters with stroke order animation</div>
         </div>
         <div className="hw-grid">
           {HANDWRITING_SETS.map((set, i) => (
@@ -230,55 +228,78 @@ export function HandwritingPage() {
         {/* Hint */}
         <div className="hw-hint">✏️ {char.hint}</div>
 
-        {/* Canvas area */}
-        <div className="hw-canvas-wrapper">
-          <canvas
-            ref={guideCanvasRef}
-            width={CANVAS_SIZE}
-            height={CANVAS_SIZE}
-            className="hw-guide-canvas"
-          />
-          <canvas
-            ref={canvasRef}
-            width={CANVAS_SIZE}
-            height={CANVAS_SIZE}
-            className="hw-draw-canvas"
-            onMouseDown={startDraw}
-            onMouseMove={moveDraw}
-            onMouseUp={endDraw}
-            onMouseLeave={endDraw}
-            onTouchStart={startDraw}
-            onTouchMove={moveDraw}
-            onTouchEnd={endDraw}
-          />
+        {/* Mode toggle: Drawing vs Animation */}
+        <div className="hw-mode-toggle">
+          <button
+            className={`hw-mode-btn${!showAnimation ? " on" : ""}`}
+            onClick={() => setShowAnimation(false)}
+          >
+            ✍️ Practice
+          </button>
+          <button
+            className={`hw-mode-btn${showAnimation ? " on" : ""}`}
+            onClick={() => setShowAnimation(true)}
+          >
+            ▶ Stroke Order
+          </button>
         </div>
 
-        {/* Controls */}
-        <div className="hw-controls">
-          <label className="hw-toggle">
-            <input type="checkbox" checked={showGuide} onChange={(e) => setShowGuide(e.target.checked)} />
-            <span>Show guide</span>
-          </label>
-          <button className="btn btn-sec btn-sm" onClick={undoStroke} disabled={strokes.length === 0}>Undo</button>
-          <button className="btn btn-sec btn-sm" onClick={clearCanvas} disabled={strokes.length === 0}>Clear</button>
-          <button className="btn btn-pri btn-sm" onClick={checkDrawing} disabled={strokes.length === 0}>Check</button>
-        </div>
+        {showAnimation ? (
+          /* Stroke Order Animation */
+          <StrokeAnimation char={char.char} size={CANVAS_SIZE} />
+        ) : (
+          <>
+            {/* Canvas area */}
+            <div className="hw-canvas-wrapper">
+              <canvas
+                ref={guideCanvasRef}
+                width={CANVAS_SIZE}
+                height={CANVAS_SIZE}
+                className="hw-guide-canvas"
+              />
+              <canvas
+                ref={canvasRef}
+                width={CANVAS_SIZE}
+                height={CANVAS_SIZE}
+                className="hw-draw-canvas"
+                onMouseDown={startDraw}
+                onMouseMove={moveDraw}
+                onMouseUp={endDraw}
+                onMouseLeave={endDraw}
+                onTouchStart={startDraw}
+                onTouchMove={moveDraw}
+                onTouchEnd={endDraw}
+              />
+            </div>
 
-        {/* Score feedback */}
-        {score && (
-          <div className={`hw-feedback ${score}`}>
-            {score === "good" ? (
-              <>
-                <span className="hw-fb-icon">✅</span>
-                <span>Nice work! Your {char.char} looks good.</span>
-              </>
-            ) : (
-              <>
-                <span className="hw-fb-icon">🔄</span>
-                <span>Try again — draw bigger and more centered. Follow the guide!</span>
-              </>
+            {/* Controls */}
+            <div className="hw-controls">
+              <label className="hw-toggle">
+                <input type="checkbox" checked={showGuide} onChange={(e) => setShowGuide(e.target.checked)} />
+                <span>Show guide</span>
+              </label>
+              <button className="btn btn-sec btn-sm" onClick={undoStroke} disabled={strokes.length === 0}>Undo</button>
+              <button className="btn btn-sec btn-sm" onClick={clearCanvas} disabled={strokes.length === 0}>Clear</button>
+              <button className="btn btn-pri btn-sm" onClick={checkDrawing} disabled={strokes.length === 0}>Check</button>
+            </div>
+
+            {/* Score feedback */}
+            {score && (
+              <div className={`hw-feedback ${score}`}>
+                {score === "good" ? (
+                  <>
+                    <span className="hw-fb-icon">✅</span>
+                    <span>Nice work! Your {char.char} looks good.</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="hw-fb-icon">🔄</span>
+                    <span>Try again — draw bigger and more centered. Follow the guide!</span>
+                  </>
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
 
         {/* Navigation */}
@@ -289,7 +310,7 @@ export function HandwritingPage() {
           </button>
         </div>
 
-        <button className="btn btn-sec btn-sm" onClick={() => { setSetIdx(null); clearCanvas(); }} style={{ marginTop: 16 }}>
+        <button className="btn btn-sec btn-sm" onClick={() => { setSetIdx(null); clearCanvas(); setShowAnimation(false); }} style={{ marginTop: 16 }}>
           ← Back to sets
         </button>
       </div>

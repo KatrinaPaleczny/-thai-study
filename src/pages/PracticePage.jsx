@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useApp } from "../context/AppContext";
 import { ToneDrills } from "../components/ToneDrills";
 import { MatchingGame } from "../components/MatchingGame";
 import { ReadingPractice } from "../components/ReadingPractice";
 import { ClassifierTable } from "../components/ClassifierTable";
 
-export function PracticePage({ allVocab, studied }) {
+export function PracticePage() {
+  const { allVocab, studied } = useApp();
   const [tab, setTab] = useState("tones");
 
   const tabs = [

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useApp } from "../context/AppContext";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 
@@ -11,7 +12,8 @@ function shuffle(arr) {
   return a;
 }
 
-export function MatchPage({ allVocab }) {
+export function MatchPage() {
+  const { allVocab } = useApp();
   const [cat, setCat] = useState("All");
   const [phase, setPhase] = useState("setup"); // setup | playing | done
   const [pairCount, setPairCount] = useState(6);

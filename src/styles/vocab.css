@@ -1,0 +1,51 @@
+/* ── Vocab Cards (Duolingo-style) ── */
+.vc{background:var(--sur);border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);border-radius:var(--radius-md);padding:14px 16px;cursor:pointer;transition:all .15s ease}
+.vc:hover{border-color:var(--olive-mid);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.vc:active{transform:translateY(0);border-bottom-width:2px}
+.vc.open{border-color:var(--olive);box-shadow:0 0 0 3px rgba(212,160,23,.1)}
+.vc.custom{border:2px solid var(--walnut);border-bottom:4px solid #1B6B42;box-shadow:none}
+.vc.pinned{border:2px solid var(--olive);border-bottom:4px solid var(--olive-dark);box-shadow:none}
+.vc.studied:not(.pinned){opacity:0.5}
+.vc-top{display:flex;align-items:center;gap:8px}
+.vc-bot{display:flex;align-items:center;gap:8px;margin-top:3px;padding-left:30px}
+.vc-ej{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.vc-th{font-family:var(--thai);font-size:17px;font-weight:600}
+.vc-ph{font-size:12px;color:var(--t3);font-style:italic;font-weight:500}
+.vc-en{font-size:13px;color:var(--t2);flex:1;text-align:right;margin-right:4px;font-weight:600}
+.vc-cat{font-size:10px;color:var(--t3);padding:3px 10px;border:2px solid var(--bdr);border-radius:20px;white-space:nowrap;background:var(--sur2);font-weight:700}
+.vc-acts{display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:8px;border-top:2px solid var(--bdr)}
+.ic-btn{background:none;border:none;cursor:pointer;color:var(--t3);padding:4px;border-radius:6px;display:flex;align-items:center;transition:all .15s ease;font-weight:700}
+.ic-btn:hover{color:var(--t1);background:var(--sur2)}
+.ic-btn.fav{color:var(--walnut)}.ic-btn.stu{color:var(--success)}.ic-btn.pin{color:var(--olive)}.ic-btn.del{color:var(--danger)}
+.vc-ex{margin-top:10px;padding-top:10px;border-top:2px solid var(--bdr)}
+.vc-ex-th{font-family:var(--thai);font-size:14px;font-weight:500;margin-bottom:2px}
+.vc-ex-ph{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:1px;font-weight:500}
+.vc-ex-en{font-size:12px;color:var(--t2);font-weight:500}
+.vocab-list{display:flex;flex-direction:column;gap:7px}
+.filter-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.filter-ct{font-size:12px;color:var(--t3);font-weight:600}
+.vt-btn{padding:6px 14px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--bdr);border-bottom:4px solid var(--bdr);background:var(--sur);color:var(--t2);transition:all .1s ease}
+.vt-btn:active{transform:translateY(2px);border-bottom-width:2px}
+.vt-btn.on{background:var(--olive);border-color:var(--olive-dark);border-bottom-color:var(--olive-dark);color:#fff}
+.pinned-banner{background:var(--olive-soft);border:2px solid var(--olive-mid);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:16px;font-size:13px;font-weight:600;color:var(--olive-dark)}
+
+/* ── Vocab Table ── */
+.vtable{width:100%;font-size:13px}
+.vtable-hdr{display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--sur2);border-radius:var(--radius-md) var(--radius-md) 0 0;border:2px solid var(--bdr);border-bottom:none;font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+.vtable-row{display:flex;align-items:center;gap:8px;padding:12px 14px;border:2px solid var(--bdr);border-top:none;background:var(--sur);transition:all .15s}
+.vtable-row:nth-child(even){background:rgba(248,247,245,.6)}
+.vtable-row:last-child{border-radius:0 0 var(--radius-md) var(--radius-md)}
+.vtable-row:hover{background:var(--olive-soft)}
+.vtable-row.done{background:rgba(88,204,2,.05);border-left:3px solid var(--success)}
+.vtable-col-ej{width:26px;text-align:center;flex-shrink:0}
+.vtable-col-th{min-width:100px;display:flex;align-items:center;gap:7px}
+.vtable-col-ph{min-width:120px;color:var(--t3);font-style:italic;font-size:12px;font-weight:500}
+.vtable-col-en{flex:1;color:var(--t2);font-weight:500}
+.vtable-col-act{width:34px;flex-shrink:0;text-align:center}
+.vtable-thai{font-family:var(--thai);font-weight:600;font-size:16px}
+.vtable-speak{background:none;border:none;cursor:pointer;padding:3px;color:var(--t3);display:flex;align-items:center;transition:color .15s ease}
+.vtable-speak:hover{color:var(--olive)}
+.vtable-mark{width:30px;height:30px;border-radius:50%;border:2px solid var(--bdr);background:var(--sur);cursor:pointer;font-size:12px;font-weight:700;color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all .15s ease}
+.vtable-mark:hover{border-color:var(--olive);color:var(--olive)}
+.vtable-mark.on{background:var(--success);border-color:var(--success-dark);color:#fff}
+.vtable-conf{display:block;font-size:10px;line-height:1;margin-top:2px;letter-spacing:1px;font-weight:700}

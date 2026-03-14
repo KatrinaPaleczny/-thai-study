@@ -59,6 +59,7 @@ const XP_VALUES = {
   mistake_review: 3,
   sentence_correct: 6,
   ai_chat_turn: 3,
+  unit_test_pass: 25,
 };
 
 export function awardXP(action) {

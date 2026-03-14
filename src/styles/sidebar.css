@@ -1,0 +1,35 @@
+/* ── Sidebar (Duolingo-style deep royal purple) ── */
+.sb{width:220px;min-width:220px;background:linear-gradient(180deg,#1A1147 0%,#120D33 100%);border-right:2px solid #2D1F6B;display:flex;flex-direction:column;padding:24px 0;height:100vh;overflow-y:auto;flex-shrink:0}
+.sb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+.sb-logo{padding:0 22px 22px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.sb-th{font-family:var(--thai);font-size:22px;font-weight:700;color:#FFD54F;text-shadow:0 2px 10px rgba(255,213,79,.3)}
+.sb-sub{font-family:var(--disp);font-size:12px;font-weight:600;color:var(--sb-t3);margin-top:3px;letter-spacing:.03em}
+.sb-lbl{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--sb-t3);padding:0 22px;margin-bottom:3px;margin-top:16px}
+.sb-btn{display:flex;align-items:center;gap:10px;padding:10px 22px;cursor:pointer;font-size:14px;font-weight:600;color:var(--sb-t2);border:none;border-left:3px solid transparent;background:none;width:100%;text-align:left;transition:all .15s ease;text-decoration:none}
+.sb-btn:hover{color:var(--sb-t1);background:rgba(255,255,255,.06)}
+.sb-btn.on{color:#FFD54F;background:rgba(255,193,7,.12);font-weight:700;border-left-color:#FFD54F;padding-left:20px}
+.sb-ic{width:18px;text-align:center;font-size:15px}
+.sb-txt{}
+.sb-chev{margin-left:auto;font-size:10px;color:var(--sb-t3);flex-shrink:0;transition:transform .2s ease;opacity:.8}
+.sb-sub-list{background:rgba(0,0,0,.25);padding:3px 0 6px 0;overflow:hidden}
+.sb-sub-btn{display:flex;align-items:center;gap:8px;padding:8px 12px 8px 30px;cursor:pointer;font-size:12px;font-weight:600;color:var(--sb-t2);border:none;border-left:3px solid transparent;background:none;width:100%;text-align:left;transition:all .15s ease;text-decoration:none}
+.sb-sub-btn:hover{color:var(--sb-t1);background:rgba(255,255,255,.06);border-left-color:#FFD54F}
+.sb-sub-ic{font-size:11px;width:16px;text-align:center;flex-shrink:0}
+.sb-sub-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sb-sub-script{border-left-color:rgba(121,134,203,.3);background:rgba(121,134,203,.08)}
+.sb-sub-script:hover{border-left-color:#7986cb;background:rgba(121,134,203,.15)}
+.sb-script-ic{font-family:var(--thai);font-size:10px;font-weight:700;color:#7986cb;background:rgba(121,134,203,.2);border-radius:4px;padding:1px 4px;width:auto!important}
+
+/* ── Sidebar XP Widget & Badge ── */
+.sb-xp-widget{margin:0 14px 8px;padding:12px 14px;background:rgba(255,193,7,.12);border-radius:var(--radius-sm);border:2px solid rgba(255,193,7,.2)}
+.sb-xp-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sb-streak{font-size:14px;font-weight:800;color:#FFD54F}
+.sb-level{font-size:11px;color:var(--sb-t2);font-weight:700}
+.sb-xp-bar{height:8px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
+.sb-xp-fill{height:100%;background:linear-gradient(90deg,#FFD54F 0%,#FF9800 100%);border-radius:8px;transition:width .5s ease}
+.sb-xp-label{font-size:10px;color:var(--sb-t3);margin-top:4px;text-align:center;font-weight:600}
+.sb-badge{margin-left:auto;background:#FF6D00;color:#fff;font-size:10px;font-weight:800;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 6px;flex-shrink:0}
+
+/* ── Sidebar Backup Nudge ── */
+.sb-backup-nudge{display:block;width:calc(100% - 28px);margin:6px 14px;padding:8px 10px;background:rgba(255,160,0,.15);border:2px solid rgba(255,160,0,.3);border-radius:var(--radius-sm);font-size:11px;font-weight:600;color:#ffd180;cursor:pointer;text-align:left;line-height:1.4}
+.sb-backup-nudge:hover{background:rgba(255,160,0,.25)}

@@ -1,8 +1,10 @@
 import { useState, useMemo, useCallback } from "react";
+import { useApp } from "../context/AppContext";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 
-export function ListeningPage({ allVocab }) {
+export function ListeningPage() {
+  const { allVocab } = useApp();
   const [cat, setCat] = useState("All");
   const [wordIdx, setWordIdx] = useState(0);
   const [userInput, setUserInput] = useState("");

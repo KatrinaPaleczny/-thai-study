@@ -1,7 +1,9 @@
 import { useState, useMemo } from "react";
 import { FlashcardDeck } from "../components/FlashcardDeck";
+import { useApp } from "../context/AppContext";
 
-export function FlashcardPage({ allVocab, favs, studied, toggleStudied, pinned, cats, confidence, updateConfidence }) {
+export function FlashcardPage() {
+  const { allVocab, favs, studied, toggleStudied, pinned, cats, confidence, updateConfidence } = useApp();
   const [view, setView] = useState("all");
   const [filterCat, setFilterCat] = useState("");
 

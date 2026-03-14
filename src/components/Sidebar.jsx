@@ -1,10 +1,27 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useApp } from "../context/AppContext";
 import { FULL_PATH } from "../data/curriculumData";
 import { getTodayProgress, getStreak, getLevel } from "../utils/xp";
 import { getSRSStats } from "../utils/srs";
 import { getMistakeStats } from "../utils/mistakes";
+import { getLastExportDate } from "../utils/storage";
 
-export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
+const ROUTE_MAP = {
+  "/": "mypath", "/placement": "placement", "/vocab": "vocab", "/flashcards": "flashcards", "/srs": "srs",
+  "/practice": "practice", "/sentences": "sentences", "/roleplay": "roleplay",
+  "/aichat": "aichat", "/writing": "writing", "/handwriting": "handwriting",
+  "/scenes": "scenes", "/stories": "stories", "/pronunciation": "pronunciation",
+  "/listening": "listening", "/match": "match", "/imagevocab": "imagevocab",
+  "/daily": "daily", "/mistakes": "mistakes", "/analytics": "analytics",
+  "/grammar": "grammar", "/numbers": "numbers", "/settings": "settings",
+};
+
+export function Sidebar() {
+  const { allVocab, studied } = useApp();
+  const studiedCount = allVocab ? allVocab.filter(v => studied.has(v.id)).length : 0;
+  const location = useLocation();
+  const navigate = useNavigate();
   const [pathOpen, setPathOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [xpInfo, setXpInfo] = useState({ todayXP: 0, dailyGoal: 50, progress: 0, totalXP: 0 });
@@ -13,7 +30,8 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
   const [srsdue, setSrsdue] = useState(0);
   const [unreviewedMistakes, setUnreviewedMistakes] = useState(0);
 
-  // Refresh stats periodically
+  const page = location.pathname.startsWith("/unit/") ? "mypath" : (ROUTE_MAP[location.pathname] || "mypath");
+
   useEffect(() => {
     const refresh = () => {
       const tp = getTodayProgress();
@@ -28,8 +46,10 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
     return () => clearInterval(interval);
   }, [allVocab]);
 
-  const btn = (p, ic, label, badge) => (
-    <button className={`sb-btn${page===p?" on":""}`} onClick={()=>{ setPage(p); setMobileOpen(false); }}>
+  const go = (path) => { navigate(path); setMobileOpen(false); };
+
+  const btn = (path, pageKey, ic, label, badge) => (
+    <button className={`sb-btn${page===pageKey?" on":""}`} onClick={() => go(path)}>
       <span className="sb-ic">{ic}</span><span className="sb-txt">{label}</span>
       {badge > 0 && <span className="sb-badge">{badge}</span>}
     </button>
@@ -37,13 +57,11 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
 
   let vocabUnitNum = 0;
 
-  // Find current page label for mobile header
-  const pageLabels = { mypath:"My Path", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", unit:"My Path" };
+  const pageLabels = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", settings:"Settings" };
   const currentLabel = pageLabels[page] || "My Path";
 
   return (
     <>
-      {/* Mobile top bar */}
       <div className="sb-mobile-bar">
         <button className="sb-hamburger" onClick={() => setMobileOpen(o => !o)}>
           {mobileOpen ? "✕" : "☰"}
@@ -58,7 +76,6 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
         <div className="sb-sub">คุณแคท · Thai Study</div>
       </div>
 
-      {/* Streak & XP Widget */}
       <div className="sb-xp-widget">
         <div className="sb-xp-row">
           <span className="sb-streak">{streakInfo.streak > 0 ? `🔥 ${streakInfo.streak}` : "🔥 0"}</span>
@@ -72,11 +89,10 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
 
       <div className="sb-lbl">Learn</div>
 
-      {/* My Path with dropdown */}
       <div>
         <button
           className={`sb-btn${page==="mypath"?" on":""}`}
-          onClick={() => { setPage("mypath"); setPathOpen(o => !o); }}
+          onClick={() => { go("/"); setPathOpen(o => !o); }}
         >
           <span className="sb-ic">🛤️</span>
           <span>My Path</span>
@@ -91,10 +107,10 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
               return (
                 <button
                   key={unit.id}
-                  className="sb-sub-btn"
-                  onClick={() => { onOpenUnit(unit.id); setMobileOpen(false); }}
+                  className={`sb-sub-btn${isScript ? " sb-sub-script" : ""}`}
+                  onClick={() => { navigate(`/unit/${unit.id}`); setMobileOpen(false); }}
                 >
-                  <span className="sb-sub-ic">{unit.icon}</span>
+                  <span className={`sb-sub-ic${isScript ? " sb-script-ic" : ""}`}>{unit.icon}</span>
                   <span className="sb-sub-lbl">{label}</span>
                 </button>
               );
@@ -103,28 +119,53 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
         )}
       </div>
 
-      {btn("vocab","📖","Vocabulary")}
-      {btn("flashcards","🃏","Flashcards")}
-      {btn("srs","🧠","SRS Review", srsdue)}
-      {btn("practice","🎯","Practice")}
-      {btn("sentences","🧩","Sentences")}
-      {btn("roleplay","💬","Role-Play")}
-      {btn("aichat","🤖","AI Chat")}
-      {btn("writing","✍️","Writing")}
-      {btn("handwriting","🖌️","Handwriting")}
-      {btn("scenes","🖼️","Scenes")}
-      {btn("stories","📚","Stories")}
-      {btn("pronunciation","🎙️","Pronunciation")}
-      {btn("listening","👂","Listening")}
-      {btn("match","🔗","Match Pairs")}
-      {btn("imagevocab","🖼️","Image Vocab")}
-      <div className="sb-lbl">Review</div>
-      {btn("daily","⭐","Daily Word")}
-      {btn("mistakes","📝","Mistakes", unreviewedMistakes)}
-      {btn("analytics","📊","Analytics")}
-      <div className="sb-lbl">Reference</div>
-      {btn("grammar","📐","Grammar")}
-      {btn("numbers","🔢","Numbers")}
+      {/* Always visible */}
+      {btn("/vocab","vocab","📖","Vocabulary")}
+      {btn("/flashcards","flashcards","🃏","Flashcards")}
+      {btn("/srs","srs","🧠","SRS Review", srsdue)}
+      {btn("/daily","daily","⭐","Daily Word")}
+
+      {/* After 10 words */}
+      {studiedCount >= 10 && <>
+        {btn("/pronunciation","pronunciation","🎙️","Pronunciation")}
+        {btn("/listening","listening","👂","Listening")}
+        {btn("/practice","practice","🎯","Practice")}
+        {btn("/mistakes","mistakes","📝","Mistakes", unreviewedMistakes)}
+      </>}
+
+      {/* After 30 words */}
+      {studiedCount >= 30 && <>
+        {btn("/sentences","sentences","🧩","Sentences")}
+        {btn("/match","match","🔗","Match Pairs")}
+        {btn("/stories","stories","📚","Stories")}
+        {btn("/analytics","analytics","📊","Analytics")}
+        <div className="sb-lbl">Reference</div>
+        {btn("/grammar","grammar","📐","Grammar")}
+        {btn("/numbers","numbers","🔢","Numbers")}
+      </>}
+
+      {/* After 60 words */}
+      {studiedCount >= 60 && <>
+        {btn("/writing","writing","✍️","Writing")}
+        {btn("/handwriting","handwriting","🖌️","Handwriting")}
+        {btn("/scenes","scenes","🖼️","Scenes")}
+        {btn("/roleplay","roleplay","💬","Role-Play")}
+        {btn("/aichat","aichat","🤖","AI Chat")}
+        {btn("/imagevocab","imagevocab","🖼️","Image Vocab")}
+        {btn("/placement","placement","📋","Placement Test")}
+      </>}
+
+      <div className="sb-lbl">Settings</div>
+      {btn("/settings","settings","⚙️","Settings")}
+      {(() => {
+        const last = getLastExportDate();
+        const needsBackup = !last || (Date.now() - new Date(last).getTime()) > 7 * 86400000;
+        return needsBackup ? (
+          <button className="sb-backup-nudge" onClick={() => go("/settings")}>
+            {last ? "Last backup: " + new Date(last).toLocaleDateString() : "No backups yet"} — back up now?
+          </button>
+        ) : null;
+      })()}
     </div>
     </>
   );

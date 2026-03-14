@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
+import { useApp } from "../context/AppContext";
 import { getXPHistory, getTodayProgress, getStreak, getLevel, loadXP } from "../utils/xp";
 import { getSRSStats, loadSRS } from "../utils/srs";
 import { getMistakeStats } from "../utils/mistakes";
 
-export function AnalyticsPage({ allVocab, studied, confidence }) {
+export function AnalyticsPage() {
+  const { allVocab, studied, confidence } = useApp();
   const [range, setRange] = useState(14); // 7 | 14 | 30
 
   const xpHistory = useMemo(() => getXPHistory(range), [range]);
@@ -146,7 +148,7 @@ export function AnalyticsPage({ allVocab, studied, confidence }) {
         <div className="an-conf-dist">
           {["New", "Learning", "Familiar", "Mastered"].map((label, i) => {
             const pct = totalWords > 0 ? Math.round((confDist[i] / totalWords) * 100) : 0;
-            const colors = ["var(--t3)", "#c29b3f", "#6b9e5a", "#3d8b37"];
+            const colors = ["var(--t3)", "#D4BA6E", "#0A8A7A", "#087068"];
             return (
               <div key={label} className="an-conf-item">
                 <div className="an-conf-lbl">{label}</div>
