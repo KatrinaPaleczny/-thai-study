@@ -6,6 +6,7 @@ import { getMistakeStats } from "../utils/mistakes";
 
 export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
   const [pathOpen, setPathOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [xpInfo, setXpInfo] = useState({ todayXP: 0, dailyGoal: 50, progress: 0, totalXP: 0 });
   const [streakInfo, setStreakInfo] = useState({ streak: 0 });
   const [levelInfo, setLevelInfo] = useState({ level: 1, title: "Newcomer" });
@@ -28,16 +29,30 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
   }, [allVocab]);
 
   const btn = (p, ic, label, badge) => (
-    <button className={`sb-btn${page===p?" on":""}`} onClick={()=>setPage(p)}>
-      <span className="sb-ic">{ic}</span><span>{label}</span>
+    <button className={`sb-btn${page===p?" on":""}`} onClick={()=>{ setPage(p); setMobileOpen(false); }}>
+      <span className="sb-ic">{ic}</span><span className="sb-txt">{label}</span>
       {badge > 0 && <span className="sb-badge">{badge}</span>}
     </button>
   );
 
   let vocabUnitNum = 0;
 
+  // Find current page label for mobile header
+  const pageLabels = { mypath:"My Path", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", unit:"My Path" };
+  const currentLabel = pageLabels[page] || "My Path";
+
   return (
-    <div className="sb">
+    <>
+      {/* Mobile top bar */}
+      <div className="sb-mobile-bar">
+        <button className="sb-hamburger" onClick={() => setMobileOpen(o => !o)}>
+          {mobileOpen ? "✕" : "☰"}
+        </button>
+        <span className="sb-mobile-title">{currentLabel}</span>
+        <span className="sb-mobile-xp">{xpInfo.todayXP}/{xpInfo.dailyGoal} XP</span>
+      </div>
+      {mobileOpen && <div className="sb-overlay" onClick={() => setMobileOpen(false)} />}
+    <div className={`sb${mobileOpen ? " sb-open" : ""}`}>
       <div className="sb-logo">
         <div className="sb-th">เรียนไทย</div>
         <div className="sb-sub">คุณแคท · Thai Study</div>
@@ -77,7 +92,7 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
                 <button
                   key={unit.id}
                   className="sb-sub-btn"
-                  onClick={() => onOpenUnit(unit.id)}
+                  onClick={() => { onOpenUnit(unit.id); setMobileOpen(false); }}
                 >
                   <span className="sb-sub-ic">{unit.icon}</span>
                   <span className="sb-sub-lbl">{label}</span>
@@ -108,5 +123,6 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
       {btn("grammar","📐","Grammar")}
       {btn("numbers","🔢","Numbers")}
     </div>
+    </>
   );
 }
