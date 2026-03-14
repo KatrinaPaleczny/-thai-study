@@ -57,6 +57,8 @@ const XP_VALUES = {
   daily_session: 10,
   scene_word: 2,
   mistake_review: 3,
+  sentence_correct: 6,
+  ai_chat_turn: 3,
 };
 
 export function awardXP(action) {

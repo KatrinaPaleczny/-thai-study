@@ -3,6 +3,7 @@ import { CSS } from "./appStyles";
 import { VOCAB_DATA } from "./data/vocabData";
 import { FULL_PATH } from "./data/curriculumData";
 import { loadLS, saveLS, useLocalSet, K_FAV, K_STU, K_CUSTOM, K_PINNED, K_HIDDEN, K_SCRIPT, K_STREAK, K_CONFIDENCE } from "./utils/storage";
+import { recordCategoryResult } from "./utils/adaptive";
 import { Sidebar } from "./components/Sidebar";
 import { VocabPage } from "./pages/VocabPage";
 import { GrammarPage } from "./pages/GrammarPage";
@@ -18,6 +19,9 @@ import { WritingPage } from "./pages/WritingPage";
 import { ScenesPage } from "./pages/ScenesPage";
 import { PronunciationPage } from "./pages/PronunciationPage";
 import { AnalyticsPage } from "./pages/AnalyticsPage";
+import { SentenceBuilderPage } from "./pages/SentenceBuilderPage";
+import { DailyChallengePage } from "./pages/DailyChallengePage";
+import { AIConversationPage } from "./pages/AIConversationPage";
 import { DailySession } from "./components/DailySession";
 
 export default function App() {
@@ -54,16 +58,6 @@ export default function App() {
   const handleToggleStudied = id => { toggleStudied(id); recordActivity(); };
   const handleToggleScriptStudied = id => { toggleScriptStudied(id); recordActivity(); };
 
-  const updateConfidence = useCallback((id, delta) => {
-    setConfidence(prev => {
-      const cur = prev[id] || 0;
-      const next = Math.max(0, Math.min(3, cur + delta));
-      const updated = { ...prev, [id]: next };
-      saveLS(K_CONFIDENCE, updated);
-      return updated;
-    });
-  }, []);
-
   const hideWord = id => {
     const n = new Set(hiddenIds); n.add(id);
     saveLS(K_HIDDEN, [...n]); setHiddenIds(n);
@@ -71,6 +65,19 @@ export default function App() {
 
   const allVocab = useMemo(()=>[...VOCAB_DATA,...customWords].filter(v=>!hiddenIds.has(v.id)),[customWords, hiddenIds]);
   const cats = useMemo(()=>[...new Set(allVocab.map(v=>v.category))].sort(),[allVocab]);
+
+  const updateConfidence = useCallback((id, delta) => {
+    setConfidence(prev => {
+      const cur = prev[id] || 0;
+      const next = Math.max(0, Math.min(3, cur + delta));
+      const updated = { ...prev, [id]: next };
+      saveLS(K_CONFIDENCE, updated);
+      // Track adaptive difficulty per category
+      const word = allVocab.find(v => v.id === id);
+      if (word) recordCategoryResult(word.category, delta > 0);
+      return updated;
+    });
+  }, [allVocab]);
 
   const openUnit = id => { setUnitId(id); setPage("unit"); };
   const closeUnit = () => { setUnitId(null); setPage("mypath"); };
@@ -104,6 +111,9 @@ export default function App() {
       case "scenes": return <ScenesPage/>;
       case "pronunciation": return <PronunciationPage allVocab={allVocab}/>;
       case "analytics": return <AnalyticsPage allVocab={allVocab} studied={studied} confidence={confidence}/>;
+      case "sentences": return <SentenceBuilderPage/>;
+      case "daily": return <DailyChallengePage allVocab={allVocab}/>;
+      case "aichat": return <AIConversationPage/>;
       default: return <div className="page"><div className="empty">Coming soon</div></div>;
     }
   };

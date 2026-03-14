@@ -92,11 +92,14 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
       {btn("flashcards","🃏","Flashcards")}
       {btn("srs","🧠","SRS Review", srsdue)}
       {btn("practice","🎯","Practice")}
+      {btn("sentences","🧩","Sentences")}
       {btn("roleplay","💬","Role-Play")}
+      {btn("aichat","🤖","AI Chat")}
       {btn("writing","✍️","Writing")}
       {btn("scenes","🖼️","Scenes")}
       {btn("pronunciation","🎙️","Pronunciation")}
       <div className="sb-lbl">Review</div>
+      {btn("daily","⭐","Daily Word")}
       {btn("mistakes","📝","Mistakes", unreviewedMistakes)}
       {btn("analytics","📊","Analytics")}
       <div className="sb-lbl">Reference</div>
