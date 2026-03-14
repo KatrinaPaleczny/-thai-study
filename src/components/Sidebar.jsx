@@ -7,6 +7,7 @@ import { getTodayProgress, getStreak, getLevel } from "../utils/xp";
 import { getSRSStats } from "../utils/srs";
 import { getMistakeStats } from "../utils/mistakes";
 import { getLastExportDate } from "../utils/storage";
+import { FlameIcon, FlashcardIcon, TargetIcon, StarIcon, BrainIcon } from "./AppIcons";
 
 const ROUTE_MAP = {
   "/": "mypath", "/placement": "placement", "/vocab": "vocab", "/flashcards": "flashcards", "/srs": "srs",
@@ -80,7 +81,7 @@ export function Sidebar() {
 
       <div className="sb-xp-widget">
         <div className="sb-xp-row">
-          <span className="sb-streak">{streakInfo.streak > 0 ? `🔥 ${streakInfo.streak}` : "🔥 0"}</span>
+          <span className="sb-streak"><span className="sb-streak-flame"><FlameIcon size={16} active={streakInfo.streak > 0} /></span> {streakInfo.streak > 0 ? streakInfo.streak : 0}</span>
           <span className="sb-level">Lv.{levelInfo.level} {levelInfo.title}</span>
         </div>
         <div className="sb-xp-bar">
@@ -123,15 +124,15 @@ export function Sidebar() {
 
       {/* Always visible */}
       {btn("/vocab","vocab","📖","Vocabulary")}
-      {btn("/flashcards","flashcards","🃏","Flashcards")}
-      {btn("/srs","srs","🧠","SRS Review", srsdue)}
-      {btn("/daily","daily","⭐","Daily Word")}
+      {btn("/flashcards","flashcards",<FlashcardIcon />,"Flashcards")}
+      {btn("/srs","srs",<BrainIcon />,"SRS Review", srsdue)}
+      {btn("/daily","daily",<StarIcon filled />,"Daily Word")}
 
       {/* After 10 words */}
       {studiedCount >= 10 && <>
         {btn("/pronunciation","pronunciation","🎙️","Pronunciation")}
         {btn("/listening","listening","👂","Listening")}
-        {btn("/practice","practice","🎯","Practice")}
+        {btn("/practice","practice",<TargetIcon />,"Practice")}
         {btn("/mistakes","mistakes","📝","Mistakes", unreviewedMistakes)}
       </>}
 

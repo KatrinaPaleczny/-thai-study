@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { speakThai } from "../utils/speech";
 import { PronunciationGuide } from "./PronunciationGuide";
+import { SparkleEffect, XPPopup } from "./Celebrations";
+import { Mascot } from "./Mascot";
 
 const CONF_LABELS = ["New", "Learning", "Familiar", "Mastered"];
 const CONF_COLORS = ["var(--t3)", "#D4BA6E", "#0A8A7A", "#087068"];
@@ -9,9 +11,16 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [thaiFirst, setThaiFirst] = useState(false);
+  const [showSparkle, setShowSparkle] = useState(false);
+  const [showXP, setShowXP] = useState(false);
 
   if (!words?.length) {
-    return <div className="empty">No words to study.</div>;
+    return (
+      <div className="empty" style={{ textAlign: "center", padding: "40px 20px" }}>
+        <Mascot mood="thinking" size="md" />
+        <div style={{ marginTop: 12 }}>No words to study.</div>
+      </div>
+    );
   }
 
   const word = words[idx];
@@ -25,6 +34,11 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
   const markEasy = () => {
     if (!isDone) toggleStudied(word.id);
     if (updateConfidence) updateConfidence(word.id, 1);
+    // Show celebration effects
+    setShowSparkle(true);
+    setShowXP(true);
+    setTimeout(() => setShowSparkle(false), 1000);
+    setTimeout(() => setShowXP(false), 1200);
     if (idx < total - 1) next(); else setFlipped(false);
   };
   const markReview = () => {
@@ -95,9 +109,11 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
         </button>
       </div>
 
-      <div className="fc" onClick={flip}>
+      <div className="fc" onClick={flip} style={{ position: "relative" }}>
         {!flipped ? frontContent : backContent}
         {!flipped && <div className="fc-hint-lbl">tap to flip</div>}
+        <SparkleEffect show={showSparkle} />
+        <XPPopup points={5} show={showXP} />
         {confidence && (confidence[word.id] || 0) > 0 && (
           <div className="fc-conf" style={{ color: CONF_COLORS[confidence[word.id]] }}>
             {"●".repeat(confidence[word.id])}{"○".repeat(3 - confidence[word.id])} {CONF_LABELS[confidence[word.id]]}

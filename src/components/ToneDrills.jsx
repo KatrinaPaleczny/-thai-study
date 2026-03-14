@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { speakThai } from "../utils/speech";
 
 const TONE_PAIRS = [
+  // Original pairs
   { a: { thai: "มา", phonetics: "maa", english: "come", tone: "mid" }, b: { thai: "หมา", phonetics: "mǎa", english: "dog", tone: "rising" }},
   { a: { thai: "ไก่", phonetics: "gài", english: "chicken", tone: "low" }, b: { thai: "ไข่", phonetics: "khài", english: "egg", tone: "low" }},
   { a: { thai: "ใกล้", phonetics: "glâi", english: "near", tone: "falling" }, b: { thai: "ไกล", phonetics: "glai", english: "far", tone: "mid" }},
@@ -10,6 +11,25 @@ const TONE_PAIRS = [
   { a: { thai: "คา", phonetics: "kaa", english: "stuck", tone: "mid" }, b: { thai: "ค่า", phonetics: "khâa", english: "value/cost", tone: "falling" }},
   { a: { thai: "ป้า", phonetics: "bpâa", english: "aunt", tone: "falling" }, b: { thai: "ป่า", phonetics: "bpàa", english: "forest", tone: "low" }},
   { a: { thai: "น้ำ", phonetics: "náam", english: "water", tone: "high" }, b: { thai: "นำ", phonetics: "nam", english: "lead/guide", tone: "mid" }},
+  // ได้/ไม่ได้ pattern (from tutor lessons)
+  { a: { thai: "ได้", phonetics: "dâi", english: "can / yes", tone: "falling" }, b: { thai: "ไม่ได้", phonetics: "mâi dâi", english: "cannot", tone: "falling+falling" }},
+  { a: { thai: "ได้ไหม", phonetics: "dâi mái", english: "can ...?", tone: "falling+high" }, b: { thai: "ได้ยิน", phonetics: "dâi yin", english: "hear", tone: "falling+mid" }},
+  // More minimal pairs — same/similar consonants, different tones
+  { a: { thai: "สี่", phonetics: "sìi", english: "four", tone: "low" }, b: { thai: "สี", phonetics: "sǐi", english: "color", tone: "rising" }},
+  { a: { thai: "เสื้อ", phonetics: "sûea", english: "shirt", tone: "rising" }, b: { thai: "เสือ", phonetics: "sʉ̌a", english: "tiger", tone: "rising" }},
+  { a: { thai: "หมา", phonetics: "mǎa", english: "dog", tone: "rising" }, b: { thai: "ม้า", phonetics: "máa", english: "horse", tone: "high" }},
+  { a: { thai: "ขา", phonetics: "khǎa", english: "leg", tone: "rising" }, b: { thai: "ข่า", phonetics: "khàa", english: "galangal", tone: "low" }},
+  { a: { thai: "เผ็ด", phonetics: "pèt", english: "spicy", tone: "low" }, b: { thai: "เป็ด", phonetics: "bpèt", english: "duck", tone: "low" }},
+  { a: { thai: "กา", phonetics: "gaa", english: "crow / kettle", tone: "mid" }, b: { thai: "ก่า", phonetics: "gàa", english: "old (archaic)", tone: "low" }},
+  { a: { thai: "สูง", phonetics: "sǔung", english: "tall", tone: "rising" }, b: { thai: "ซุง", phonetics: "sung", english: "log / timber", tone: "mid" }},
+  { a: { thai: "ร้อน", phonetics: "rɔ́ɔn", english: "hot", tone: "high" }, b: { thai: "ร้อง", phonetics: "rɔ́ɔng", english: "cry / sing", tone: "high" }},
+  { a: { thai: "กิน", phonetics: "gin", english: "eat", tone: "mid" }, b: { thai: "กิ่น", phonetics: "gìn", english: "smell (old)", tone: "low" }},
+  { a: { thai: "ดี", phonetics: "dii", english: "good", tone: "mid" }, b: { thai: "ตี", phonetics: "dtii", english: "hit / strike", tone: "mid" }},
+  { a: { thai: "หิว", phonetics: "hǐw", english: "hungry", tone: "rising" }, b: { thai: "หิ้ว", phonetics: "hîw", english: "carry (by hand)", tone: "falling" }},
+  { a: { thai: "มา", phonetics: "maa", english: "come", tone: "mid" }, b: { thai: "ม้า", phonetics: "máa", english: "horse", tone: "high" }},
+  { a: { thai: "ช้า", phonetics: "cháa", english: "slow", tone: "high" }, b: { thai: "ชา", phonetics: "chaa", english: "tea", tone: "mid" }},
+  { a: { thai: "สุก", phonetics: "sùk", english: "ripe / cooked", tone: "low" }, b: { thai: "สุข", phonetics: "sùk", english: "happy", tone: "low" }},
+  { a: { thai: "เค็ม", phonetics: "kem", english: "salty", tone: "mid" }, b: { thai: "เข็ม", phonetics: "khěm", english: "needle", tone: "rising" }},
 ];
 
 function pickRandom() {

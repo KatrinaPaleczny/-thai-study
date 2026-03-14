@@ -1,0 +1,141 @@
+/* ── App Animations ── */
+
+/* Confetti particle burst - uses CSS custom props --tx, --ty, --rot per particle */
+@keyframes confetti-fall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
+}
+
+/* Sparkle scale pulse */
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+/* XP float up and fade */
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-50px); opacity: 0; }
+}
+
+/* Bouncy entrance */
+@keyframes bounce-in {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.15); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Gentle pulse glow for streak */
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(255,109,0,.4)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 8px rgba(255,109,0,.7)); transform: scale(1.08); }
+}
+
+/* Wiggle attention */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(8deg); }
+  60% { transform: rotate(-5deg); }
+  80% { transform: rotate(5deg); }
+}
+
+/* Shimmer sweep across progress bars */
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Mascot bounce */
+@keyframes mascot-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Celebration stars orbit */
+@keyframes orbit-star {
+  0% { transform: rotate(0deg) translateX(30px) rotate(0deg) scale(0); opacity: 0; }
+  20% { opacity: 1; scale: 1; }
+  80% { opacity: 1; }
+  100% { transform: rotate(360deg) translateX(30px) rotate(-360deg) scale(0); opacity: 0; }
+}
+
+/* ── Confetti Component Styles ── */
+.confetti-container {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 50%;
+  left: 50%;
+  border-radius: 2px;
+  animation: confetti-fall 1.8s ease-out forwards;
+}
+
+/* ── Sparkle Component Styles ── */
+.sparkle-container {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+.sparkle-star {
+  position: absolute;
+  font-size: 18px;
+  color: #FFD54F;
+  animation: sparkle 0.8s ease-out forwards;
+  text-shadow: 0 0 6px rgba(255,213,79,.6);
+}
+
+/* ── XP Popup Styles ── */
+.xp-popup {
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 800;
+  color: #FF9800;
+  animation: float-up 1.2s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 0 1px 4px rgba(255,152,0,.3);
+  white-space: nowrap;
+}
+
+/* ── Mascot Styles ── */
+.mascot-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mascot-wrap.celebrating {
+  animation: mascot-bounce 0.6s ease infinite;
+}
+.mascot-celebrating-stars {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+.mascot-orbit-star {
+  position: absolute;
+  top: 50%; left: 50%;
+  font-size: 14px;
+  animation: orbit-star 2s ease infinite;
+}
+
+/* ── Shimmer on progress bars ── */
+.sb-xp-fill,
+.path-pfill,
+.continue-fill,
+.rp-prog-fill {
+  background-size: 200% 100%;
+}

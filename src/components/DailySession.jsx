@@ -3,6 +3,8 @@ import { FULL_PATH } from "../data/curriculumData";
 import { GRAMMAR_DATA } from "../data/grammarData";
 import { FlashcardDeck } from "./FlashcardDeck";
 import { BuildTab } from "./BuildTab";
+import { ConfettiBurst } from "./Celebrations";
+import { Mascot } from "./Mascot";
 
 export function DailySession({ allVocab, studied, toggleStudied, confidence, updateConfidence, onClose }) {
   const [phase, setPhase] = useState("ready"); // ready | studying | done
@@ -63,7 +65,7 @@ export function DailySession({ allVocab, studied, toggleStudied, confidence, upd
     return (
       <div className="ds-wrap">
         <div className="ds-ready">
-          <div className="ds-ready-icon">⏱️</div>
+          <div className="ds-ready-icon"><Mascot mood="encouraging" size="lg" /></div>
           <div className="ds-ready-title">5-Minute Study Session</div>
           <div className="ds-ready-desc">
             A focused session with {newWords.length} new words, {reviewWords.length} review words, and {exercises.length} grammar exercises.
@@ -87,7 +89,8 @@ export function DailySession({ allVocab, studied, toggleStudied, confidence, upd
     return (
       <div className="ds-wrap">
         <div className="ds-done">
-          <div className="ds-done-icon">🎉</div>
+          <ConfettiBurst trigger={true} />
+          <div className="ds-done-icon"><Mascot mood="celebrating" size="lg" /></div>
           <div className="ds-done-title">Session Complete!</div>
           <div className="ds-done-desc">
             Great work! You studied for {formatTime(elapsed)}.

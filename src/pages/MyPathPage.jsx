@@ -9,6 +9,8 @@ import { getAdaptiveSummary } from "../utils/adaptive";
 import { useApp } from "../context/AppContext";
 import { isUnitUnlocked, loadUnitTests } from "../utils/unitTests";
 import { CURRICULUM } from "../data/curriculumData";
+import { ConfettiBurst } from "../components/Celebrations";
+import { Mascot } from "../components/Mascot";
 
 /* ── Helper: compute progress for a unit ── */
 function getUnitProgress(unit, allVocab, studied, scriptStudied) {
@@ -121,9 +123,12 @@ export function MyPathPage() {
     <div className="page">
       {/* ── Hero Dashboard ── */}
       <div className="mp-hero">
-        <div className="mp-hero-left">
-          <div className="mp-greeting">{greeting()}</div>
-          <div className="mp-level">Level {levelInfo.level}: {levelInfo.title}</div>
+        <div className="mp-hero-left" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Mascot mood={allChecklistDone ? "celebrating" : "happy"} size="sm" />
+          <div>
+            <div className="mp-greeting">{greeting()}</div>
+            <div className="mp-level">Level {levelInfo.level}: {levelInfo.title}</div>
+          </div>
         </div>
         <div className="mp-stats">
           <div className="mp-stat">
@@ -160,7 +165,10 @@ export function MyPathPage() {
           <span className="mp-checklist-count">{checklist.filter(t => t.done).length}/{checklist.length}</span>
         </div>
         {allChecklistDone ? (
-          <div className="mp-checklist-done">All tasks complete — keep going or take a break!</div>
+          <>
+            <ConfettiBurst trigger={true} />
+            <div className="mp-checklist-done">All tasks complete — keep going or take a break!</div>
+          </>
         ) : (
           <div className="mp-checklist-list">
             {checklist.map(t => (

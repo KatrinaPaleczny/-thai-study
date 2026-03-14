@@ -26,7 +26,19 @@
       "Bash(npm install:*)",
       "Bash(kill 60497)",
       "Bash(ls -1 /Users/katrina.paleczny/thai-study/src/pages/*.jsx)",
-      "Bash(xargs -I {} basename {} .jsx)"
+      "Bash(xargs -I {} basename {} .jsx)",
+      "Bash(git status:*)",
+      "WebFetch(domain:thai-study.vercel.app)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://tjbpuhjkzenacnhxibfb.supabase.co/auth/v1/health\")",
+      "Bash(curl -s \"https://tjbpuhjkzenacnhxibfb.supabase.co/auth/v1/signup\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqYnB1aGpremVuYWNuaHhpYmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTAxNTUsImV4cCI6MjA4OTA4NjE1NX0.tujzJ_FBb09RSRwZ44_AXZT-7qOFwYOCnm7MBl9My8I\" -H \"Content-Type: application/json\" -d '{\"\"\"\"email\"\"\"\":\"\"\"\"test-probe@example.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"testtest123\"\"\"\"}')",
+      "Bash(curl -s -D - \"https://tjbpuhjkzenacnhxibfb.supabase.co/auth/v1/signup\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqYnB1aGpremVuYWNuaHhpYmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTAxNTUsImV4cCI6MjA4OTA4NjE1NX0.tujzJ_FBb09RSRwZ44_AXZT-7qOFwYOCnm7MBl9My8I\" -H \"Content-Type: application/json\" -H \"Origin: https://thai-study.vercel.app\" -X OPTIONS)",
+      "Bash(curl -s -D - \"https://tjbpuhjkzenacnhxibfb.supabase.co/auth/v1/signup\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqYnB1aGpremVuYWNuaHhpYmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTAxNTUsImV4cCI6MjA4OTA4NjE1NX0.tujzJ_FBb09RSRwZ44_AXZT-7qOFwYOCnm7MBl9My8I\" -H \"Content-Type: application/json\" -d '{\"\"\"\"email\"\"\"\":\"\"\"\"kat.paleczny@gmail.com\"\"\"\",\"\"\"\"password\"\"\"\":\"\"\"\"testpass123\"\"\"\"}')",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE: %{http_code}\" \"https://tjbpuhjkzenacnhxibfb.supabase.co/auth/v1/signup\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqYnB1aGpremVuYWNuaHhpYmZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTAxNTUsImV4cCI6MjA4OTA4NjE1NX0.tujzJ_FBb09RSRwZ44_AXZT-7qOFwYOCnm7MBl9My8I\" -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"kat.paleczny@gmail.com\"\",\"\"password\"\":\"\"testpass123\"\"}')",
+      "Read(//Users/katrina.paleczny/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/b8800725-a092-414a-a9ba-695d59f6b031/b7e97c9d-5edd-4b74-be76-56fa10093db6/skills/xlsx/**)",
+      "Bash(python3 -c \":*)",
+      "Bash(sips -z 192 192 --out pwa-192x192.png pwa-512x512.png)",
+      "Bash(sips -z 180 180 --out apple-touch-icon-180x180.png pwa-512x512.png)",
+      "Bash(ls -la pwa-*.png apple-touch-icon-*.png)"
     ]
   }
 }
