@@ -2,6 +2,7 @@ import { useState } from "react";
 import { GRAMMAR_DATA } from "../data/grammarData";
 import { ChevD } from "../components/Icons";
 import { BuildTab } from "../components/BuildTab";
+import { speakThai } from "../utils/speech";
 
 // ── Grammar Card ──────────────────────────────────────────────────────────────
 function GrammarCard({ g }) {
@@ -65,7 +66,10 @@ function GrammarCard({ g }) {
               <div className="gram-exs">
                 {g.examples.map((ex, i) => (
                   <div key={i} className="gram-ex">
-                    <div className="gram-ex-th">{ex.thai}</div>
+                    <div className="gram-ex-th">
+                      {ex.thai}
+                      <button className="conv-speak" onClick={() => speakThai(ex.thai)} title="Listen">🔊</button>
+                    </div>
                     <div className="gram-ex-ph">{ex.phonetics}</div>
                     <div className="gram-ex-en">{ex.english}</div>
                   </div>

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx vite build)",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const {VOCAB_DATA} = require\\(''/Users/katrina.paleczny/thai-study/src/data/vocabData.js''\\); console.log\\(''Last ID:'', VOCAB_DATA[VOCAB_DATA.length-1].id\\); console.log\\(''Last few:'', JSON.stringify\\(VOCAB_DATA.slice\\(-3\\), null, 2\\)\\)\")",
+      "Bash(npm run:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(brew install:*)",
+      "Bash(curl -L https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_macOS_arm64.zip -o /tmp/gh.zip)",
+      "Bash(unzip -o /tmp/gh.zip -d /tmp/gh)",
+      "Bash(/tmp/gh/gh_2.67.0_macOS_arm64/bin/gh --version)",
+      "Bash(/tmp/gh/gh_2.67.0_macOS_arm64/bin/gh auth:*)"
+    ]
+  }
+}

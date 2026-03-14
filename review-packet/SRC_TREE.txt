@@ -1,0 +1,56 @@
+thai-study/
+├── index.html
+├── vite.config.js
+├── package.json
+├── public/
+│   └── vite.svg
+└── src/
+    ├── main.jsx                        (10 lines)  App entry point — mounts React root
+    ├── App.jsx                         (52 lines)  Root component: page state, shared vocab/favs/studied/pinned state, routing switch
+    ├── App.css                         (42 lines)  Minimal global overrides
+    ├── index.css                       (68 lines)  CSS reset and base font rules
+    ├── appStyles.js                   (212 lines)  All component styles as a JS string (injected via <style>)
+    │
+    ├── components/
+    │   ├── Sidebar.jsx                 (26 lines)  Left nav: "Learn" group (Dashboard, Vocabulary, Flashcards, Categories),
+    │   │                                           "Practice" group (Conversation, Sentence Builder),
+    │   │                                           "Reference" group (Grammar, Numbers)
+    │   └── Icons.jsx                    (7 lines)  SVG icon components (Heart, Check, Search, Plus, X, Pin)
+    │
+    ├── pages/
+    │   ├── Dashboard.jsx              (160 lines)  Home: daily study plan (5 words + grammar + sentence + conversation),
+    │   │                                           stats bar, quick-study category buttons, tools shortcuts,
+    │   │                                           recently-studied + favourites grids
+    │   ├── VocabPage.jsx              (133 lines)  Full vocab list with search, category chips, view tabs (All / This Week / Favourites),
+    │   │                                           per-word pin/fav/studied actions, expandable example sentences,
+    │   │                                           Add Word modal for custom entries
+    │   ├── StudyPage.jsx               (49 lines)  Flashcard player: tap-to-reveal (phonetics front, Thai+English back),
+    │   │                                           "Review again" / "Got it ✓" progression, example sentence on reveal
+    │   ├── CategoriesPage.jsx          (24 lines)  Category grid cards showing emoji, name, word count;
+    │   │                                           Browse (→ VocabPage filtered) and Study (→ Flashcards) actions
+    │   ├── GrammarPage.jsx             (51 lines)  Accordion list of grammar rules, filterable by level (Beginner/Intermediate/Advanced)
+    │   ├── NumbersPage.jsx             (97 lines)  Tabbed reference: Cardinals, Ordinals, Classifiers; interactive quiz mode
+    │   ├── ConversationPage.jsx       (121 lines)  Scenario list with done-tracking; detail view shows turn-by-turn
+    │   │                                           English prompts with reveal-hint button for Thai; Add Scenario modal
+    │   └── SentenceBuilderPage.jsx     (83 lines)  English→Thai production exercise: type Thai answer, check correctness,
+    │                                               week filter tabs, running score tracker
+    │
+    ├── data/
+    │   ├── vocabData.js                 (1 lines*)  VOCAB_DATA array — word objects {id, thai, phonetics, english, category, emoji,
+    │   │                                           example_thai?, example_phonetics?, example_english?}
+    │   ├── grammarData.js              (12 lines*)  GRAMMAR_DATA array — {title, icon, level, summary, examples[]}
+    │   ├── numbersData.js              (13 lines*)  Numbers reference data (cardinals, ordinals, classifiers)
+    │   ├── scenariosData.js             (1 lines*)  SCENARIOS_DATA array — {title, goal, turns[{role, prompt_en, thai_hint}]}
+    │   └── sentenceExercises.js        (22 lines*)  SENTENCE_EXERCISES array — {pattern, week, english, thai, phonetics, hint, tip}
+    │
+    └── utils/
+        └── storage.js                  (22 lines)  localStorage helpers: loadLS/saveLS, useLocalSet hook,
+                                                    key constants (K_FAV, K_STU, K_CUSTOM, K_PINNED, K_CONV, K_CONV_CUSTOM)
+
+* Data files are minified / single-line exports; actual data volume is higher than the raw line count suggests.
+
+──────────────────────────────────────────────────────────────
+Tech stack:  React 19 · Vite 7 · no external UI library
+Styling:     Inline JS-string CSS (appStyles.js) — no CSS modules, no Tailwind
+State:       useState / useMemo in App.jsx; localStorage for persistence
+Routing:     Manual page-key switch (no React Router)

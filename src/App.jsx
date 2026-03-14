@@ -12,6 +12,12 @@ import { UnitPage } from "./pages/UnitPage";
 import { FlashcardPage } from "./pages/FlashcardPage";
 import { PracticePage } from "./pages/PracticePage";
 import { RolePlayPage } from "./pages/RolePlayPage";
+import { SRSPage } from "./pages/SRSPage";
+import { MistakesPage } from "./pages/MistakesPage";
+import { WritingPage } from "./pages/WritingPage";
+import { ScenesPage } from "./pages/ScenesPage";
+import { PronunciationPage } from "./pages/PronunciationPage";
+import { AnalyticsPage } from "./pages/AnalyticsPage";
 import { DailySession } from "./components/DailySession";
 
 export default function App() {
@@ -92,6 +98,12 @@ export default function App() {
       case "numbers": return <NumbersPage/>;
       case "practice": return <PracticePage allVocab={allVocab} studied={studied}/>;
       case "roleplay": return <RolePlayPage/>;
+      case "srs": return <SRSPage allVocab={allVocab}/>;
+      case "mistakes": return <MistakesPage/>;
+      case "writing": return <WritingPage/>;
+      case "scenes": return <ScenesPage/>;
+      case "pronunciation": return <PronunciationPage allVocab={allVocab}/>;
+      case "analytics": return <AnalyticsPage allVocab={allVocab} studied={studied} confidence={confidence}/>;
       default: return <div className="page"><div className="empty">Coming soon</div></div>;
     }
   };
@@ -100,7 +112,7 @@ export default function App() {
     <>
       <style>{CSS}</style>
       <div className="app">
-        <Sidebar page={page === "unit" ? "mypath" : page} setPage={handleSetPage} onOpenUnit={openUnit}/>
+        <Sidebar page={page === "unit" ? "mypath" : page} setPage={handleSetPage} onOpenUnit={openUnit} allVocab={allVocab}/>
         <div className="main" ref={mainRef}>{renderPage()}</div>
       </div>
     </>

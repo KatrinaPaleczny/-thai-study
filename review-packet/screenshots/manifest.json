@@ -1,0 +1,62 @@
+[
+  {
+    "page": "Dashboard",
+    "file": "dashboard-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Dashboard",
+    "file": "dashboard-mobile.jpg",
+    "viewport": "mobile"
+  },
+  {
+    "page": "Vocabulary",
+    "file": "vocabulary-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Vocabulary",
+    "file": "vocabulary-mobile.jpg",
+    "viewport": "mobile"
+  },
+  {
+    "page": "Flashcards",
+    "file": "flashcards-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Flashcards",
+    "file": "flashcards-mobile.jpg",
+    "viewport": "mobile"
+  },
+  {
+    "page": "Categories",
+    "file": "categories-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Grammar",
+    "file": "grammar-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Numbers",
+    "file": "numbers-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Conversation",
+    "file": "conversation-desktop.jpg",
+    "viewport": "desktop"
+  },
+  {
+    "page": "Conversation",
+    "file": "conversation-mobile.jpg",
+    "viewport": "mobile"
+  },
+  {
+    "page": "Sentence Builder",
+    "file": "sentence-builder-desktop.jpg",
+    "viewport": "desktop"
+  }
+]
