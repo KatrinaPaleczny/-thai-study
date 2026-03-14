@@ -26,6 +26,7 @@ import { ListeningPage } from "./pages/ListeningPage";
 import { MatchPage } from "./pages/MatchPage";
 import { ImageVocabPage } from "./pages/ImageVocabPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { AuthPage } from "./pages/AuthPage";
 import { PlacementTestPage } from "./pages/PlacementTestPage";
 import { UnitTestPage } from "./pages/UnitTestPage";
 import { isUnitUnlocked, loadUnitTests } from "./utils/unitTests";
@@ -111,6 +112,7 @@ export default function App() {
             <Route path="/match" element={<MatchPage />} />
             <Route path="/imagevocab" element={<ImageVocabPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/account" element={<AuthPage />} />
             <Route path="/placement" element={<PlacementTestPage />} />
             <Route path="/unit-test/:unitId" element={<UnitTestPage />} />
             <Route path="*" element={<div className="page"><div className="empty">Coming soon</div></div>} />

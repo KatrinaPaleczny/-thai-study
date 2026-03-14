@@ -33,3 +33,14 @@
 /* ── Sidebar Backup Nudge ── */
 .sb-backup-nudge{display:block;width:calc(100% - 28px);margin:6px 14px;padding:8px 10px;background:rgba(255,160,0,.15);border:2px solid rgba(255,160,0,.3);border-radius:var(--radius-sm);font-size:11px;font-weight:600;color:#ffd180;cursor:pointer;text-align:left;line-height:1.4}
 .sb-backup-nudge:hover{background:rgba(255,160,0,.25)}
+
+/* ── Sidebar Account ── */
+.sb-account{margin-top:auto;padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-account-btn{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);cursor:pointer;text-align:left;transition:background .15s}
+.sb-account-btn:hover{background:rgba(255,255,255,.12)}
+.sb-account-avatar{font-size:18px;flex-shrink:0}
+.sb-account-info{display:flex;flex-direction:column;overflow:hidden;flex:1}
+.sb-account-email{font-size:12px;font-weight:600;color:var(--sb-t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-account-status{font-size:10px;color:var(--sb-t3);font-weight:500;margin-top:1px}
+.sb-account-login .sb-account-email{color:#FFD54F}
+.sb-account-login .sb-account-status{color:var(--sb-t2)}

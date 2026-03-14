@@ -1,9 +1,13 @@
 import { useState, useRef } from "react";
 import { exportAllData, importAllData, clearAllData, getDataStats, setLastExportDate, getLastExportDate, getProxyUrl, setProxyUrl } from "../utils/storage";
+import { useAuth } from "../context/AuthContext";
+import { pushAllToCloud } from "../utils/cloudSync";
 
 export function SettingsPage() {
+  const { isAuthenticated, user, syncing, signOut, supabaseConfigured } = useAuth();
   const [msg, setMsg] = useState(null); // { type: "success"|"error", text }
   const [confirmClear, setConfirmClear] = useState(false);
+  const [forceSync, setForceSync] = useState(false);
   const [importPreview, setImportPreview] = useState(null); // parsed JSON awaiting confirmation
   const [proxyInput, setProxyInput] = useState(() => getProxyUrl());
   const [proxySaved, setProxySaved] = useState(false);
@@ -70,6 +74,39 @@ export function SettingsPage() {
       <div className="ph"><h1 className="ph-t">Settings</h1><p className="ph-s">Manage your data and preferences</p></div>
 
       {msg && <div className={`sett-msg sett-msg-${msg.type}`}>{msg.text}</div>}
+
+      {/* Account */}
+      <div className="sett-section">
+        <h2 className="sett-h">Account</h2>
+        {isAuthenticated ? (
+          <>
+            <p className="sett-desc">Signed in as <strong>{user?.email}</strong>. Your progress syncs automatically to the cloud.</p>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button className="btn btn-pri" disabled={forceSync || syncing} onClick={async () => {
+                setForceSync(true);
+                try {
+                  await pushAllToCloud(user.id);
+                  setMsg({ type: "success", text: "All data synced to cloud!" });
+                } catch { setMsg({ type: "error", text: "Sync failed. Try again." }); }
+                setForceSync(false);
+              }}>
+                {forceSync || syncing ? "Syncing..." : "Sync Now"}
+              </button>
+              <button className="btn btn-sec" onClick={async () => {
+                await signOut();
+                setMsg({ type: "success", text: "Signed out. Your local data is still here." });
+              }}>Sign Out</button>
+            </div>
+          </>
+        ) : (
+          <p className="sett-desc">
+            {supabaseConfigured
+              ? <>Sign in to back up your progress to the cloud and sync across devices. <a href="/account" style={{ color: "var(--act)", fontWeight: 600 }}>Sign in or create account</a></>
+              : "Cloud sync is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment variables to enable it."
+            }
+          </p>
+        )}
+      </div>
 
       {/* Export */}
       <div className="sett-section">

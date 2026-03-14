@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 import { FULL_PATH } from "../data/curriculumData";
 import { getTodayProgress, getStreak, getLevel } from "../utils/xp";
 import { getSRSStats } from "../utils/srs";
@@ -14,11 +15,12 @@ const ROUTE_MAP = {
   "/scenes": "scenes", "/stories": "stories", "/pronunciation": "pronunciation",
   "/listening": "listening", "/match": "match", "/imagevocab": "imagevocab",
   "/daily": "daily", "/mistakes": "mistakes", "/analytics": "analytics",
-  "/grammar": "grammar", "/numbers": "numbers", "/settings": "settings",
+  "/grammar": "grammar", "/numbers": "numbers", "/settings": "settings", "/account": "account",
 };
 
 export function Sidebar() {
   const { allVocab, studied } = useApp();
+  const { isAuthenticated, user, syncing } = useAuth();
   const studiedCount = allVocab ? allVocab.filter(v => studied.has(v.id)).length : 0;
   const location = useLocation();
   const navigate = useNavigate();
@@ -166,6 +168,26 @@ export function Sidebar() {
           </button>
         ) : null;
       })()}
+
+      <div className="sb-account">
+        {isAuthenticated ? (
+          <button className="sb-account-btn" onClick={() => go("/settings")}>
+            <span className="sb-account-avatar">👤</span>
+            <span className="sb-account-info">
+              <span className="sb-account-email">{user?.email}</span>
+              <span className="sb-account-status">{syncing ? "Syncing..." : "☁️ Synced"}</span>
+            </span>
+          </button>
+        ) : (
+          <button className="sb-account-btn sb-account-login" onClick={() => go("/account")}>
+            <span className="sb-account-avatar">☁️</span>
+            <span className="sb-account-info">
+              <span className="sb-account-email">Sign in</span>
+              <span className="sb-account-status">Sync across devices</span>
+            </span>
+          </button>
+        )}
+      </div>
     </div>
     </>
   );

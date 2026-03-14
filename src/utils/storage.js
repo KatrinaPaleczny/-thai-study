@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { pushCloudData } from "./cloudSync";
 
 export const K_FAV = "katthai_favs_v2";
 export const K_STU = "katthai_studied_v2";
@@ -13,6 +14,11 @@ export const K_STREAK = "katthai_streak_v1";
 export const K_CONFIDENCE = "katthai_confidence_v1";
 export const K_ROLEPLAY = "katthai_roleplay_v1";
 export const K_UNIT_TESTS = "katthai_unit_tests_v1";
+
+// Cloud sync: set by AuthContext when user logs in/out
+let _currentUserId = null;
+export function setCurrentUserId(id) { _currentUserId = id; }
+export function getCurrentUserId() { return _currentUserId; }
 
 // All data keys for export/import (hardcoded strings to avoid circular imports)
 const ALL_DATA_KEYS = [
@@ -92,7 +98,13 @@ export function setProxyUrl(url) {
 export function loadLS(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; } catch { return fallback; }
 }
-export function saveLS(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+export function saveLS(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+  // Also push to cloud if user is authenticated (fire-and-forget)
+  if (_currentUserId) {
+    pushCloudData(_currentUserId, key, val).catch(() => {});
+  }
+}
 
 export function useLocalSet(key) {
   const [s, setS] = useState(() => new Set(loadLS(key, [])));
