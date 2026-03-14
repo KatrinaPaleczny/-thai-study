@@ -96,7 +96,9 @@ export function Sidebar({ page, setPage, onOpenUnit, allVocab }) {
       {btn("roleplay","💬","Role-Play")}
       {btn("aichat","🤖","AI Chat")}
       {btn("writing","✍️","Writing")}
+      {btn("handwriting","🖌️","Handwriting")}
       {btn("scenes","🖼️","Scenes")}
+      {btn("stories","📚","Stories")}
       {btn("pronunciation","🎙️","Pronunciation")}
       <div className="sb-lbl">Review</div>
       {btn("daily","⭐","Daily Word")}
