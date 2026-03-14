@@ -95,7 +95,7 @@ export default function App() {
       return <DailySession allVocab={allVocab} studied={studied} toggleStudied={handleToggleStudied} confidence={confidence} updateConfidence={updateConfidence} onClose={() => setShowSession(false)} />;
     }
     switch(page) {
-      case "mypath": return <MyPathPage allVocab={allVocab} studied={studied} toggleStudied={handleToggleStudied} scriptStudied={scriptStudied} streakData={streakData} confidence={confidence} onOpenUnit={openUnit} onStartSession={() => setShowSession(true)}/>;
+      case "mypath": return <MyPathPage allVocab={allVocab} studied={studied} toggleStudied={handleToggleStudied} scriptStudied={scriptStudied} streakData={streakData} confidence={confidence} onOpenUnit={openUnit} onStartSession={() => setShowSession(true)} setPage={handleSetPage}/>;
       case "unit": {
         const unit = FULL_PATH.find(u => u.id === unitId);
         if (!unit) return <MyPathPage allVocab={allVocab} studied={studied} toggleStudied={handleToggleStudied} scriptStudied={scriptStudied} streakData={streakData} onOpenUnit={openUnit} onStartSession={() => setShowSession(true)}/>;
