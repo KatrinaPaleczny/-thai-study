@@ -29,7 +29,7 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
 
 /* ── Main Content ── */
 .main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
-.page{padding:36px 44px;max-width:1040px;overflow-x:hidden}
+.page{padding:36px 44px;max-width:1040px;width:100%;overflow-x:hidden}
 
 /* ── Page Header ── */
 .ph{margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid var(--bdr)}
@@ -138,14 +138,36 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
   .sb.sb-open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.3)}
   .sb-overlay{position:fixed;inset:0;top:52px;background:rgba(0,0,0,.4);z-index:999;display:none}
   body:has(.sb.sb-open) .sb-overlay{display:block}
-  .app{display:block}
+  .app{display:block;width:100%;overflow-x:hidden}
   .main{margin-top:52px;height:calc(100vh - 52px);width:100%;overflow-y:auto}
-  .page{padding:18px 14px}
+  .page{padding:14px 12px}
   .stats{grid-template-columns:repeat(2,1fr)}
   .dash2{grid-template-columns:1fr}
   .fc-thai{font-size:34px}
-  .fc{min-height:240px;padding:28px}
+  .fc{min-height:220px;padding:22px}
+  .fc-wrap{width:100%;max-width:100%}
   .path-grid{grid-template-columns:1fr}
+
+  /* Compact page header on mobile */
+  .ph{margin-bottom:14px;padding-bottom:10px}
+  .ph-t{font-size:22px}
+  .ph-s{font-size:12px}
+
+  /* Compact tabs */
+  .tabs{margin-bottom:12px;gap:0}
+  .tab{padding:8px 12px;font-size:12px}
+
+  /* Horizontal-scroll chips instead of wrapping */
+  .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:10px;gap:6px;padding-bottom:2px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{padding:5px 12px;font-size:11px;flex-shrink:0}
+
+  /* Compact search */
+  .srch{margin-bottom:10px}
+  .srch input{padding:9px 14px 9px 38px;font-size:13px}
+
+  /* Compact filter row */
+  .filter-row{margin-bottom:6px}
 }
 
 /* ── Week Tabs ── */
