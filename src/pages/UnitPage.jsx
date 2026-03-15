@@ -37,7 +37,7 @@ function Section({ icon, title, children, defaultOpen = false }) {
 }
 
 /* ── Vocab Lesson Content ── */
-function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confidence, updateConfidence }) {
+function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confidence, updateConfidence, scriptStudied }) {
   const words = useMemo(
     () => allVocab.filter(v => (lesson.vocabIds || []).includes(v.id)),
     [lesson.vocabIds, allVocab]
@@ -114,8 +114,8 @@ function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confiden
         </Section>
       )}
 
-      {/* Reading section */}
-      {UNIT_READINGS[lesson.id] && (
+      {/* Reading section — only after user has started Thai script lessons */}
+      {UNIT_READINGS[lesson.id] && scriptStudied && scriptStudied.size > 0 && (
         <Section icon="📖" title="Reading Practice">
           <div className="unit-reading-intro">Read the Thai text below. Tap any word to see its meaning.</div>
           {UNIT_READINGS[lesson.id].map(passage => (
@@ -253,6 +253,7 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
           toggleStudied={toggleStudied}
           confidence={confidence}
           updateConfidence={updateConfidence}
+          scriptStudied={scriptStudied}
         />
       )}
 
