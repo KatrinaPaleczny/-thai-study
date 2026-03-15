@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FULL_PATH, CEFR_STAGES } from "../data/curriculumData";
 import { FlashcardDeck } from "../components/FlashcardDeck";
-import { getTodayProgress, getStreak, getLevel } from "../utils/xp";
+import { getTodayProgress, getStreak, getLevel, awardXP } from "../utils/xp";
 import { getSRSStats, getDueWordsWithLimit } from "../utils/srs";
 import { getMistakeStats } from "../utils/mistakes";
 import { getAdaptiveSummary } from "../utils/adaptive";
@@ -12,6 +12,8 @@ import { CURRICULUM } from "../data/curriculumData";
 import { ConfettiBurst } from "../components/Celebrations";
 import { levelStyle } from "../appStyles";
 import { Mascot } from "../components/Mascot";
+import { hasAIAccess } from "../utils/ai";
+import { gatherStudyContext, generateAIPlan, getCachedPlan, cachePlan } from "../utils/studyPlan";
 
 /* ── Helper: compute progress for a unit ── */
 function getUnitProgress(unit, allVocab, studied, scriptStudied) {
@@ -43,6 +45,9 @@ export function MyPathPage() {
   const navigate = useNavigate();
   const [showReview, setShowReview] = useState(false);
   const [showCurriculum, setShowCurriculum] = useState(false);
+  const [aiPlan, setAiPlan] = useState(null);
+  const [aiPlanLoading, setAiPlanLoading] = useState(false);
+  const [aiPlanError, setAiPlanError] = useState(null);
   const testResults = useMemo(() => loadUnitTests(), []);
 
   const unitProgress = useMemo(() => {
@@ -77,6 +82,28 @@ export function MyPathPage() {
   const mistakeStats = getMistakeStats();
   const cats = useMemo(() => [...new Set(allVocab.map(v => v.category))].sort(), [allVocab]);
   const weakAreas = useMemo(() => getAdaptiveSummary(cats).filter(c => c.total > 0 && c.accuracy !== null && c.accuracy < 70).slice(0, 3), [cats]);
+
+  // Load cached AI plan on mount
+  useEffect(() => {
+    const cached = getCachedPlan();
+    if (cached) setAiPlan(cached);
+  }, []);
+
+  const handleGenerateAIPlan = async () => {
+    setAiPlanLoading(true);
+    setAiPlanError(null);
+    try {
+      const context = gatherStudyContext(allVocab, studied, continueUnit, unitProgress);
+      const plan = await generateAIPlan(context);
+      cachePlan(plan);
+      setAiPlan(plan);
+      awardXP("ai_explain");
+    } catch (err) {
+      setAiPlanError(err.message);
+    } finally {
+      setAiPlanLoading(false);
+    }
+  };
 
   // Daily checklist tasks
   const dueInfo = useMemo(() => getDueWordsWithLimit(allVocab), [allVocab]);
@@ -202,6 +229,58 @@ export function MyPathPage() {
           </div>
         )}
       </div>
+
+      {/* ── AI Study Coach ── */}
+      {hasAIAccess() && (
+        <div className="mp-ai-plan">
+          {aiPlan ? (
+            <>
+              <div className="mp-ai-plan-header">
+                <span className="mp-ai-plan-title">Your AI Study Coach</span>
+                <button
+                  className="btn btn-sec btn-sm"
+                  onClick={handleGenerateAIPlan}
+                  disabled={aiPlanLoading}
+                >
+                  {aiPlanLoading ? "Generating..." : "Refresh"}
+                </button>
+              </div>
+              <div className="mp-ai-plan-tasks">
+                {aiPlan.tasks.map((task, i) => (
+                  <div
+                    key={i}
+                    className="mp-ai-plan-task"
+                    onClick={() => task.page && navigate(`/${task.page}`)}
+                  >
+                    <div className="mp-ai-plan-task-top">
+                      <span className="mp-ai-plan-task-name">{task.activity}</span>
+                      <span className="mp-ai-plan-task-time">~{task.minutes} min</span>
+                    </div>
+                    <div className="mp-ai-plan-task-reason">{task.reason}</div>
+                  </div>
+                ))}
+              </div>
+              {aiPlan.focusTip && (
+                <div className="mp-ai-plan-tip">
+                  <span className="mp-ai-plan-tip-icon">💡</span>
+                  <span>{aiPlan.focusTip}</span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="mp-ai-plan-empty">
+              <button
+                className="btn btn-pri"
+                onClick={handleGenerateAIPlan}
+                disabled={aiPlanLoading}
+              >
+                {aiPlanLoading ? "Generating your plan..." : "Generate AI Study Plan"}
+              </button>
+              {aiPlanError && <div className="ai-explain-error" style={{ marginTop: 8 }}>{aiPlanError}</div>}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Jump In ── */}
       <div className="mp-section">
