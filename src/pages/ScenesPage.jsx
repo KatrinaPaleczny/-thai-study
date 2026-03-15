@@ -2,27 +2,40 @@ import { useState } from "react";
 import { SCENES_DATA } from "../data/scenesData";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
+import { levelStyle } from "../appStyles";
 
 export function ScenesPage() {
   const [sceneIdx, setSceneIdx] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   const [learnedItems, setLearnedItems] = useState(new Set());
   const [showPhrases, setShowPhrases] = useState(false);
+  const [levelFilter, setLevelFilter] = useState("All");
 
   if (sceneIdx === null) {
+    const filtered = SCENES_DATA.map((scene, i) => ({ scene, i })).filter(({ scene }) => levelFilter === "All" || scene.level === levelFilter);
     return (
       <div className="page">
         <div className="ph">
           <div className="ph-t">Contextual Scenes</div>
           <div className="ph-s">Tap objects in real-world scenes to learn vocabulary in context</div>
         </div>
+        <div className="wk-tabs">
+          {["All", "A1", "A2", "B1", "B2"].map(w => (
+            <button key={w} className={`wk-tab${levelFilter === w ? " on" : ""}`} onClick={() => setLevelFilter(w)}>
+              {w}
+            </button>
+          ))}
+        </div>
         <div className="sc-grid">
-          {SCENES_DATA.map((scene, i) => (
+          {filtered.map(({ scene, i }) => (
             <button key={scene.id} className="sc-scene-card" onClick={() => { setSceneIdx(i); setLearnedItems(new Set()); setActiveItem(null); setShowPhrases(false); }}>
               <div className="sc-scene-emoji">{scene.emoji}</div>
               <div className="sc-scene-title">{scene.title}</div>
               <div className="sc-scene-desc">{scene.description}</div>
-              <div className="sc-scene-count">{scene.items.length} words · {scene.phrases.length} phrases</div>
+              <div className="sc-scene-meta">
+                {scene.level && <span className="sc-scene-level" style={levelStyle(scene.level)}>{scene.level}</span>}
+                <span>{scene.items.length} words · {scene.phrases.length} phrases</span>
+              </div>
             </button>
           ))}
         </div>

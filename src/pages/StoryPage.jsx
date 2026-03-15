@@ -2,6 +2,7 @@ import { useState } from "react";
 import { STORIES } from "../data/storiesData";
 import { speakThai, speakThaiSlow } from "../utils/speech";
 import { awardXP } from "../utils/xp";
+import { levelStyle } from "../appStyles";
 
 export function StoryPage() {
   const [storyIdx, setStoryIdx] = useState(null);
@@ -14,19 +15,30 @@ export function StoryPage() {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [quizScore, setQuizScore] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
+  const [levelFilter, setLevelFilter] = useState("All");
 
   // ─── Story picker ───
   if (storyIdx === null) {
+    const filtered = STORIES.filter(s => levelFilter === "All" || s.level === levelFilter);
     return (
       <div className="page">
         <div className="ph">
           <div className="ph-t">Story Mode</div>
           <div className="ph-s">Read Thai stories with tap-to-translate words and comprehension quizzes</div>
         </div>
+        <div className="wk-tabs">
+          {["All", "A1", "A2", "B1", "B2"].map(w => (
+            <button key={w} className={`wk-tab${levelFilter === w ? " on" : ""}`} onClick={() => setLevelFilter(w)}>
+              {w}
+            </button>
+          ))}
+        </div>
         <div className="st-grid">
-          {STORIES.map((story, i) => (
+          {filtered.map((story, i) => {
+            const originalIdx = STORIES.indexOf(story);
+            return (
             <button key={story.id} className="st-story-card" onClick={() => {
-              setStoryIdx(i); setSentenceIdx(0); setPhase("reading");
+              setStoryIdx(originalIdx); setSentenceIdx(0); setPhase("reading");
               setQuizIdx(0); setSelectedAnswer(null); setQuizScore(0); setQuizDone(false);
               setExpandedWord(null); setShowPhonetic(false); setShowEnglish(false);
             }}>
@@ -35,11 +47,12 @@ export function StoryPage() {
               <div className="st-story-title-en">{story.titleEn}</div>
               <div className="st-story-desc">{story.description}</div>
               <div className="st-story-meta">
-                <span className={`st-level ${story.level}`}>{story.level}</span>
+                <span className="st-level" style={levelStyle(story.level)}>{story.level}</span>
                 <span>{story.sentences.length} sentences</span>
               </div>
             </button>
-          ))}
+            );
+          })}
         </div>
       </div>
     );

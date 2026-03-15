@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { HeartIcon, CheckIcon, SearchIcon, PlusIcon, XIcon, PinIcon, SpeakerIcon } from "../components/Icons";
 import { saveLS, K_CUSTOM } from "../utils/storage";
 import { useApp } from "../context/AppContext";
+import { LEVEL_COLORS, levelStyle } from "../appStyles";
 
 function AddWordModal({ cats, onSave, onClose }) {
   const [form, setForm] = useState({
@@ -45,8 +46,6 @@ function AddWordModal({ cats, onSave, onClose }) {
   );
 }
 
-const LEVEL_COLORS = { A1: {color:"#1a7f37",background:"#dafbe1",borderColor:"#1a7f37"}, A2: {color:"#0969da",background:"#ddf4ff",borderColor:"#0969da"}, B1: {color:"#9a6700",background:"#fff8c5",borderColor:"#9a6700"}, B2: {color:"#bc4c00",background:"#fff1e5",borderColor:"#bc4c00"} };
-const levelStyle = l => LEVEL_COLORS[l] || {};
 
 function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, togglePin, onDelete, expanded, toggle }) {
   const [speaking, setSpeaking] = useState(false);

@@ -6,7 +6,7 @@ export const STORIES = [
     id: "cafe-morning",
     title: "เช้าที่ร้านกาแฟ",
     titleEn: "Morning at the Café",
-    level: "beginner",
+    level: "A1",
     emoji: "☕",
     description: "Order your morning coffee in Thai",
     sentences: [
@@ -83,7 +83,7 @@ export const STORIES = [
     id: "market-trip",
     title: "ไปตลาด",
     titleEn: "Going to the Market",
-    level: "beginner",
+    level: "A1",
     emoji: "🛒",
     description: "A trip to the local market",
     sentences: [
@@ -158,7 +158,7 @@ export const STORIES = [
     id: "taxi-ride",
     title: "นั่งแท็กซี่",
     titleEn: "Taking a Taxi",
-    level: "beginner",
+    level: "A2",
     emoji: "🚕",
     description: "Navigate a taxi ride in Bangkok",
     sentences: [
@@ -232,7 +232,7 @@ export const STORIES = [
     id: "new-friend",
     title: "เพื่อนใหม่",
     titleEn: "A New Friend",
-    level: "intermediate",
+    level: "A2",
     emoji: "🤝",
     description: "Meet someone new and make plans",
     sentences: [
@@ -308,7 +308,7 @@ export const STORIES = [
     id: "sick-day",
     title: "ไม่สบาย",
     titleEn: "Feeling Sick",
-    level: "intermediate",
+    level: "B1",
     emoji: "🤒",
     description: "Visit the doctor when you're not feeling well",
     sentences: [
@@ -381,7 +381,7 @@ export const STORIES = [
     id: "weekend-temple",
     title: "วันหยุดที่วัด",
     titleEn: "Weekend at the Temple",
-    level: "intermediate",
+    level: "B1",
     emoji: "🛕",
     description: "Visit a Buddhist temple and learn about Thai culture",
     sentences: [

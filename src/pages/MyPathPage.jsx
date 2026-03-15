@@ -10,6 +10,7 @@ import { useApp } from "../context/AppContext";
 import { isUnitUnlocked, loadUnitTests } from "../utils/unitTests";
 import { CURRICULUM } from "../data/curriculumData";
 import { ConfettiBurst } from "../components/Celebrations";
+import { levelStyle } from "../appStyles";
 import { Mascot } from "../components/Mascot";
 
 /* ── Helper: compute progress for a unit ── */
@@ -301,6 +302,7 @@ export function MyPathPage() {
                   </div>
                   <div className="path-uc-title">
                     {isScript ? unit.title : `Unit ${vocabUnitNum}: ${unit.title}`}
+                    {unit.level && <span className="path-uc-level" style={levelStyle(unit.level)}>{unit.level}</span>}
                   </div>
                   <div className="path-uc-desc">
                     {locked

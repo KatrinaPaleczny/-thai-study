@@ -6,6 +6,7 @@
 .rp-card.completed{border-color:var(--success);background:rgba(88,204,2,.04)}
 .rp-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .rp-card-title{font-family:var(--disp);font-size:15px;font-weight:700;color:var(--t1)}
+.rp-card-level{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:700;border:1.5px solid;white-space:nowrap}
 .rp-card-badge{font-size:12px;color:var(--success);font-weight:700;white-space:nowrap}
 .rp-card-goal{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:8px;font-weight:500}
 .rp-card-meta{display:flex;gap:14px;font-size:11px;color:var(--t3);font-weight:600}

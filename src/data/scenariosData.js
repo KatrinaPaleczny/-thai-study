@@ -2,6 +2,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 1: Meeting Someone New 👋",
     "goal": "You are meeting someone for the first time. Greet them, ask their name, and tell them where you are from.",
+    "level": "A1",
     "turns": [
       {"role":"Teacher","prompt_en":"Greets you.","thai_hint":"sà-wàt-dii kráp/khá","thai":"สวัสดีครับ"},
       {"role":"You","prompt_en":"Greet them back.","thai_hint":"sà-wàt-dii ค่ะ","thai":"สวัสดีค่ะ"},
@@ -16,6 +17,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 2: Asking for Directions 🗺️",
     "goal": "You are a tourist in Bangkok. Politely ask a local how to get to the train station.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Get their attention and ask where the train station is.","thai_hint":"khǎw-tôht ค่ะ... sà-tăa-nii rót-fai yùu thîi-nǎi คะ","thai":"ขอโทษค่ะ สถานีรถไฟอยู่ที่ไหนคะ"},
       {"role":"Teacher","prompt_en":"Says the train station is nearby.","thai_hint":"sà-tăa-nii rót-fai yùu glâi-glâi kráp","thai":"สถานีรถไฟอยู่ใกล้ใกล้ครับ"},
@@ -26,6 +28,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 3: At a Food Stall 🍤",
     "goal": "Ask the vendor what they have, if it's fresh, and practice asking for clarification.",
+    "level": "A1",
     "turns": [
       {"role":"You","prompt_en":"Ask: 'Do you have shrimp?'","thai_hint":"mii gûng mái คะ","thai":"มีกุ้งไหมคะ"},
       {"role":"Teacher","prompt_en":"Says yes.","thai_hint":"mii kráp","thai":"มีครับ"},
@@ -39,6 +42,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 4: At a Friend's House 🥢",
     "goal": "Your friend is offering you food. Accept, decline, and answer questions about what you can eat.",
+    "level": "A1",
     "turns": [
       {"role":"Teacher","prompt_en":"Offers spring rolls: 'Do you want to eat spring rolls?'","thai_hint":"gin bpɔɔ bpía mái kráp","thai":"กินปอเปี๊ยะไหมครับ"},
       {"role":"You","prompt_en":"Say yes: 'Eat.'","thai_hint":"gin ค่ะ","thai":"กินค่ะ"},
@@ -51,6 +55,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 5: Family & Hobbies 👨‍👩‍👧‍👦",
     "goal": "Your teacher asks about your parents and free time. Use: ของ, บางครั้ง, ดู, ฟัง.",
+    "level": "A2",
     "turns": [
       {"role":"Teacher","prompt_en":"Asks: 'Do your parents travel?'","thai_hint":"phâaw-mâae kɔ̌ɔng khun tîao mái kráp","thai":"พ่อแม่ของคุณเที่ยวไหมครับ"},
       {"role":"You","prompt_en":"Answer: 'Sometimes.'","thai_hint":"baang kráng ค่ะ","thai":"บางครั้งค่ะ"},
@@ -63,6 +68,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 6: Checking on a Sick Friend 🤒",
     "goal": "Your friend is sick. Call them, find out how they are, and where the hospital is.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Start: 'Hello. I heard you're sick, right?'","thai_hint":"sà-wàt-dii ค่ะ. khun mâi sà baai châi mái คะ","thai":"สวัสดีค่ะ คุณไม่สบายใช่ไหมคะ"},
       {"role":"Teacher","prompt_en":"Confirms and says they couldn't sleep.","thai_hint":"châi kráp. nɔɔn mâi làp","thai":"ใช่ครับ นอนไม่หลับ"},
@@ -76,6 +82,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 7: Birthday Call 🎂",
     "goal": "It's your friend's birthday. Call them and ask if they can see you at the restaurant.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Wish them happy birthday.","thai_hint":"sà-wàt-dii ค่ะ. sùk sǎn wan gə̀ət ค่ะ!","thai":"สวัสดีค่ะ สุขสันต์วันเกิดค่ะ"},
       {"role":"Teacher","prompt_en":"Thanks you and asks what you're doing.","thai_hint":"khàwp-khun kráp. khun tham à-rai yùu","thai":"ขอบคุณครับ คุณทำอะไรอยู่"},
@@ -86,6 +93,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 8: Ordering at a Café ☕",
     "goal": "Order a Thai iced tea, specify your sweetness preference, and pay.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Greet and ask if you can order.","thai_hint":"sà-wàt-dii ค่ะ. khǎaw sàng nòi dâi mái คะ","thai":"สวัสดีค่ะ ขอสั่งหน่อยได้ไหมคะ"},
       {"role":"Teacher","prompt_en":"Says sure, what would you like?","thai_hint":"dâi kráp. ao à-rai kráp","thai":"ได้ครับ เอาอะไรครับ"},
@@ -99,6 +107,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 9: Taking a Taxi 🚕",
     "goal": "Tell the driver where you're going, ask how long it will take, and mention you're in a hurry.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Tell the driver you're going to Siam.","thai_hint":"pai sǐam ค่ะ","thai":"ไปสยามค่ะ"},
       {"role":"Teacher","prompt_en":"Asks if you're in a hurry.","thai_hint":"khun ròn mái kráp","thai":"คุณร้อนไหมครับ"},
@@ -110,6 +119,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 10: Shopping at the Market 🛍️",
     "goal": "Ask the price of a shirt and practise bargaining down from 350 baht.",
+    "level": "A2",
     "turns": [
       {"role":"You","prompt_en":"Ask how much this shirt costs.","thai_hint":"sûea tua née thâo-rài คะ","thai":"เสื้อตัวนี้เท่าไหร่คะ"},
       {"role":"Teacher","prompt_en":"Says 350 baht.","thai_hint":"sǎam-rɔ̂i hâa-sìp bàat kráp","thai":"สามร้อยห้าสิบบาทครับ"},
@@ -123,6 +133,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 11: Making Weekend Plans 📅",
     "goal": "Find out what your teacher is doing this weekend and make plans to meet at Chatuchak market.",
+    "level": "B1",
     "turns": [
       {"role":"Teacher","prompt_en":"Asks what you're doing this weekend.","thai_hint":"sùt-sàp-daa née khun ja tham à-rai kráp","thai":"สุดสัปดาห์นี้คุณจะทำอะไรครับ"},
       {"role":"You","prompt_en":"Say you have no plans, then ask what about them.","thai_hint":"mâi mii plaan ค่ะ. láew khun là คะ","thai":"ไม่มีแพลนค่ะ แล้วคุณล่ะคะ"},
@@ -135,6 +146,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 12: Talking About Your Day 🌞",
     "goal": "Tell your teacher what you did today — work, lunch with a friend, and what you ate.",
+    "level": "B1",
     "turns": [
       {"role":"Teacher","prompt_en":"Asks how today was.","thai_hint":"wan née bpen yang-ngai bâang kráp","thai":"วันนี้เป็นยังไงบ้างครับ"},
       {"role":"You","prompt_en":"Say it was tiring.","thai_hint":"nùeai ค่ะ","thai":"เหนื่อยค่ะ"},
@@ -149,6 +161,7 @@ export const SCENARIOS_DATA = [
   {
     "title": "Scenario 13: Not Feeling Well 💊",
     "goal": "Tell your teacher you have a headache, say when it started, and receive medicine instructions.",
+    "level": "B1",
     "turns": [
       {"role":"You","prompt_en":"Say you're not feeling well.","thai_hint":"mâi sà-baai ค่ะ","thai":"ไม่สบายค่ะ"},
       {"role":"Teacher","prompt_en":"Asks what's wrong.","thai_hint":"bpen à-rai kráp","thai":"เป็นอะไรครับ"},

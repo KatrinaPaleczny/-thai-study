@@ -3,6 +3,7 @@ import { GRAMMAR_DATA } from "../data/grammarData";
 import { ChevD } from "../components/Icons";
 import { BuildTab } from "../components/BuildTab";
 import { speakThai } from "../utils/speech";
+import { levelStyle } from "../appStyles";
 
 // ── Grammar Card ──────────────────────────────────────────────────────────────
 function GrammarCard({ g }) {
@@ -22,7 +23,7 @@ function GrammarCard({ g }) {
       <div className="gram-hdr" onClick={toggle}>
         <span className="gram-ic">{g.icon}</span>
         <span className="gram-tt">{g.title}</span>
-        <span className="gram-lv">{g.level}</span>
+        <span className="gram-lv" style={levelStyle(g.level)}>{g.level}</span>
         <div style={{ transform: open ? "rotate(90deg)" : "none", transition: "transform .2s", display: "flex" }}>
           <ChevD/>
         </div>
@@ -113,7 +114,7 @@ export function GrammarPage() {
         <div className="ph-s">{GRAMMAR_DATA.length} patterns · Understand, practice, and build</div>
       </div>
       <div className="wk-tabs">
-        {["All", "Beginner", "Intermediate"].map(w => (
+        {["All", "A1", "A2", "B1", "B2"].map(w => (
           <button key={w} className={`wk-tab${wk === w ? " on" : ""}`} onClick={() => setWk(w)}>
             {w}
           </button>

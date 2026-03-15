@@ -1,3 +1,12 @@
+// Shared CEFR level colors used across all pages
+export const LEVEL_COLORS = {
+  A1: { color: "#1a7f37", background: "#dafbe1", borderColor: "#1a7f37" },
+  A2: { color: "#0969da", background: "#ddf4ff", borderColor: "#0969da" },
+  B1: { color: "#9a6700", background: "#fff8c5", borderColor: "#9a6700" },
+  B2: { color: "#bc4c00", background: "#fff1e5", borderColor: "#bc4c00" },
+};
+export const levelStyle = (l) => LEVEL_COLORS[l] || {};
+
 export const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -165,7 +174,7 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
 .gram-hdr:hover{background:var(--sur2)}
 .gram-ic{font-size:17px;width:26px;text-align:center;flex-shrink:0}
 .gram-tt{font-family:var(--disp);font-size:14.5px;font-weight:500;flex:1}
-.gram-lv{font-size:9.5px;color:var(--concrete);background:var(--concrete-soft);border:1px solid var(--bdr);padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:500}
+.gram-lv{font-size:9.5px;padding:3px 9px;border-radius:20px;white-space:nowrap;font-weight:600;border:1px solid}
 .gram-body{padding:0 16px 16px;border-top:1px solid var(--bdr)}
 .gram-sum{font-size:13px;color:var(--t2);margin:13px 0;line-height:1.6}
 .gram-exs{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}
@@ -1206,9 +1215,11 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
 .st-story-title-en{font-family:var(--disp);font-size:14px;color:var(--t2);margin-bottom:8px}
 .st-story-desc{font-size:12px;color:var(--t3);margin-bottom:10px}
 .st-story-meta{display:flex;gap:10px;justify-content:center;align-items:center;font-size:11px;color:var(--t3)}
-.st-level{padding:2px 8px;border-radius:10px;font-weight:600;text-transform:capitalize;font-size:10px}
-.st-level.beginner{background:var(--olive-soft);color:var(--olive-dark)}
-.st-level.intermediate{background:var(--walnut-soft);color:#7a4a2a}
+.st-level{padding:2px 8px;border-radius:10px;font-weight:600;font-size:10px;border:1px solid}
+.rp-card-level{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:600;border:1px solid;margin-left:8px;white-space:nowrap}
+.sc-scene-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t3);margin-top:6px}
+.sc-scene-level{font-size:9.5px;padding:2px 8px;border-radius:10px;font-weight:600;border:1px solid;white-space:nowrap}
+.path-uc-level{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;border:1px solid;margin-left:6px;white-space:nowrap;vertical-align:middle}
 .st-reader{max-width:560px;margin:0 auto}
 .st-sentence-card{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--radius-lg);padding:28px;margin:16px 0;box-shadow:var(--shadow-sm)}
 .st-thai-line{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;line-height:2}

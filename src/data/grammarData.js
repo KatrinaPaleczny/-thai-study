@@ -1,6 +1,6 @@
 export const GRAMMAR_DATA = [
   {
-    id:"g1",title:"Sentence Structure: Subject + Verb + Object",icon:"📐",level:"Beginner",
+    id:"g1",title:"Sentence Structure: Subject + Verb + Object",icon:"📐",level:"A1",
     formula:"Subject + Verb + Object",
     summary:"Thai word order mirrors English: Subject → Verb → Object. There are no verb conjugations for tense, person, or number.",
     examples:[
@@ -44,7 +44,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g2",title:"Yes/No Questions with ไหม (mái)",icon:"❓",level:"Beginner",
+    id:"g2",title:"Yes/No Questions with ไหม (mái)",icon:"❓",level:"A1",
     formula:"[statement] + ไหม",
     summary:"Add ไหม to the end of any statement to turn it into a yes/no question — like a rising intonation in English.",
     examples:[
@@ -94,7 +94,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g3",title:"Confirmation with ใช่ไหม (châi mái)",icon:"✔️",level:"Beginner",
+    id:"g3",title:"Confirmation with ใช่ไหม (châi mái)",icon:"✔️",level:"A1",
     formula:"[statement] + ใช่ไหม",
     summary:"Like the Canadian 'eh?' — add ใช่ไหม to seek confirmation. Means 'right?' or 'isn't it?'",
     examples:[
@@ -138,7 +138,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g4",title:"Ability: verb + ได้ไหม / ได้ / ไม่ได้",icon:"💪",level:"Beginner",
+    id:"g4",title:"Ability: verb + ได้ไหม / ได้ / ไม่ได้",icon:"💪",level:"A2",
     formula:"Verb + ได้ไหม → answer: ได้ or ไม่ได้",
     summary:"Use verb + ได้ไหม to ask 'can you...?'. Answer with ได้ (can) or ไม่ได้ (cannot).",
     examples:[
@@ -176,7 +176,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g5",title:"Negation with ไม่ (mâi)",icon:"🚫",level:"Beginner",
+    id:"g5",title:"Negation with ไม่ (mâi)",icon:"🚫",level:"A1",
     formula:"ไม่ + verb / adjective",
     summary:"Place ไม่ directly before any verb or adjective to negate it.",
     examples:[
@@ -220,7 +220,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g6",title:"Question Words: อะไร ที่ไหน ยังไง ใคร",icon:"🔍",level:"Beginner",
+    id:"g6",title:"Question Words: อะไร ที่ไหน ยังไง ใคร",icon:"🔍",level:"A2",
     formula:"[sentence] + à-rai / thîi-nǎi / yang-ngai / khrai",
     summary:"Thai question words go at the END of the sentence — the opposite of English.",
     examples:[
@@ -264,7 +264,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g7",title:"Polite Particles: ครับ / คะ / ค่ะ",icon:"🙏",level:"Beginner",
+    id:"g7",title:"Polite Particles: ครับ / คะ / ค่ะ",icon:"🙏",level:"A1",
     formula:"[sentence] + khâ (female statement) / khá (female question) / kráp (male)",
     summary:"Add these at the end of any sentence to sound polite. As Kat, you'll use khá (questions) and khâ (statements).",
     examples:[
@@ -308,7 +308,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g8",title:"Already done: แล้ว (láew)",icon:"✅",level:"Intermediate",
+    id:"g8",title:"Already done: แล้ว (láew)",icon:"✅",level:"B1",
     formula:"Verb + แล้ว",
     summary:"Add แล้ว after a verb to indicate something has already happened or just occurred.",
     examples:[
@@ -346,7 +346,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g9",title:"Possessives with ของ (kɔ̌ɔng)",icon:"🔗",level:"Intermediate",
+    id:"g9",title:"Possessives with ของ (kɔ̌ɔng)",icon:"🔗",level:"B1",
     formula:"[thing] + kɔ̌ɔng + [owner]",
     summary:"ของ = 'of'. Use it to show possession: [thing] + ของ + [owner].",
     examples:[
@@ -384,7 +384,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g10",title:"Verb + มา — action toward speaker",icon:"➡️",level:"Intermediate",
+    id:"g10",title:"Verb + มา — action toward speaker",icon:"➡️",level:"B1",
     formula:"Verb + maa",
     summary:"Adding มา after a verb signals motion toward the current location — or doing something before arriving.",
     examples:[
@@ -428,7 +428,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g11",title:"Future: จะ (jà)",icon:"🔮",level:"Beginner",
+    id:"g11",title:"Future: จะ (jà)",icon:"🔮",level:"A2",
     formula:"จะ + Verb",
     summary:"Place จะ before any verb to indicate future action or intention — 'will' or 'going to'.",
     examples:[
@@ -472,7 +472,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g12",title:"Happening Now: กำลัง (gam-lang)",icon:"⏳",level:"Beginner",
+    id:"g12",title:"Happening Now: กำลัง (gam-lang)",icon:"⏳",level:"A2",
     formula:"กำลัง + Verb + (อยู่)",
     summary:"กำลัง before a verb means the action is happening right now — like '-ing' in English. Often paired with อยู่.",
     examples:[
@@ -510,7 +510,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g13",title:"Want To: อยาก (yàak)",icon:"💭",level:"Beginner",
+    id:"g13",title:"Want To: อยาก (yàak)",icon:"💭",level:"A2",
     formula:"อยาก + Verb",
     summary:"Place อยาก before a verb to say 'want to'. อยากได้ + noun means 'want (a thing)'.",
     examples:[
@@ -554,7 +554,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g14",title:"Experience: เคย (kəəi)",icon:"📅",level:"Intermediate",
+    id:"g14",title:"Experience: เคย (kəəi)",icon:"📅",level:"B1",
     formula:"เคย + Verb",
     summary:"เคย before a verb means 'have ever' or 'used to'. ไม่เคย = never.",
     examples:[
@@ -592,7 +592,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g15",title:"Conditional: ถ้า (tâa)",icon:"🔀",level:"Intermediate",
+    id:"g15",title:"Conditional: ถ้า (tâa)",icon:"🔀",level:"B1",
     formula:"ถ้า + [condition], ก็ + [result]",
     summary:"ถ้า = 'if'. Often paired with ก็ (gôr) meaning 'then'. Simple conditional — no verb changes needed.",
     examples:[
@@ -636,7 +636,7 @@ export const GRAMMAR_DATA = [
     ],
   },
   {
-    id:"g16",title:"Reason: เพราะ (prɔ́)",icon:"💡",level:"Intermediate",
+    id:"g16",title:"Reason: เพราะ (prɔ́)",icon:"💡",level:"B1",
     formula:"[result] + เพราะ + [reason]",
     summary:"เพราะ = 'because'. Can go before or after the main clause, just like English.",
     examples:[

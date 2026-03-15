@@ -6,7 +6,7 @@
 .gram-hdr:hover{background:var(--sur2)}
 .gram-ic{font-size:18px;width:26px;text-align:center;flex-shrink:0}
 .gram-tt{font-family:var(--disp);font-size:15px;font-weight:700;flex:1}
-.gram-lv{font-size:10px;color:var(--concrete);background:var(--concrete-soft);border:2px solid var(--bdr);padding:3px 10px;border-radius:20px;white-space:nowrap;font-weight:700}
+.gram-lv{font-size:10px;padding:3px 10px;border-radius:20px;white-space:nowrap;font-weight:700;border:1.5px solid}
 .gram-body{padding:0 16px 16px;border-top:2px solid var(--bdr)}
 .gram-sum{font-size:14px;color:var(--t2);margin:13px 0;line-height:1.6;font-weight:500}
 .gram-exs{display:flex;flex-direction:column;gap:8px;margin-bottom:13px}

@@ -2,7 +2,7 @@ import { SCRIPT_LESSONS } from "./scriptData";
 
 export const CURRICULUM = [
   {
-    id: "u1", title: "Sound & Survival", icon: "🆘",
+    id: "u1", title: "Sound & Survival", icon: "🆘", level: "A1",
     description: "The essentials you need from day 1",
     lessons: [
       {
@@ -26,7 +26,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u2", title: "Building Blocks", icon: "🧱",
+    id: "u2", title: "Building Blocks", icon: "🧱", level: "A1",
     description: "Core grammar patterns that unlock hundreds of sentences",
     lessons: [
       {
@@ -50,7 +50,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u3", title: "Numbers & Time", icon: "🔢",
+    id: "u3", title: "Numbers & Time", icon: "🔢", level: "A2",
     description: "Count, tell time, and handle money",
     lessons: [
       {
@@ -72,7 +72,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u4", title: "Food & Daily Life", icon: "🍜",
+    id: "u4", title: "Food & Daily Life", icon: "🍜", level: "A2",
     description: "Eat, order, and talk about your day",
     lessons: [
       {
@@ -96,7 +96,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u5", title: "People & Feelings", icon: "💕",
+    id: "u5", title: "People & Feelings", icon: "💕", level: "A2",
     description: "Talk about family, friends, and emotions",
     lessons: [
       {
@@ -120,7 +120,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u6", title: "Out & About", icon: "🗺️",
+    id: "u6", title: "Out & About", icon: "🗺️", level: "B1",
     description: "Navigate, describe, and explore",
     lessons: [
       {
@@ -143,7 +143,7 @@ export const CURRICULUM = [
     ]
   },
   {
-    id: "u7", title: "Social Thai", icon: "🗣️",
+    id: "u7", title: "Social Thai", icon: "🗣️", level: "B1",
     description: "Relationship talk, slang, and real-life Thai",
     lessons: [
       {

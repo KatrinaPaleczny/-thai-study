@@ -4,6 +4,7 @@ export const SCENES_DATA = [
     title: "At the Restaurant",
     emoji: "🍽️",
     description: "Learn food and dining vocabulary in context",
+    level: "A1",
     bgColor: "#f9f3e8",
     items: [
       { x: 15, y: 20, emoji: "🍽️", thai: "จาน", phonetics: "jaan", english: "plate", vocabId: 101 },
@@ -28,6 +29,7 @@ export const SCENES_DATA = [
     title: "At the Market",
     emoji: "🏪",
     description: "Shopping and bargaining vocabulary",
+    level: "A2",
     bgColor: "#f0f5e8",
     items: [
       { x: 12, y: 18, emoji: "🍎", thai: "แอปเปิ้ล", phonetics: "ɛ́ɛp-bpêrn", english: "apple" },
@@ -52,6 +54,7 @@ export const SCENES_DATA = [
     title: "In a Taxi",
     emoji: "🚕",
     description: "Transportation and directions vocabulary",
+    level: "A2",
     bgColor: "#e8f0f9",
     items: [
       { x: 20, y: 20, emoji: "🚕", thai: "แท็กซี่", phonetics: "thɛ́k-sîi", english: "taxi" },
@@ -75,6 +78,7 @@ export const SCENES_DATA = [
     title: "At the Hotel",
     emoji: "🏨",
     description: "Accommodation and check-in vocabulary",
+    level: "A2",
     bgColor: "#f5eff8",
     items: [
       { x: 18, y: 18, emoji: "🛏️", thai: "เตียง", phonetics: "dtiang", english: "bed" },
@@ -98,6 +102,7 @@ export const SCENES_DATA = [
     title: "At the Doctor",
     emoji: "🏥",
     description: "Health and body vocabulary",
+    level: "B1",
     bgColor: "#eef5f5",
     items: [
       { x: 20, y: 18, emoji: "🩺", thai: "หมอ", phonetics: "mǎw", english: "doctor" },
