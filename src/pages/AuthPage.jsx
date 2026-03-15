@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export function AuthPage() {
   const { signIn, signUp, resetPassword, updatePassword, error: authError, isAuthenticated, supabaseConfigured, recoveryMode, setRecoveryMode } = useAuth();
-  const navigate = useNavigate();
+
   const [mode, setMode] = useState("signin"); // "signin" | "signup" | "reset"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,9 +14,9 @@ export function AuthPage() {
   // If Supabase fired PASSWORD_RECOVERY, show "set new password" form
   const isRecovery = recoveryMode;
 
-  // If already logged in (and not in recovery flow), redirect to settings
+  // If already logged in (and not in recovery flow), redirect home
   if (isAuthenticated && !isRecovery) {
-    return <Navigate to="/settings" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!supabaseConfigured) {
@@ -41,9 +41,10 @@ export function AuthPage() {
     try {
       if (isRecovery) {
         await updatePassword(password);
+        setMsg({ type: "success", text: "Password updated! Redirecting..." });
+        // Brief delay so user sees success message, then clear recovery → <Navigate> kicks in
+        await new Promise(r => setTimeout(r, 1000));
         setRecoveryMode(false);
-        setMsg({ type: "success", text: "Password updated! You're now signed in." });
-        setTimeout(() => navigate("/", { replace: true }), 1500);
       } else if (mode === "reset") {
         await resetPassword(email);
         setMsg({ type: "success", text: "Password reset email sent! Check your inbox." });
@@ -53,7 +54,7 @@ export function AuthPage() {
         setMode("signin");
       } else {
         await signIn(email, password);
-        navigate("/", { replace: true });
+        // isAuthenticated becomes true → <Navigate to="/"> handles redirect
       }
     } catch (err) {
       // Show detailed error for debugging

@@ -19,7 +19,18 @@ export const K_MISTAKES = "katthai_mistakes_v1";
  */
 
 export function loadMistakes() {
-  return loadLS(K_MISTAKES, []);
+  const raw = loadLS(K_MISTAKES, []);
+  // Defensive: cloud sync may have corrupted array to object — always return array
+  if (!Array.isArray(raw)) {
+    // Attempt to recover values from corrupted object
+    if (raw && typeof raw === "object") {
+      const recovered = Object.values(raw).filter(v => v && typeof v === "object" && v.prompt);
+      saveLS(K_MISTAKES, recovered);
+      return recovered;
+    }
+    return [];
+  }
+  return raw;
 }
 
 export function saveMistakes(data) {

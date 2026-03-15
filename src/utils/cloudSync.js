@@ -97,18 +97,23 @@ function mergeValue(key, local, cloud) {
     return local;
   }
 
-  // Mistakes: merge by word id, keep higher count
+  // Mistakes: merge arrays by prompt+correctAnswer, keep higher count
   if (key === "katthai_mistakes_v1") {
-    if (typeof local === "object" && typeof cloud === "object") {
-      const merged = { ...cloud };
-      for (const [k, v] of Object.entries(local)) {
-        if (!merged[k] || (v.count || 0) > (merged[k].count || 0)) {
-          merged[k] = v;
-        }
-      }
-      return merged;
+    const localArr = Array.isArray(local) ? local : [];
+    const cloudArr = Array.isArray(cloud) ? cloud : [];
+    const map = new Map();
+    for (const m of cloudArr) {
+      const k = `${m.prompt}||${m.correctAnswer}`;
+      map.set(k, m);
     }
-    return local;
+    for (const m of localArr) {
+      const k = `${m.prompt}||${m.correctAnswer}`;
+      const existing = map.get(k);
+      if (!existing || (m.reviewCount || 0) > (existing.reviewCount || 0)) {
+        map.set(k, m);
+      }
+    }
+    return [...map.values()];
   }
 
   // Default: prefer local (most recent user action)
