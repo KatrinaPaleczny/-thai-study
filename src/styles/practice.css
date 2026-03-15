@@ -103,3 +103,27 @@
 .clf-ph{font-size:12px;color:var(--t3);font-style:italic;font-weight:500}
 .clf-use{font-size:13px;color:var(--t2);margin-bottom:4px;line-height:1.45;font-weight:500}
 .clf-ex{font-size:12px;color:var(--t3);font-style:italic;font-weight:500}
+
+/* ── Mobile Practice ── */
+@media(max-width:600px){
+  .sb-page{padding:18px 14px;border-radius:var(--radius-md)}
+  .sb-english{font-size:18px}
+  .sb-inp{font-size:16px;padding:12px 14px}
+  .sb-act-btn{padding:10px 20px;font-size:13px}
+  .sb-result-th{font-size:22px}
+  .wbank{max-width:100%}
+  .wbank-english{font-size:18px}
+  .wbank-build{padding:10px 12px;min-height:48px}
+  .wbank-chip{padding:8px 14px}
+  .wbank-chip-thai{font-size:14px}
+  .wbank-pool{gap:8px}
+  .tone-q{padding:20px 16px}
+  .tone-target{font-size:24px}
+  .tone-opts{gap:10px;flex-wrap:wrap}
+  .tone-opt{padding:14px 18px;font-size:24px;min-width:90px}
+  .match-cols{gap:10px}
+  .match-card{padding:12px;font-size:14px;min-height:48px}
+  .match-card .match-thai{font-size:16px}
+  .reading-body{font-size:18px}
+  .clf-grid{grid-template-columns:1fr}
+}
