@@ -15,6 +15,9 @@ import { CULTURAL_NOTES } from "../data/culturalNotes";
 import { PassageCard } from "../components/ReadingPractice";
 import { UNIT_READINGS } from "../data/unitReadingData";
 import { loadUnitTests } from "../utils/unitTests";
+import { MiniAudioQuiz } from "../components/MiniAudioQuiz";
+import { MiniPronunciation } from "../components/MiniPronunciation";
+import { MatchingGame } from "../components/MatchingGame";
 
 /* ── Section divider (accordion) ── */
 function Section({ icon, title, children, defaultOpen = false }) {
@@ -107,6 +110,25 @@ function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confiden
         </Section>
       )}
 
+      {/* Inline practice activities — scoped to this lesson's words */}
+      {words.length >= 4 && (
+        <Section icon="🎧" title="Audio Practice">
+          <MiniAudioQuiz key={`aq-${lesson.id}`} words={words} />
+        </Section>
+      )}
+
+      {words.length >= 4 && (
+        <Section icon="🔗" title="Matching Game">
+          <MatchingGame key={`mg-${lesson.id}`} words={words} />
+        </Section>
+      )}
+
+      {words.length > 0 && (
+        <Section icon="🎙️" title="Pronunciation Practice">
+          <MiniPronunciation key={`pron-${lesson.id}`} words={words} />
+        </Section>
+      )}
+
       {/* Conversation section */}
       {scenario && (
         <Section icon="💬" title="Conversation">
@@ -157,7 +179,7 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
 export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied, toggleScriptStudied, confidence, updateConfidence, onBack }) {
   const [activeTab, setActiveTab] = useState(0);
   const isScript = unit.type === "script";
-  const testResults = isScript ? null : loadUnitTests()[unit.id];
+  const testResults = loadUnitTests()[unit.id];
   const lessons = unit.lessons || [];
   const lesson = lessons[activeTab];
 
@@ -265,22 +287,20 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
       )}
 
       {/* Unit Test Section */}
-      {!isScript && (
-        <div className="ut-section">
-          {testResults?.passed ? (
-            <div className="ut-passed-row">
-              <span className="ut-passed-badge">✅ Passed ({testResults.bestPct}%)</span>
-              <a className="btn btn-sec btn-sm" href={`/unit-test/${unit.id}`}>Retake</a>
-            </div>
-          ) : progress.pct === 100 || testResults ? (
-            <a className="btn btn-pri ut-test-btn" href={`/unit-test/${unit.id}`}>
-              📝 Take Unit Test
-            </a>
-          ) : (
-            <div className="ut-locked-msg">Study all words to unlock the unit test</div>
-          )}
-        </div>
-      )}
+      <div className="ut-section">
+        {testResults?.passed ? (
+          <div className="ut-passed-row">
+            <span className="ut-passed-badge">✅ Passed ({testResults.bestPct}%)</span>
+            <a className="btn btn-sec btn-sm" href={`/unit-test/${unit.id}`}>Retake</a>
+          </div>
+        ) : progress.pct === 100 || testResults ? (
+          <a className="btn btn-pri ut-test-btn" href={`/unit-test/${unit.id}`}>
+            📝 Take {isScript ? "Script" : "Unit"} Test
+          </a>
+        ) : (
+          <div className="ut-locked-msg">Study all {isScript ? "characters" : "words"} to unlock the test</div>
+        )}
+      </div>
     </div>
   );
 }

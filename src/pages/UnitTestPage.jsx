@@ -1,8 +1,9 @@
 import { useState, useCallback, useMemo } from "react";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import { CURRICULUM } from "../data/curriculumData";
-import { generateUnitTest, loadUnitTests, saveUnitTestResult } from "../utils/unitTests";
+import { CURRICULUM, FULL_PATH } from "../data/curriculumData";
+import { SCRIPT_LESSONS } from "../data/scriptData";
+import { generateUnitTest, generateScriptTest, loadUnitTests, saveUnitTestResult } from "../utils/unitTests";
 import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 import { recordMistake } from "../utils/mistakes";
@@ -12,7 +13,8 @@ export function UnitTestPage() {
   const navigate = useNavigate();
   const { allVocab } = useApp();
 
-  const unit = CURRICULUM.find(u => u.id === unitId);
+  const unit = CURRICULUM.find(u => u.id === unitId) || SCRIPT_LESSONS.find(u => u.id === unitId);
+  const isScript = unit?.type === "script";
   const prevResult = loadUnitTests()[unitId];
 
   const [started, setStarted] = useState(false);
@@ -29,13 +31,14 @@ export function UnitTestPage() {
   const [drillIdx, setDrillIdx] = useState(0);
   const [drillFlipped, setDrillFlipped] = useState(false);
 
-  const vocabCount = useMemo(() => {
+  const itemCount = useMemo(() => {
     if (!unit) return 0;
+    if (isScript) return unit.lessons.flatMap(l => l.characters || []).length;
     return new Set(unit.lessons.flatMap(l => l.vocabIds || [])).size;
-  }, [unit]);
+  }, [unit, isScript]);
 
   const startTest = useCallback(() => {
-    const qs = generateUnitTest(unitId, allVocab);
+    const qs = isScript ? generateScriptTest(unitId) : generateUnitTest(unitId, allVocab);
     setQuestions(qs);
     setQIdx(0);
     setSelected(null);
@@ -43,7 +46,7 @@ export function UnitTestPage() {
     setDone(false);
     setFinalResult(null);
     setStarted(true);
-  }, [unitId, allVocab]);
+  }, [unitId, allVocab, isScript]);
 
   if (!unit) {
     return <Navigate to="/" replace />;
@@ -81,8 +84,8 @@ export function UnitTestPage() {
     }
   };
 
-  // Unit index for display
-  const unitNum = CURRICULUM.indexOf(unit) + 1;
+  // Unit display name
+  const unitLabel = isScript ? unit.title : `Unit ${CURRICULUM.indexOf(unit) + 1}`;
 
   // ── Drill mode: study missed words ──
   if (drillMode && drillWords.length > 0) {
@@ -95,7 +98,7 @@ export function UnitTestPage() {
       return (
         <div className="page">
           <div className="ph">
-            <div className="ph-t">Unit {unitNum} Test</div>
+            <div className="ph-t">{unitLabel} Test</div>
             <div className="ph-s">Review Complete</div>
           </div>
           <div className="ut-drill-done">
@@ -164,19 +167,23 @@ export function UnitTestPage() {
     return (
       <div className="page">
         <div className="ph">
-          <div className="ph-t">Unit {unitNum} Test</div>
+          <div className="ph-t">{unitLabel} Test</div>
           <div className="ph-s">{unit.title}</div>
         </div>
         <div className="pt-intro">
           <div className="pt-intro-icon">📝</div>
           <h3>Unit Test</h3>
           <p>
-            Test your knowledge of {vocabCount} words from {unit.title}.
-            You need 75% to pass and unlock the next unit.
+            Test your knowledge of {itemCount} {isScript ? "characters" : "words and grammar"} from {unit.title}.
+            You need 75% to pass{!isScript ? " and unlock the next unit" : ""}.
           </p>
           <ul className="pt-intro-list">
             <li>Multiple choice questions</li>
-            <li>Phonetics → English, English → Phonetics, and audio</li>
+            {isScript ? (
+              <li>Character recognition, sounds, and classes</li>
+            ) : (
+              <li>Vocabulary, grammar, and audio questions</li>
+            )}
             <li>75% required to pass</li>
             <li>You can retake anytime</li>
           </ul>
@@ -200,8 +207,9 @@ export function UnitTestPage() {
   if (done && finalResult) {
     const pct = Math.round((finalResult.score / finalResult.total) * 100);
     const passed = pct >= 75;
-    const nextUnitIdx = CURRICULUM.indexOf(unit) + 1;
-    const nextUnit = nextUnitIdx < CURRICULUM.length ? CURRICULUM[nextUnitIdx] : null;
+    // Find next unit from FULL_PATH (works for both vocab and script units)
+    const pathIdx = FULL_PATH.findIndex(u => u.id === unitId);
+    const nextUnit = pathIdx >= 0 && pathIdx + 1 < FULL_PATH.length ? FULL_PATH[pathIdx + 1] : null;
 
     // Collect wrong answers for review
     const wrongAnswers = questions
@@ -222,7 +230,7 @@ export function UnitTestPage() {
     return (
       <div className="page">
         <div className="ph">
-          <div className="ph-t">Unit {unitNum} Test</div>
+          <div className="ph-t">{unitLabel} Test</div>
           <div className="ph-s">Results</div>
         </div>
         <div className="pt-results">
@@ -266,12 +274,12 @@ export function UnitTestPage() {
           <div className="pt-actions">
             {passed && nextUnit && (
               <button className="btn btn-pri" onClick={() => navigate(`/unit/${nextUnit.id}`)}>
-                Continue to Unit {nextUnitIdx + 1} →
+                Continue to {nextUnit.title} →
               </button>
             )}
             {!passed && (
               <>
-                {wrongAnswers.length > 0 && (
+                {wrongAnswers.length > 0 && wrongAnswers.some(q => q.wordId) && (
                   <button className="btn btn-pri" onClick={startDrill}>📖 Study Missed Words</button>
                 )}
                 <button className="btn btn-sec" onClick={startTest}>Retake Test</button>
@@ -291,7 +299,7 @@ export function UnitTestPage() {
   return (
     <div className="page">
       <div className="ph">
-        <div className="ph-t">Unit {unitNum} Test</div>
+        <div className="ph-t">{unitLabel} Test</div>
         <div className="ph-s">Question {qIdx + 1} of {questions.length}</div>
       </div>
 
