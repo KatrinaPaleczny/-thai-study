@@ -116,13 +116,25 @@ export function MyPathPage() {
     else if (srsStats.total > 0) tasks.push({ key: "srs", label: "SRS cards reviewed", done: true, page: "/srs" });
     if (mistakeStats.unreviewed > 0) tasks.push({ key: "mistakes", label: `Review ${mistakeStats.unreviewed} mistake${mistakeStats.unreviewed !== 1 ? "s" : ""}`, done: false, page: "/mistakes" });
     if (continueUnit && unstudiedInUnit > 0) {
-      const wordGoal = Math.min(unstudiedInUnit, 10);
-      tasks.push({ key: "learn", label: `Learn ${wordGoal} new words in ${continueUnit.title}`, done: false, page: `/unit/${continueUnit.id}` });
+      const isScript = continueUnit.type === "script";
+      // For script units, suggest the next sub-lesson's size; for vocab, cap at 10
+      let wordGoal = unstudiedInUnit;
+      if (isScript) {
+        // Find the first sub-lesson with unstudied characters
+        const nextLesson = continueUnit.lessons.find(l =>
+          (l.characters || []).some(c => !scriptStudied.has(c.char))
+        );
+        wordGoal = nextLesson ? (nextLesson.characters || []).filter(c => !scriptStudied.has(c.char)).length : Math.min(unstudiedInUnit, 4);
+      } else {
+        wordGoal = Math.min(unstudiedInUnit, 10);
+      }
+      const itemType = isScript ? "characters" : "words";
+      tasks.push({ key: "learn", label: `Learn ${wordGoal} new ${itemType} in ${continueUnit.title}`, done: false, page: `/unit/${continueUnit.id}` });
     }
     tasks.push({ key: "xp", label: `Earn ${xpProgress.dailyGoal} XP today`, done: xpProgress.goalMet, page: null });
-    if (studiedCount >= 5) tasks.push({ key: "practice", label: "Practice: flashcards or listening", done: false, page: "/flashcards" });
+    if (studiedCount >= 5) tasks.push({ key: "practice", label: "Practice: flashcards or listening", done: xpProgress.todayXP >= 15, page: "/flashcards" });
     return tasks;
-  }, [totalDue, srsStats, mistakeStats, continueUnit, unstudiedInUnit, xpProgress, studiedCount]);
+  }, [totalDue, srsStats, mistakeStats, continueUnit, unstudiedInUnit, xpProgress, studiedCount, scriptStudied]);
   const allChecklistDone = checklist.every(t => t.done);
 
   // Build smart "Jump In" cards
