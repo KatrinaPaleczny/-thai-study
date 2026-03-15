@@ -16,7 +16,8 @@ const ROUTE_MAP = {
   "/scenes": "scenes", "/stories": "stories", "/pronunciation": "pronunciation",
   "/listening": "listening", "/match": "match", "/imagevocab": "imagevocab",
   "/daily": "daily", "/mistakes": "mistakes", "/analytics": "analytics",
-  "/grammar": "grammar", "/numbers": "numbers", "/settings": "settings", "/account": "account",
+  "/grammar": "grammar", "/grammarbank": "grammarbank", "/numbers": "numbers",
+  "/frequency": "frequency", "/audioquiz": "audioquiz", "/settings": "settings", "/account": "account",
 };
 
 export function Sidebar() {
@@ -60,7 +61,7 @@ export function Sidebar() {
 
   let vocabUnitNum = 0;
 
-  const pageLabels = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", numbers:"Numbers", settings:"Settings" };
+  const pageLabels = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", grammarbank:"Grammar Bank", numbers:"Numbers", frequency:"Core Words", audioquiz:"Audio Quiz", settings:"Settings" };
   const currentLabel = pageLabels[page] || "My Path";
 
   return (
@@ -124,6 +125,7 @@ export function Sidebar() {
 
       {/* Always visible */}
       {btn("/vocab","vocab","📖","Vocabulary")}
+      {btn("/frequency","frequency","📊","Core Words")}
       {btn("/flashcards","flashcards",<FlashcardIcon />,"Flashcards")}
       {btn("/srs","srs",<BrainIcon />,"SRS Review", srsdue)}
       {btn("/daily","daily",<StarIcon filled />,"Daily Word")}
@@ -132,6 +134,7 @@ export function Sidebar() {
       {studiedCount >= 10 && <>
         {btn("/pronunciation","pronunciation","🎙️","Pronunciation")}
         {btn("/listening","listening","👂","Listening")}
+        {btn("/audioquiz","audioquiz","🎧","Audio Quiz")}
         {btn("/practice","practice",<TargetIcon />,"Practice")}
         {btn("/mistakes","mistakes","📝","Mistakes", unreviewedMistakes)}
       </>}
@@ -144,6 +147,7 @@ export function Sidebar() {
         {btn("/analytics","analytics","📊","Analytics")}
         <div className="sb-lbl">Reference</div>
         {btn("/grammar","grammar","📐","Grammar")}
+        {btn("/grammarbank","grammarbank","📋","Grammar Bank")}
         {btn("/numbers","numbers","🔢","Numbers")}
       </>}
 

@@ -1,0 +1,58 @@
+/* ── Frequency Page ── */
+.freq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.freq-stats .stat{cursor:pointer;transition:all .15s}
+.freq-stats .stat.stat-active{border-color:var(--olive);box-shadow:0 0 0 3px rgba(212,160,23,.12)}
+.freq-bar{height:6px;background:var(--sur2);border-radius:4px;margin-top:6px;overflow:hidden}
+.freq-bar-fill{height:100%;background:var(--success);border-radius:4px;transition:width .3s ease}
+
+.freq-controls{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.freq-search{display:flex;align-items:center;gap:8px;flex:1;min-width:180px;padding:8px 14px;border:2px solid var(--bdr);border-radius:var(--radius-sm);background:var(--sur);font-size:13px}
+.freq-search input{border:none;outline:none;background:none;flex:1;font-size:13px;font-weight:500;color:var(--t1)}
+.freq-search svg{color:var(--t3);flex-shrink:0}
+
+.freq-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--t3)}
+.freq-studied{color:var(--success)}
+
+/* Header row */
+.freq-hdr{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sur2);border-radius:var(--radius-md) var(--radius-md) 0 0;border:2px solid var(--bdr);border-bottom:none;font-size:11px;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+.freq-hdr-rank{width:40px;text-align:center;flex-shrink:0}
+.freq-hdr-ej{width:26px;flex-shrink:0}
+.freq-hdr-word{min-width:140px}
+.freq-hdr-en{flex:1}
+.freq-hdr-lvl{width:40px;text-align:center}
+.freq-hdr-act{width:32px;flex-shrink:0}
+
+/* Word rows */
+.freq-list{margin-bottom:32px}
+.freq-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border:2px solid var(--bdr);border-top:none;background:var(--sur);transition:all .15s}
+.freq-row:nth-child(even){background:rgba(248,247,245,.6)}
+.freq-row:last-child{border-radius:0 0 var(--radius-md) var(--radius-md)}
+.freq-row:hover{background:var(--olive-soft)}
+.freq-row.done{background:rgba(88,204,2,.05);border-left:3px solid var(--success)}
+
+.freq-rank{width:40px;text-align:center;font-size:11px;font-weight:800;color:var(--t3);flex-shrink:0}
+.freq-ej{width:26px;text-align:center;font-size:15px;flex-shrink:0}
+.freq-main{min-width:140px;display:flex;flex-direction:column;gap:1px}
+.freq-th{font-family:var(--thai);font-size:16px;font-weight:600}
+.freq-ph{font-size:11px;color:var(--t3);font-style:italic;font-weight:500}
+.freq-en{flex:1;font-size:13px;color:var(--t2);font-weight:500}
+
+.freq-speak{background:none;border:none;cursor:pointer;padding:4px;color:var(--t3);display:flex;align-items:center;transition:color .15s}
+.freq-speak:hover{color:var(--olive)}
+
+.freq-mark{width:28px;height:28px;border-radius:50%;border:2px solid var(--bdr);background:var(--sur);cursor:pointer;font-size:12px;font-weight:700;color:var(--t3);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.freq-mark:hover{border-color:var(--olive);color:var(--olive)}
+.freq-mark.on{background:var(--success);border-color:var(--success-dark);color:#fff}
+
+/* Mobile */
+@media(max-width:600px){
+  .freq-stats{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .freq-hdr{display:none}
+  .freq-row{flex-wrap:wrap;gap:4px 8px;padding:10px 12px}
+  .freq-rank{width:32px;font-size:10px}
+  .freq-ej{width:20px;font-size:13px}
+  .freq-main{min-width:0;flex:1}
+  .freq-en{width:100%;padding-left:60px;font-size:12px}
+  .freq-controls{flex-direction:column;gap:8px}
+  .freq-search{min-width:0;width:100%}
+}

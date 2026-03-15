@@ -61,6 +61,8 @@ const XP_VALUES = {
   ai_chat_turn: 3,
   unit_test_pass: 25,
   ai_explain: 2,
+  audio_quiz_correct: 5,
+  audio_quiz_attempt: 1,
 };
 
 export function awardXP(action) {

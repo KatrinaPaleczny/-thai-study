@@ -25,6 +25,9 @@ import { StoryPage } from "./pages/StoryPage";
 import { ListeningPage } from "./pages/ListeningPage";
 import { MatchPage } from "./pages/MatchPage";
 import { ImageVocabPage } from "./pages/ImageVocabPage";
+import { FrequencyPage } from "./pages/FrequencyPage";
+import { GrammarBankPage } from "./pages/GrammarBankPage";
+import { AudioQuizPage } from "./pages/AudioQuizPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { AuthPage } from "./pages/AuthPage";
 import { PlacementTestPage } from "./pages/PlacementTestPage";
@@ -111,6 +114,9 @@ export default function App() {
             <Route path="/listening" element={<ListeningPage />} />
             <Route path="/match" element={<MatchPage />} />
             <Route path="/imagevocab" element={<ImageVocabPage />} />
+            <Route path="/frequency" element={<FrequencyPage />} />
+            <Route path="/grammarbank" element={<GrammarBankPage />} />
+            <Route path="/audioquiz" element={<AudioQuizPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/account" element={<AuthPage />} />
             <Route path="/placement" element={<PlacementTestPage />} />
