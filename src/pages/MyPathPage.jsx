@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { FULL_PATH } from "../data/curriculumData";
+import { FULL_PATH, CEFR_STAGES } from "../data/curriculumData";
 import { FlashcardDeck } from "../components/FlashcardDeck";
 import { getTodayProgress, getStreak, getLevel } from "../utils/xp";
 import { getSRSStats, getDueWordsWithLimit } from "../utils/srs";
@@ -118,7 +118,22 @@ export function MyPathPage() {
     { emoji: "🧠", title: "Review", desc: "SRS, flashcards, mistakes, analytics", pages: ["srs", "flashcards", "mistakes", "analytics"] },
   ];
 
-  let vocabUnitNum = 0;
+  // Group FULL_PATH items by CEFR level
+  const cefrGroups = useMemo(() => {
+    const groups = {}; // level -> { items: [{unit, vocabNum}], ... }
+    let lastLevel = null;
+    let vNum = 0;
+    FULL_PATH.forEach(unit => {
+      const isScript = unit.type === "script";
+      if (!isScript) vNum++;
+      const level = isScript ? lastLevel : (unit.level || null);
+      if (!isScript) lastLevel = unit.level || null;
+      const key = level || "custom";
+      if (!groups[key]) groups[key] = [];
+      groups[key].push({ unit, vocabNum: isScript ? null : vNum });
+    });
+    return groups;
+  }, []);
 
   return (
     <div className="page">
@@ -282,46 +297,118 @@ export function MyPathPage() {
           <span className="mp-curriculum-chev">{showCurriculum ? "▲" : "▼"}</span>
         </button>
         {showCurriculum && (
-          <div className="path-grid">
-            {FULL_PATH.map(unit => {
-              const isScript = unit.type === "script";
-              if (!isScript) vocabUnitNum++;
-              const prog = unitProgress[unit.id];
-              const locked = !isScript && !isUnitUnlocked(unit.id, testResults);
-              const passed = !isScript && testResults[unit.id]?.passed;
+          <div className="cefr-stages">
+            {CEFR_STAGES.map(stage => {
+              const items = cefrGroups[stage.level] || [];
+              if (items.length === 0) return null;
+              const stageTotal = items.reduce((s, { unit }) => s + (unitProgress[unit.id]?.total || 0), 0);
+              const stageDone = items.reduce((s, { unit }) => s + (unitProgress[unit.id]?.done || 0), 0);
+              const stagePct = stageTotal ? Math.round((stageDone / stageTotal) * 100) : 0;
+              const stageColor = levelStyle(stage.level);
               return (
-                <div
-                  key={unit.id}
-                  className={`path-unit-card${isScript ? " script" : ""}${prog.pct === 100 ? " complete" : ""}${locked ? " locked" : ""}${passed ? " passed" : ""}`}
-                  onClick={() => !locked && navigate(`/unit/${unit.id}`)}
-                  style={locked ? { cursor: "not-allowed" } : undefined}
-                >
-                  <div className="path-uc-top">
-                    <span className="path-uc-icon">{locked ? "🔒" : unit.icon}</span>
-                    <span className="path-uc-pct">{locked ? "" : `${prog.pct}%`}{passed ? " ✅" : ""}</span>
+                <div key={stage.level} className="cefr-stage" style={{ borderLeftColor: stageColor.color }}>
+                  <div className="cefr-stage-hdr">
+                    <span className="cefr-stage-badge" style={stageColor}>{stage.level}</span>
+                    <div className="cefr-stage-info">
+                      <span className="cefr-stage-label">{stage.label}</span>
+                      <span className="cefr-stage-desc">{stage.description}</span>
+                    </div>
+                    <div className="cefr-stage-prog">
+                      <span className="cefr-stage-pct">{stagePct}%</span>
+                      <span className="cefr-stage-count">{stageDone}/{stageTotal}</span>
+                    </div>
                   </div>
-                  <div className="path-uc-title">
-                    {isScript ? unit.title : `Unit ${vocabUnitNum}: ${unit.title}`}
-                    {unit.level && <span className="path-uc-level" style={levelStyle(unit.level)}>{unit.level}</span>}
+                  <div className="cefr-stage-bar">
+                    <div className="cefr-stage-fill" style={{ width: stagePct + "%", background: stageColor.color }} />
                   </div>
-                  <div className="path-uc-desc">
-                    {locked
-                      ? `Pass Unit ${vocabUnitNum - 1} test to unlock`
-                      : unit.description}
+                  <div className="path-grid">
+                    {items.map(({ unit, vocabNum }) => {
+                      const isScript = unit.type === "script";
+                      const prog = unitProgress[unit.id];
+                      const locked = !isScript && !isUnitUnlocked(unit.id, testResults);
+                      const passed = !isScript && testResults[unit.id]?.passed;
+                      return (
+                        <div
+                          key={unit.id}
+                          className={`path-unit-card${isScript ? " script" : ""}${prog.pct === 100 ? " complete" : ""}${locked ? " locked" : ""}${passed ? " passed" : ""}`}
+                          onClick={() => !locked && navigate(`/unit/${unit.id}`)}
+                          style={locked ? { cursor: "not-allowed" } : undefined}
+                        >
+                          <div className="path-uc-top">
+                            <span className="path-uc-icon">{locked ? "🔒" : unit.icon}</span>
+                            <span className="path-uc-pct">{locked ? "" : `${prog.pct}%`}{passed ? " ✅" : ""}</span>
+                          </div>
+                          <div className="path-uc-title">
+                            {isScript ? unit.title : `Unit ${vocabNum}: ${unit.title}`}
+                            {unit.level && <span className="path-uc-level" style={levelStyle(unit.level)}>{unit.level}</span>}
+                          </div>
+                          <div className="path-uc-desc">
+                            {locked
+                              ? `Pass Unit ${vocabNum - 1} test to unlock`
+                              : unit.description}
+                          </div>
+                          {!locked && (
+                            <>
+                              <div className="path-uc-meta">
+                                {prog.done}/{prog.total} {isScript ? "characters" : "words"}
+                              </div>
+                              <div className="path-pbar path-pbar-sm" style={{ marginTop: 8 }}>
+                                <div className="path-pfill" style={{ width: prog.pct + "%" }} />
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                  {!locked && (
-                    <>
-                      <div className="path-uc-meta">
-                        {prog.done}/{prog.total} {isScript ? "characters" : "words"}
-                      </div>
-                      <div className="path-pbar path-pbar-sm" style={{ marginTop: 8 }}>
-                        <div className="path-pfill" style={{ width: prog.pct + "%" }} />
-                      </div>
-                    </>
-                  )}
                 </div>
               );
             })}
+            {/* Custom / no-level units (Unit 8) */}
+            {cefrGroups["custom"] && (
+              <div className="cefr-stage cefr-stage-custom">
+                <div className="cefr-stage-hdr">
+                  <span className="cefr-stage-badge" style={{ color: "#6b6b6b", background: "#f0f0f0", borderColor: "#ccc" }}>✨</span>
+                  <div className="cefr-stage-info">
+                    <span className="cefr-stage-label">Your Thai</span>
+                    <span className="cefr-stage-desc">Custom vocabulary</span>
+                  </div>
+                  <div className="cefr-stage-prog">
+                    <span className="cefr-stage-pct">
+                      {(() => {
+                        const items = cefrGroups["custom"];
+                        const t = items.reduce((s, { unit }) => s + (unitProgress[unit.id]?.total || 0), 0);
+                        const d = items.reduce((s, { unit }) => s + (unitProgress[unit.id]?.done || 0), 0);
+                        return t ? Math.round((d / t) * 100) : 0;
+                      })()}%
+                    </span>
+                  </div>
+                </div>
+                <div className="path-grid">
+                  {cefrGroups["custom"].map(({ unit, vocabNum }) => {
+                    const prog = unitProgress[unit.id];
+                    return (
+                      <div
+                        key={unit.id}
+                        className={`path-unit-card${prog.pct === 100 ? " complete" : ""}`}
+                        onClick={() => navigate(`/unit/${unit.id}`)}
+                      >
+                        <div className="path-uc-top">
+                          <span className="path-uc-icon">{unit.icon}</span>
+                          <span className="path-uc-pct">{prog.pct}%</span>
+                        </div>
+                        <div className="path-uc-title">Unit {vocabNum}: {unit.title}</div>
+                        <div className="path-uc-desc">{unit.description}</div>
+                        <div className="path-uc-meta">{prog.done}/{prog.total} words</div>
+                        <div className="path-pbar path-pbar-sm" style={{ marginTop: 8 }}>
+                          <div className="path-pfill" style={{ width: prog.pct + "%" }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

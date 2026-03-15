@@ -1,5 +1,11 @@
 import { SCRIPT_LESSONS } from "./scriptData";
 
+export const CEFR_STAGES = [
+  { level: "A1", label: "Beginner", description: "Survival basics" },
+  { level: "A2", label: "Elementary", description: "Daily life" },
+  { level: "B1", label: "Intermediate", description: "Functional fluency" },
+];
+
 export const CURRICULUM = [
   {
     id: "u1", title: "Sound & Survival", icon: "🆘", level: "A1",
