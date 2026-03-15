@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { STORIES } from "../data/storiesData";
 import { speakThai, speakThaiSlow } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 import { levelStyle } from "../appStyles";
+import { hasAIAccess } from "../utils/ai";
+import { useApp } from "../context/AppContext";
+import { gatherStoryContext, generateAIStory, getGeneratedStories, saveGeneratedStory, deleteGeneratedStory } from "../utils/storyGen";
 
 export function StoryPage() {
+  const { allVocab, studied } = useApp();
   const [storyIdx, setStoryIdx] = useState(null);
   const [sentenceIdx, setSentenceIdx] = useState(0);
   const [expandedWord, setExpandedWord] = useState(null);
@@ -16,10 +20,39 @@ export function StoryPage() {
   const [quizScore, setQuizScore] = useState(0);
   const [quizDone, setQuizDone] = useState(false);
   const [levelFilter, setLevelFilter] = useState("All");
+  const [genStories, setGenStories] = useState(() => getGeneratedStories());
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState(null);
+
+  // Combine static + generated stories
+  const allStories = useMemo(() => [...STORIES, ...genStories], [genStories]);
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+    setGenError(null);
+    try {
+      const level = levelFilter === "All" ? "A1" : levelFilter;
+      const context = gatherStoryContext(allVocab, studied, level);
+      const story = await generateAIStory(context);
+      saveGeneratedStory(story);
+      setGenStories(getGeneratedStories());
+      awardXP("ai_explain");
+    } catch (err) {
+      setGenError(err.message);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleDelete = (e, id) => {
+    e.stopPropagation();
+    deleteGeneratedStory(id);
+    setGenStories(getGeneratedStories());
+  };
 
   // ─── Story picker ───
   if (storyIdx === null) {
-    const filtered = STORIES.filter(s => levelFilter === "All" || s.level === levelFilter);
+    const filtered = allStories.filter(s => levelFilter === "All" || s.level === levelFilter);
     return (
       <div className="page">
         <div className="ph">
@@ -34,14 +67,28 @@ export function StoryPage() {
           ))}
         </div>
         <div className="st-grid">
-          {filtered.map((story, i) => {
-            const originalIdx = STORIES.indexOf(story);
+          {hasAIAccess() && (
+            <button className="st-story-card st-gen-btn" onClick={handleGenerate} disabled={generating}>
+              <div className="st-story-emoji">{generating ? "⏳" : "✨"}</div>
+              <div className="st-story-title">{generating ? "Generating..." : "Generate New Story"}</div>
+              <div className="st-story-desc">
+                {generating ? "AI is writing a story for you..." : `Create an AI story at ${levelFilter === "All" ? "A1" : levelFilter} level using your vocabulary`}
+              </div>
+              {genError && <div className="st-gen-error">{genError}</div>}
+            </button>
+          )}
+          {filtered.map((story) => {
+            const idx = allStories.indexOf(story);
             return (
-            <button key={story.id} className="st-story-card" onClick={() => {
-              setStoryIdx(originalIdx); setSentenceIdx(0); setPhase("reading");
+            <button key={story.id} className={`st-story-card${story.aiGenerated ? " st-ai-card" : ""}`} onClick={() => {
+              setStoryIdx(idx); setSentenceIdx(0); setPhase("reading");
               setQuizIdx(0); setSelectedAnswer(null); setQuizScore(0); setQuizDone(false);
               setExpandedWord(null); setShowPhonetic(false); setShowEnglish(false);
             }}>
+              {story.aiGenerated && <span className="st-ai-badge">AI</span>}
+              {story.aiGenerated && (
+                <span className="st-gen-delete" onClick={(e) => handleDelete(e, story.id)} title="Delete story">✕</span>
+              )}
               <div className="st-story-emoji">{story.emoji}</div>
               <div className="st-story-title">{story.title}</div>
               <div className="st-story-title-en">{story.titleEn}</div>
@@ -58,7 +105,7 @@ export function StoryPage() {
     );
   }
 
-  const story = STORIES[storyIdx];
+  const story = allStories[storyIdx];
 
   // ─── Quiz phase ───
   if (phase === "quiz") {
