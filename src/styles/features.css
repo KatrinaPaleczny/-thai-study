@@ -451,7 +451,8 @@
 .pt-results-score{font-size:15px;color:var(--t2);margin-bottom:20px}
 
 .pt-bar-container{max-width:400px;margin:0 auto 24px}
-.pt-bar{height:12px;background:var(--sur2);border-radius:10px;overflow:hidden;border:1px solid var(--bdr)}
+.pt-bar{height:12px;background:var(--sur2);border-radius:10px;overflow:visible;border:1px solid var(--bdr);position:relative}
+.pt-bar-fill{overflow:hidden;border-radius:10px}
 .pt-bar-fill{height:100%;background:linear-gradient(90deg,var(--olive) 0%,#D4BA6E 100%);border-radius:10px;transition:width .6s ease}
 .pt-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px}
 
@@ -532,7 +533,7 @@
 .ut-pass-banner{font-family:var(--disp);font-size:22px;font-weight:700;margin-bottom:12px;padding:12px 24px;border-radius:var(--radius-md)}
 .ut-pass-banner.pass{background:#E6F5F3;color:#087068;border:1px solid #87CEBD}
 .ut-pass-banner.fail{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
-.ut-pass-marker{position:absolute;left:75%;top:-4px;bottom:-4px;width:2px;background:var(--olive)}
+.ut-pass-marker{position:absolute;left:75%;top:-2px;bottom:-2px;width:2px;background:var(--olive);border-radius:2px;z-index:1}
 .ut-xp-bonus{font-size:15px;font-weight:600;color:var(--olive);margin:8px 0 16px;animation:fadeUp .3s ease}
 .ut-review{text-align:left;margin:20px 0;padding:16px;background:var(--sur2);border-radius:var(--radius-md);border:1px solid var(--bdr)}
 .ut-review-title{font-family:var(--disp);font-size:14px;font-weight:600;margin-bottom:12px;color:var(--t1)}
