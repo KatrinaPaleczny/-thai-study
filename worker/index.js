@@ -26,7 +26,7 @@ export default {
       // Only allow specific fields through
       const payload = {
         model: body.model || "claude-sonnet-4-20250514",
-        max_tokens: Math.min(body.max_tokens || 300, 1024),
+        max_tokens: Math.min(body.max_tokens || 300, 2048),
         system: body.system,
         messages: body.messages,
       };
