@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [recoveryMode, setRecoveryMode] = useState(false);
   const syncedRef = useRef(false);
 
   useEffect(() => {
@@ -36,6 +37,9 @@ export function AuthProvider({ children }) {
       const u = session?.user ?? null;
       setUser(u);
       setCurrentUserId(u?.id ?? null);
+      if (event === "PASSWORD_RECOVERY") {
+        setRecoveryMode(true);
+      }
       if (u && event === "SIGNED_IN" && !syncedRef.current) {
         syncedRef.current = true;
         setSyncing(true);
@@ -43,6 +47,7 @@ export function AuthProvider({ children }) {
       }
       if (event === "SIGNED_OUT") {
         syncedRef.current = false;
+        setRecoveryMode(false);
       }
     });
 
@@ -99,7 +104,9 @@ export function AuthProvider({ children }) {
     signOut,
     resetPassword,
     updatePassword,
-  }), [user, loading, syncing, error, signUp, signIn, signOut, resetPassword, updatePassword]);
+    recoveryMode,
+    setRecoveryMode,
+  }), [user, loading, syncing, error, signUp, signIn, signOut, resetPassword, updatePassword, recoveryMode]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

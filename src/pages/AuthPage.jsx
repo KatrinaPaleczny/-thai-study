@@ -1,32 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import { supabase, isSupabaseConfigured } from "../utils/supabase";
+import { useNavigate, Navigate } from "react-router-dom";
 
 export function AuthPage() {
-  const { signIn, signUp, resetPassword, updatePassword, error: authError, isAuthenticated, supabaseConfigured } = useAuth();
+  const { signIn, signUp, resetPassword, updatePassword, error: authError, isAuthenticated, supabaseConfigured, recoveryMode, setRecoveryMode } = useAuth();
   const navigate = useNavigate();
-  const [mode, setMode] = useState("signin"); // "signin" | "signup" | "reset" | "newpassword"
+  const [mode, setMode] = useState("signin"); // "signin" | "signup" | "reset"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState(null);
 
-  // Detect Supabase password recovery redirect (URL contains #type=recovery or ?type=recovery)
-  useEffect(() => {
-    if (!isSupabaseConfigured()) return;
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setMode("newpassword");
-        setMsg(null);
-      }
-    });
-  }, []);
+  // If Supabase fired PASSWORD_RECOVERY, show "set new password" form
+  const isRecovery = recoveryMode;
 
-  // If already logged in and NOT in newpassword mode, redirect
-  if (isAuthenticated && mode !== "newpassword") {
-    navigate("/settings", { replace: true });
-    return null;
+  // If already logged in (and not in recovery flow), redirect to settings
+  if (isAuthenticated && !isRecovery) {
+    return <Navigate to="/settings" replace />;
   }
 
   if (!supabaseConfigured) {
@@ -49,8 +39,9 @@ export function AuthPage() {
     setLoading(true);
     setMsg(null);
     try {
-      if (mode === "newpassword") {
+      if (isRecovery) {
         await updatePassword(password);
+        setRecoveryMode(false);
         setMsg({ type: "success", text: "Password updated! You're now signed in." });
         setTimeout(() => navigate("/", { replace: true }), 1500);
       } else if (mode === "reset") {
@@ -78,9 +69,9 @@ export function AuthPage() {
   return (
     <div className="page">
       <div className="ph">
-        <h1 className="ph-t">{mode === "newpassword" ? "Set New Password" : mode === "reset" ? "Reset Password" : mode === "signup" ? "Create Account" : "Sign In"}</h1>
+        <h1 className="ph-t">{isRecovery ? "Set New Password" : mode === "reset" ? "Reset Password" : mode === "signup" ? "Create Account" : "Sign In"}</h1>
         <p className="ph-s">
-          {mode === "newpassword" ? "Choose a new password for your account" : mode === "reset" ? "We'll send you a reset link" : "Sync your study progress across devices"}
+          {isRecovery ? "Choose a new password for your account" : mode === "reset" ? "We'll send you a reset link" : "Sync your study progress across devices"}
         </p>
       </div>
 
@@ -92,8 +83,8 @@ export function AuthPage() {
 
       <div className="sett-section" style={{ maxWidth: 420 }}>
         <form onSubmit={handleSubmit}>
-          {/* Email — shown for signin, signup, reset but NOT newpassword */}
-          {mode !== "newpassword" && (
+          {/* Email — shown for signin, signup, reset but NOT recovery */}
+          {!isRecovery && (
             <div style={{ marginBottom: 14 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--t2)", marginBottom: 4 }}>Email</label>
               <input
@@ -109,11 +100,11 @@ export function AuthPage() {
             </div>
           )}
 
-          {/* Password — shown for signin, signup, newpassword but NOT reset */}
-          {mode !== "reset" && (
+          {/* Password — shown for signin, signup, recovery but NOT reset */}
+          {(mode !== "reset" || isRecovery) && (
             <div style={{ marginBottom: 18 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--t2)", marginBottom: 4 }}>
-                {mode === "newpassword" ? "New Password" : "Password"}
+                {isRecovery ? "New Password" : "Password"}
               </label>
               <input
                 type="password"
@@ -123,7 +114,7 @@ export function AuthPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                autoComplete={mode === "signup" || mode === "newpassword" ? "new-password" : "current-password"}
+                autoComplete={mode === "signup" || isRecovery ? "new-password" : "current-password"}
                 placeholder="At least 6 characters"
               />
             </div>
@@ -135,7 +126,7 @@ export function AuthPage() {
             disabled={loading}
             style={{ width: "100%", padding: "10px 0", fontSize: 14, marginBottom: 14 }}
           >
-            {loading ? "..." : mode === "newpassword" ? "Set New Password" : mode === "reset" ? "Send Reset Link" : mode === "signup" ? "Create Account" : "Sign In"}
+            {loading ? "..." : isRecovery ? "Set New Password" : mode === "reset" ? "Send Reset Link" : mode === "signup" ? "Create Account" : "Sign In"}
           </button>
         </form>
 
@@ -160,8 +151,8 @@ export function AuthPage() {
               </button>
             </>
           )}
-          {(mode === "reset" || mode === "newpassword") && (
-            <button onClick={() => { setMode("signin"); setMsg(null); }} style={{ background: "none", border: "none", color: "var(--act)", cursor: "pointer", fontWeight: 500, fontSize: 13 }}>
+          {(mode === "reset" || isRecovery) && (
+            <button onClick={() => { setMode("signin"); setRecoveryMode(false); setMsg(null); }} style={{ background: "none", border: "none", color: "var(--act)", cursor: "pointer", fontWeight: 500, fontSize: 13 }}>
               Back to sign in
             </button>
           )}
