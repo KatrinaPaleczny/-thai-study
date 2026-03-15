@@ -3,6 +3,7 @@ import { WRITING_LEVELS } from "../data/writingData";
 import { awardXP } from "../utils/xp";
 import { recordMistake } from "../utils/mistakes";
 import { speakThai } from "../utils/speech";
+import { callClaude, hasAIAccess, MODELS } from "../utils/ai";
 
 export function WritingPage() {
   const [levelIdx, setLevelIdx] = useState(null);
@@ -12,6 +13,7 @@ export function WritingPage() {
   const [result, setResult] = useState(null); // null | "correct" | "wrong"
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [done, setDone] = useState(false);
+  const [aiCorrection, setAiCorrection] = useState(null); // { loading, text, error }
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -62,6 +64,7 @@ export function WritingPage() {
   };
 
   const handleNext = () => {
+    setAiCorrection(null);
     if (itemIdx + 1 >= items.length) {
       setDone(true);
     } else {
@@ -77,6 +80,22 @@ export function WritingPage() {
       e.preventDefault();
       if (result === null) handleCheck();
       else handleNext();
+    }
+  };
+
+  const handleAICorrection = async () => {
+    setAiCorrection({ loading: true });
+    try {
+      const text = await callClaude({
+        system: "You are a Thai language writing tutor. The student tried to write Thai script for an English prompt but made an error. Explain what they wrote vs what was expected. Point out specific character differences. Be brief (2-3 sentences), encouraging, and educational. Include romanized pronunciation for both what they wrote and the correct answer.",
+        messages: [{ role: "user", content: `English prompt: ${item.prompt}\nStudent wrote: ${input}\nCorrect Thai: ${item.answer}` }],
+        model: MODELS.HAIKU,
+        maxTokens: 250,
+      });
+      setAiCorrection({ text });
+      awardXP("ai_explain");
+    } catch (err) {
+      setAiCorrection({ error: err.message });
     }
   };
 
@@ -171,6 +190,25 @@ export function WritingPage() {
                   Correct: <strong>{item.answer}</strong>
                   <button className="conv-speak" onClick={() => speakThai(item.answer)} title="Listen">🔊</button>
                 </div>
+                {hasAIAccess() && !aiCorrection?.text && (
+                  <button
+                    className="btn btn-sec btn-sm"
+                    onClick={handleAICorrection}
+                    disabled={aiCorrection?.loading}
+                    style={{ marginTop: 10 }}
+                  >
+                    {aiCorrection?.loading ? "Analyzing..." : "🤖 Ask AI Why"}
+                  </button>
+                )}
+                {aiCorrection?.text && (
+                  <div className="ai-explain" style={{ marginTop: 10 }}>
+                    <div className="ai-explain-label">🤖 AI Explanation</div>
+                    <div className="ai-explain-text">{aiCorrection.text}</div>
+                  </div>
+                )}
+                {aiCorrection?.error && (
+                  <div className="ai-explain-error" style={{ marginTop: 8 }}>{aiCorrection.error}</div>
+                )}
               </>
             )}
             <button className="btn btn-pri" onClick={handleNext} style={{ marginTop: 14 }}>

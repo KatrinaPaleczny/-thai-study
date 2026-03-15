@@ -3,6 +3,7 @@ import { speakThai } from "../utils/speech";
 import { awardXP } from "../utils/xp";
 import { recordMistake } from "../utils/mistakes";
 import { getProxyUrl } from "../utils/storage";
+import { callClaude, getApiKey } from "../utils/ai";
 import { useAuth } from "../context/AuthContext";
 import { saveClaudeKey, loadClaudeKey, deleteClaudeKey } from "../utils/cloudSync";
 
@@ -28,7 +29,7 @@ const API_SECURITY_NOTE_CLOUD = "Your API key is stored securely in the cloud (e
 export function AIConversationPage() {
   const proxyUrl = getProxyUrl();
   const { isAuthenticated, user } = useAuth();
-  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem("katthai_claude_key") || localStorage.getItem("katthai_claude_key") || "");
+  const [apiKey, setApiKey] = useState(() => getApiKey());
   const [keyInput, setKeyInput] = useState("");
   const [sessionOnly, setSessionOnly] = useState(false);
   const [keyLoading, setKeyLoading] = useState(false);
@@ -122,37 +123,11 @@ IMPORTANT INSTRUCTIONS:
     }
 
     try {
-      const payload = {
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
+      const reply = await callClaude({
         system: systemPrompt,
         messages: apiMessages.length > 0 ? apiMessages : [{ role: "user", content: "สวัสดีครับ" }],
-      };
-
-      const res = proxyUrl
-        ? await fetch(proxyUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          })
-        : await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": apiKey,
-              "anthropic-version": "2023-06-01",
-              "anthropic-dangerous-direct-browser-access": "true",
-            },
-            body: JSON.stringify(payload),
-          });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error?.message || `API error ${res.status}`);
-      }
-
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || "...";
+        maxTokens: 300,
+      });
 
       // Check for corrections in the reply
       const correctionMatch = reply.match(/💡\s*Correction:?\s*([\s\S]*?)$/i);

@@ -3,10 +3,12 @@ import { SCENARIOS_DATA } from "../data/scenariosData";
 import { loadLS, K_ROLEPLAY } from "../utils/storage";
 import { RolePlaySession } from "../components/RolePlaySession";
 import { levelStyle } from "../appStyles";
+import { hasAIAccess } from "../utils/ai";
 
 export function RolePlayPage() {
   const [selectedIdx, setSelectedIdx] = useState(null);
   const [levelFilter, setLevelFilter] = useState("All");
+  const [aiMode, setAiMode] = useState(false);
   const scores = loadLS(K_ROLEPLAY, {});
 
   if (selectedIdx !== null) {
@@ -16,6 +18,7 @@ export function RolePlayPage() {
           scenario={SCENARIOS_DATA[selectedIdx]}
           scenarioIndex={selectedIdx}
           onExit={() => setSelectedIdx(null)}
+          aiMode={aiMode}
         />
       </div>
     );
@@ -29,6 +32,14 @@ export function RolePlayPage() {
         <div className="ph-t">Conversation Role-Play</div>
         <div className="ph-s">Pick a scenario and practice responding in Thai. Type your answers using romanized phonetics.</div>
       </div>
+
+      {hasAIAccess() && (
+        <label className="rp-ai-toggle">
+          <input type="checkbox" checked={aiMode} onChange={e => setAiMode(e.target.checked)} />
+          <span className="rp-ai-toggle-label">🤖 AI Mode</span>
+          <span className="rp-ai-toggle-desc">{aiMode ? "Claude generates dynamic responses" : "Scripted turns (default)"}</span>
+        </label>
+      )}
 
       <div className="wk-tabs">
         {["All", "A1", "A2", "B1", "B2"].map(w => (

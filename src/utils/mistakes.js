@@ -30,6 +30,9 @@ export function saveMistakes(data) {
  * Record a mistake. Deduplicates by prompt+correctAnswer (updates existing entry).
  */
 export function recordMistake({ source, wordId, prompt, userAnswer, correctAnswer, score }) {
+  // Require at minimum a prompt and correctAnswer to avoid incomplete entries
+  if (!prompt && !correctAnswer) return;
+
   const mistakes = loadMistakes();
   const existing = mistakes.find(
     m => m.prompt === prompt && m.correctAnswer === correctAnswer
@@ -100,7 +103,8 @@ export function getMistakeStats() {
   const unreviewed = mistakes.filter(m => !m.reviewed).length;
   const bySource = {};
   for (const m of mistakes) {
-    bySource[m.source] = (bySource[m.source] || 0) + 1;
+    const src = m.source || "other";
+    bySource[src] = (bySource[src] || 0) + 1;
   }
   return { total, unreviewed, bySource };
 }
