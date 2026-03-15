@@ -74,24 +74,24 @@ export function generateUnitTest(unitId, allVocab) {
     if (distractors.length < 3) return; // skip if not enough distractors
 
     if (type === 0) {
-      // Thai → English
+      // Phonetics → English
       const options = shuffle([
         { text: word.english, correct: true },
         ...distractors.map(d => ({ text: d.english, correct: false })),
       ]);
       questions.push({
         type: "translate",
-        prompt: `What does "${word.thai}" mean?`,
+        prompt: `What does "${word.phonetics}" mean?`,
         wordId: word.id,
         thai: word.thai,
         options: options.map(o => o.text),
         answerIdx: options.findIndex(o => o.correct),
       });
     } else if (type === 1) {
-      // English → Thai
+      // English → Phonetics
       const options = shuffle([
-        { text: word.thai, correct: true },
-        ...distractors.map(d => ({ text: d.thai, correct: false })),
+        { text: word.phonetics, correct: true },
+        ...distractors.map(d => ({ text: d.phonetics, correct: false })),
       ]);
       questions.push({
         type: "reverse",

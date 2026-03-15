@@ -13,6 +13,7 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
   const [thaiFirst, setThaiFirst] = useState(false);
   const [showSparkle, setShowSparkle] = useState(false);
   const [showXP, setShowXP] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   if (!words?.length) {
     return (
@@ -39,11 +40,11 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
     setShowXP(true);
     setTimeout(() => setShowSparkle(false), 1000);
     setTimeout(() => setShowXP(false), 1200);
-    if (idx < total - 1) next(); else setFlipped(false);
+    if (idx < total - 1) next(); else { setFlipped(false); setTimeout(() => setCompleted(true), 300); }
   };
   const markReview = () => {
     if (updateConfidence) updateConfidence(word.id, -1);
-    if (idx < total - 1) next(); else setFlipped(false);
+    if (idx < total - 1) next(); else { setFlipped(false); setTimeout(() => setCompleted(true), 300); }
   };
 
   // Keyboard shortcuts
@@ -98,6 +99,29 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
       <button className="fc-speak-btn" onClick={e => { e.stopPropagation(); speakThai(word.thai); }}>🔊</button>
     </div>
   );
+
+  const restartDeck = () => { setIdx(0); setFlipped(false); setCompleted(false); };
+
+  if (completed) {
+    const masteredCount = confCounts ? confCounts[3] : 0;
+    return (
+      <div className="fc-wrap">
+        <div className="fc-done">
+          <Mascot mood="happy" size="md" />
+          <div className="fc-done-title">Deck Complete!</div>
+          <div className="fc-done-stats">
+            <div className="fc-done-stat"><span className="fc-done-num">{studiedCount}</span> studied</div>
+            <div className="fc-done-stat"><span className="fc-done-num">{masteredCount}</span> mastered</div>
+            <div className="fc-done-stat"><span className="fc-done-num">{total}</span> total</div>
+          </div>
+          {studiedCount < total && (
+            <div className="fc-done-hint">{total - studiedCount} word{total - studiedCount !== 1 ? "s" : ""} still to learn</div>
+          )}
+          <button className="btn btn-sec" onClick={restartDeck} style={{ marginTop: 16 }}>↻ Review Again</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fc-wrap">

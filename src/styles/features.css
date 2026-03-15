@@ -541,6 +541,24 @@
 .ut-review-q{font-size:13px;color:var(--t2);margin-bottom:4px}
 .ut-review-a{font-size:13px;color:var(--olive)}
 
+/* ── Unit Test Drill (Study Missed Words) ── */
+.ut-drill-container{max-width:420px;margin:0 auto}
+.ut-drill-card{background:var(--sur);border:2px solid var(--bdr);border-bottom:5px solid var(--bdr);border-radius:var(--radius-xl);min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;cursor:pointer;text-align:center;transition:all .15s ease;margin:20px 0}
+.ut-drill-card:hover{transform:translateY(-3px);border-color:var(--olive-mid);box-shadow:var(--shadow-md)}
+.ut-drill-card.flipped{border-color:var(--olive-mid);background:linear-gradient(135deg,var(--olive-soft) 0%,rgba(251,246,232,.5) 100%)}
+.ut-drill-emoji{font-size:40px;margin-bottom:12px}
+.ut-drill-phonetics{font-size:22px;font-weight:700;color:var(--t1);margin-bottom:8px}
+.ut-drill-english{font-size:22px;font-weight:700;color:var(--olive-dark);margin-bottom:12px}
+.ut-drill-thai{font-family:var(--thai);font-size:36px;font-weight:600;color:var(--olive);margin-bottom:4px}
+.ut-drill-speak{background:none;border:1.5px solid var(--bdr);border-radius:var(--radius-sm);padding:8px 16px;cursor:pointer;font-size:14px;transition:all .15s ease;margin-top:8px}
+.ut-drill-speak:hover{border-color:var(--olive);background:var(--olive-soft)}
+.ut-drill-hint{font-size:12px;color:var(--t3);margin-top:12px;font-weight:600}
+.ut-drill-actions{display:flex;gap:10px;justify-content:center}
+.ut-drill-done{max-width:420px;margin:0 auto;text-align:center;padding:40px 20px}
+.ut-drill-done-icon{font-size:56px;margin-bottom:12px}
+.ut-drill-done h3{font-family:var(--disp);font-size:20px;font-weight:600;margin-bottom:8px}
+.ut-drill-done p{font-size:14px;color:var(--t2);line-height:1.6}
+
 /* ── AI Story Generation ── */
 .st-gen-btn{border:2px dashed var(--olive-mid) !important;background:var(--olive-soft) !important;border-bottom:2px dashed var(--olive-mid) !important}
 .st-gen-btn:hover{border-color:var(--olive) !important;background:rgba(88,176,0,.08) !important}

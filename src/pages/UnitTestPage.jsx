@@ -23,6 +23,12 @@ export function UnitTestPage() {
   const [done, setDone] = useState(false);
   const [finalResult, setFinalResult] = useState(null);
 
+  // Drill mode for missed words
+  const [drillMode, setDrillMode] = useState(false);
+  const [drillWords, setDrillWords] = useState([]);
+  const [drillIdx, setDrillIdx] = useState(0);
+  const [drillFlipped, setDrillFlipped] = useState(false);
+
   const vocabCount = useMemo(() => {
     if (!unit) return 0;
     return new Set(unit.lessons.flatMap(l => l.vocabIds || [])).size;
@@ -78,6 +84,81 @@ export function UnitTestPage() {
   // Unit index for display
   const unitNum = CURRICULUM.indexOf(unit) + 1;
 
+  // ── Drill mode: study missed words ──
+  if (drillMode && drillWords.length > 0) {
+    const dw = drillWords[drillIdx];
+    const drillTotal = drillWords.length;
+    const isLast = drillIdx >= drillTotal - 1;
+    const drillDone = drillIdx >= drillTotal;
+
+    if (drillDone) {
+      return (
+        <div className="page">
+          <div className="ph">
+            <div className="ph-t">Unit {unitNum} Test</div>
+            <div className="ph-s">Review Complete</div>
+          </div>
+          <div className="ut-drill-done">
+            <div className="ut-drill-done-icon">💪</div>
+            <h3>Nice! You reviewed {drillTotal} word{drillTotal !== 1 ? "s" : ""}</h3>
+            <p>Ready to give the test another try?</p>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", marginTop: 20 }}>
+              <button className="btn btn-pri" onClick={() => { setDrillMode(false); startTest(); }}>Retake Test</button>
+              <button className="btn btn-sec" onClick={() => setDrillMode(false)}>Back to Results</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="page">
+        <div className="ph">
+          <div className="ph-t">Study Missed Words</div>
+          <div className="ph-s">{drillIdx + 1} of {drillTotal}</div>
+        </div>
+        <div className="ut-drill-container">
+          <div className="rp-prog">
+            <div className="rp-prog-fill" style={{ width: `${((drillIdx + 1) / drillTotal) * 100}%` }} />
+          </div>
+
+          <div
+            className={`ut-drill-card${drillFlipped ? " flipped" : ""}`}
+            onClick={() => setDrillFlipped(f => !f)}
+          >
+            {!drillFlipped ? (
+              <>
+                <div className="ut-drill-emoji">{dw.emoji}</div>
+                <div className="ut-drill-phonetics">{dw.phonetics}</div>
+                <button className="ut-drill-speak" onClick={e => { e.stopPropagation(); speakThai(dw.thai); }}>🔊 Listen</button>
+                <div className="ut-drill-hint">tap to reveal</div>
+              </>
+            ) : (
+              <>
+                <div className="ut-drill-english">{dw.english}</div>
+                <div className="ut-drill-thai">{dw.thai}</div>
+                <div className="ut-drill-phonetics">{dw.phonetics}</div>
+                <button className="ut-drill-speak" onClick={e => { e.stopPropagation(); speakThai(dw.thai); }}>🔊 Listen</button>
+              </>
+            )}
+          </div>
+
+          <div className="ut-drill-actions">
+            {drillIdx > 0 && (
+              <button className="btn btn-sec" onClick={() => { setDrillIdx(i => i - 1); setDrillFlipped(false); }}>← Prev</button>
+            )}
+            <button
+              className="btn btn-pri"
+              onClick={() => { setDrillIdx(i => i + 1); setDrillFlipped(false); }}
+            >
+              {isLast ? "Finish Review" : "Next →"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ── Intro screen ──
   if (!started) {
     return (
@@ -95,7 +176,7 @@ export function UnitTestPage() {
           </p>
           <ul className="pt-intro-list">
             <li>Multiple choice questions</li>
-            <li>Thai → English, English → Thai, and audio</li>
+            <li>Phonetics → English, English → Phonetics, and audio</li>
             <li>75% required to pass</li>
             <li>You can retake anytime</li>
           </ul>
@@ -126,6 +207,17 @@ export function UnitTestPage() {
     const wrongAnswers = questions
       .map((q, i) => ({ ...q, idx: i }))
       .filter((_, i) => !answers[i]);
+
+    const startDrill = () => {
+      const words = wrongAnswers
+        .map(q => allVocab.find(v => v.id === q.wordId))
+        .filter(Boolean);
+      if (words.length === 0) return;
+      setDrillWords(words);
+      setDrillIdx(0);
+      setDrillFlipped(false);
+      setDrillMode(true);
+    };
 
     return (
       <div className="page">
@@ -179,7 +271,10 @@ export function UnitTestPage() {
             )}
             {!passed && (
               <>
-                <button className="btn btn-pri" onClick={startTest}>Retake Test</button>
+                {wrongAnswers.length > 0 && (
+                  <button className="btn btn-pri" onClick={startDrill}>📖 Study Missed Words</button>
+                )}
+                <button className="btn btn-sec" onClick={startTest}>Retake Test</button>
                 <button className="btn btn-sec" onClick={() => navigate(`/unit/${unitId}`)}>Review Unit</button>
               </>
             )}
@@ -229,7 +324,7 @@ export function UnitTestPage() {
             }
             return (
               <button key={i} className={cls} onClick={() => handleSelect(i)} disabled={answered}>
-                {q.type === "reverse" ? <span style={{ fontFamily: "var(--thai)", fontSize: 18 }}>{opt}</span> : opt}
+                {opt}
               </button>
             );
           })}
