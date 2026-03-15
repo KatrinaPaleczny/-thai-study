@@ -55,6 +55,7 @@ export function AppProvider({ children }) {
 
   const allVocab = useMemo(() => [...VOCAB_DATA, ...customWords].filter(v => !hiddenIds.has(v.id)), [customWords, hiddenIds]);
   const cats = useMemo(() => [...new Set(allVocab.map(v => v.category))].sort(), [allVocab]);
+  const levels = useMemo(() => [...new Set(allVocab.map(v => v.level).filter(Boolean))].sort(), [allVocab]);
 
   const updateConfidence = useCallback((id, delta) => {
     setConfidence(prev => {
@@ -69,7 +70,7 @@ export function AppProvider({ children }) {
   }, [allVocab]);
 
   const value = useMemo(() => ({
-    allVocab, cats,
+    allVocab, cats, levels,
     studied, toggleStudied: handleToggleStudied,
     favs, toggleFav,
     pinned, togglePin,
@@ -80,7 +81,7 @@ export function AppProvider({ children }) {
     confidence, updateConfidence,
     showSession, setShowSession,
   }), [
-    allVocab, cats, studied, favs, pinned, customWords, hiddenIds,
+    allVocab, cats, levels, studied, favs, pinned, customWords, hiddenIds,
     scriptStudied, streakData, confidence, showSession,
     handleToggleStudied, handleToggleScriptStudied, hideWord,
     toggleFav, togglePin, updateConfidence,

@@ -3,17 +3,19 @@ import { FlashcardDeck } from "../components/FlashcardDeck";
 import { useApp } from "../context/AppContext";
 
 export function FlashcardPage() {
-  const { allVocab, favs, studied, toggleStudied, pinned, cats, confidence, updateConfidence } = useApp();
+  const { allVocab, favs, studied, toggleStudied, pinned, cats, levels, confidence, updateConfidence } = useApp();
   const [view, setView] = useState("all");
   const [filterCat, setFilterCat] = useState("");
+  const [filterLevel, setFilterLevel] = useState("");
 
   const words = useMemo(() => {
     let list = allVocab;
     if (view === "pinned") list = list.filter(v => pinned.has(v.id));
     if (view === "favs") list = list.filter(v => favs.has(v.id));
     if (filterCat) list = list.filter(v => v.category === filterCat);
+    if (filterLevel) list = list.filter(v => v.level === filterLevel);
     return list;
-  }, [allVocab, view, filterCat, favs, pinned]);
+  }, [allVocab, view, filterCat, filterLevel, favs, pinned]);
 
   return (
     <div className="page">
@@ -26,6 +28,14 @@ export function FlashcardPage() {
       <div className="tabs">
         {[["all","All words"],["pinned","📌 Pinned cards"],["favs","♥ Favourites"]].map(([k,l]) => (
           <button key={k} className={`tab${view === k ? " on" : ""}`} onClick={() => setView(k)}>{l}</button>
+        ))}
+      </div>
+
+      {/* Level filter chips */}
+      <div className="chips">
+        <button className={`chip${!filterLevel ? " on" : ""}`} onClick={() => setFilterLevel("")}>All levels</button>
+        {levels.map(l => (
+          <button key={l} className={`chip${filterLevel === l ? " on" : ""}`} onClick={() => setFilterLevel(l)}>{l}</button>
         ))}
       </div>
 

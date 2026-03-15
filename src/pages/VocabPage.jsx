@@ -45,6 +45,9 @@ function AddWordModal({ cats, onSave, onClose }) {
   );
 }
 
+const LEVEL_COLORS = { A1: {color:"#1a7f37",background:"#dafbe1",borderColor:"#1a7f37"}, A2: {color:"#0969da",background:"#ddf4ff",borderColor:"#0969da"}, B1: {color:"#9a6700",background:"#fff8c5",borderColor:"#9a6700"}, B2: {color:"#bc4c00",background:"#fff1e5",borderColor:"#bc4c00"} };
+const levelStyle = l => LEVEL_COLORS[l] || {};
+
 function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, togglePin, onDelete, expanded, toggle }) {
   const [speaking, setSpeaking] = useState(false);
   const speak = e => {
@@ -68,7 +71,7 @@ function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, to
       </div>
       <div className="vc-bot">
         <span className="vc-ph">{v.phonetics}</span>
-        {expanded && <span className="vc-cat">{v.category}</span>}
+        {expanded && <><span className="vc-cat">{v.category}</span>{v.level && <span className="vc-lvl" style={levelStyle(v.level)}>{v.level}</span>}</>}
       </div>
       {expanded && (
         <div className="vc-acts" onClick={e=>e.stopPropagation()}>
@@ -90,9 +93,10 @@ function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, to
 }
 
 export function VocabPage() {
-  const { allVocab, customWords, setCustomWords, hideWord, cats, favs, toggleFav, studied, toggleStudied, pinned, togglePin } = useApp();
+  const { allVocab, customWords, setCustomWords, hideWord, cats, levels, favs, toggleFav, studied, toggleStudied, pinned, togglePin } = useApp();
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("All");
+  const [filterLevel, setFilterLevel] = useState("All");
   const [expandedId, setExpandedId] = useState(null);
   const [view, setView] = useState("all");
   const [showAdd, setShowAdd] = useState(false);
@@ -102,12 +106,13 @@ export function VocabPage() {
     if (view==="week") items = items.filter(v=>pinned.has(v.id));
     else if (view==="favs") items = items.filter(v=>favs.has(v.id));
     if (filterCat!=="All") items = items.filter(v=>v.category===filterCat);
+    if (filterLevel!=="All") items = items.filter(v=>v.level===filterLevel);
     if (search.trim()) {
       const q = search.toLowerCase();
       items = items.filter(v=>v.thai.includes(search)||v.phonetics.toLowerCase().includes(q)||v.english.toLowerCase().includes(q));
     }
     return items;
-  }, [search, filterCat, view, allVocab, pinned, favs]);
+  }, [search, filterCat, filterLevel, view, allVocab, pinned, favs]);
 
   const addWord = form => {
     const w = {...form, id:`c_${Date.now()}`, isCustom:true};
@@ -138,6 +143,9 @@ export function VocabPage() {
       {view==="week" && pinned.size>0 && <div className="pinned-banner">📌 {pinned.size} words pinned this week. Master these before rotating in new ones.</div>}
       <div className="srch"><span className="srch-ic"><SearchIcon/></span>
         <input placeholder="Search Thai, phonetics, or English…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
+      <div className="chips">
+        {["All",...levels].map(l=><span key={l} className={`chip${filterLevel===l?" on":""}`} onClick={()=>setFilterLevel(l)}>{l==="All"?"All levels":l}</span>)}
+      </div>
       <div className="chips">
         {["All",...cats].map(c=><span key={c} className={`chip${filterCat===c?" on":""}`} onClick={()=>setFilterCat(c)}>{c}</span>)}
       </div>

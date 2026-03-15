@@ -85,6 +85,7 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
 .vc-ph{font-size:12px;color:var(--t3);font-style:italic}
 .vc-en{font-size:12.5px;color:var(--t2);flex:1;text-align:right;margin-right:4px}
 .vc-cat{font-size:10px;color:var(--t3);padding:2px 8px;border:1px solid var(--bdr);border-radius:20px;white-space:nowrap;background:var(--sur2)}
+.vc-lvl{font-size:10px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:700;border:1px solid;letter-spacing:.03em}
 .vc-acts{display:flex;align-items:center;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--bdr)}
 .ic-btn{background:none;border:none;cursor:pointer;color:var(--t3);padding:4px;border-radius:6px;display:flex;align-items:center;transition:all .2s ease}
 .ic-btn:hover{color:var(--t1);background:var(--sur2)}
