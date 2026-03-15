@@ -9,6 +9,7 @@ function AddWordModal({ cats, onSave, onClose }) {
     thai:"", phonetics:"", english:"", category:"Food", emoji:"📝",
     example_thai:"", example_phonetics:"", example_english:""
   });
+  const [showMore, setShowMore] = useState(false);
   const set = (k,v) => setForm(p=>({...p,[k]:v}));
   const valid = form.thai.trim() && form.phonetics.trim() && form.english.trim();
   return (
@@ -22,21 +23,32 @@ function AddWordModal({ cats, onSave, onClose }) {
           <input placeholder="e.g. gaa-fɛɛ" value={form.phonetics} onChange={e=>set("phonetics",e.target.value)}/></div>
         <div className="field"><label>English meaning *</label>
           <input placeholder="e.g. coffee" value={form.english} onChange={e=>set("english",e.target.value)}/></div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <div className="field"><label>Category</label>
-            <select value={form.category} onChange={e=>set("category",e.target.value)}>
-              {cats.map(c=><option key={c}>{c}</option>)}
-              <option>Custom</option>
-            </select></div>
-          <div className="field"><label>Emoji</label>
-            <input placeholder="📝" value={form.emoji} onChange={e=>set("emoji",e.target.value)}/></div>
-        </div>
-        <div className="field"><label>Example (Thai) — optional</label>
-          <input placeholder="e.g. กาแฟร้อนไหม" value={form.example_thai} onChange={e=>set("example_thai",e.target.value)} style={{fontFamily:"var(--thai)"}}/></div>
-        <div className="field"><label>Example phonetics</label>
-          <input placeholder="e.g. gaa-fɛɛ rón mái" value={form.example_phonetics} onChange={e=>set("example_phonetics",e.target.value)}/></div>
-        <div className="field"><label>Example translation</label>
-          <input placeholder="e.g. Is the coffee hot?" value={form.example_english} onChange={e=>set("example_english",e.target.value)}/></div>
+        <button
+          type="button"
+          onClick={() => setShowMore(!showMore)}
+          style={{background:"none",border:"none",color:"var(--olive)",cursor:"pointer",fontSize:12,fontWeight:700,padding:"6px 0",marginBottom:4}}
+        >
+          {showMore ? "Hide extras ▲" : "Add category, emoji & example ▼"}
+        </button>
+        {showMore && (
+          <>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              <div className="field"><label>Category</label>
+                <select value={form.category} onChange={e=>set("category",e.target.value)}>
+                  {cats.map(c=><option key={c}>{c}</option>)}
+                  <option>Custom</option>
+                </select></div>
+              <div className="field"><label>Emoji</label>
+                <input placeholder="📝" value={form.emoji} onChange={e=>set("emoji",e.target.value)}/></div>
+            </div>
+            <div className="field"><label>Example (Thai)</label>
+              <input placeholder="e.g. กาแฟร้อนไหม" value={form.example_thai} onChange={e=>set("example_thai",e.target.value)} style={{fontFamily:"var(--thai)"}}/></div>
+            <div className="field"><label>Example phonetics</label>
+              <input placeholder="e.g. gaa-fɛɛ rón mái" value={form.example_phonetics} onChange={e=>set("example_phonetics",e.target.value)}/></div>
+            <div className="field"><label>Example translation</label>
+              <input placeholder="e.g. Is the coffee hot?" value={form.example_english} onChange={e=>set("example_english",e.target.value)}/></div>
+          </>
+        )}
         <div className="modal-btns">
           <button className="modal-btn sec" onClick={onClose}>Cancel</button>
           <button className="modal-btn prim" onClick={()=>valid&&onSave(form)} style={{opacity:valid?1:0.5}}>Save word</button>

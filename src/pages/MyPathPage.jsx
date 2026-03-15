@@ -363,11 +363,6 @@ export function MyPathPage() {
         </button>
       )}
 
-      {/* ── Daily Session ── */}
-      <button className="ds-launch-btn" onClick={() => setShowSession(true)}>
-        ⏱️ Study for 5 minutes
-      </button>
-
       {/* ── Full Curriculum (collapsible) ── */}
       <div className="mp-section">
         <button className="mp-curriculum-toggle" onClick={() => setShowCurriculum(!showCurriculum)}>

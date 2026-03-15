@@ -112,7 +112,7 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* ── Coffee Watermark ── */
-.main::after{content:"🇹🇭";position:fixed;bottom:18px;right:24px;font-size:80px;opacity:.06;pointer-events:none;user-select:none;z-index:0;line-height:1}
+.main::after{content:"☕";position:fixed;bottom:18px;right:24px;font-size:80px;opacity:.06;pointer-events:none;user-select:none;z-index:0;line-height:1}
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar{width:7px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#d0ccc6;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#b0aca7}

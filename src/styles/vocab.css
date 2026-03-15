@@ -50,3 +50,16 @@
 .vtable-mark:hover{border-color:var(--olive);color:var(--olive)}
 .vtable-mark.on{background:var(--success);border-color:var(--success-dark);color:#fff}
 .vtable-conf{display:block;font-size:10px;line-height:1;margin-top:2px;letter-spacing:1px;font-weight:700}
+
+/* ── Vocab Table Mobile ── */
+@media(max-width:600px){
+  .vtable-hdr{display:none}
+  .vtable-row{flex-wrap:wrap;gap:4px 8px;padding:10px 12px}
+  .vtable-col-ej{width:20px}
+  .vtable-col-th{min-width:0;flex:1}
+  .vtable-col-ph{min-width:0;width:100%;padding-left:28px;font-size:11px}
+  .vtable-col-en{width:100%;padding-left:28px}
+  .vtable-col-act{position:absolute;right:12px;top:10px}
+  .vtable-row{position:relative}
+  .vtable-mark{width:28px;height:28px}
+}
