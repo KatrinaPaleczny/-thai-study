@@ -63,6 +63,9 @@ const XP_VALUES = {
   ai_explain: 2,
   audio_quiz_correct: 5,
   audio_quiz_attempt: 1,
+  script_quiz_correct: 5,
+  script_quiz_attempt: 1,
+  mistake_quiz_correct: 5,
 };
 
 export function awardXP(action) {

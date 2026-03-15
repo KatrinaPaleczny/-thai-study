@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 
 // Predefined stroke paths for Thai characters
 // Each stroke is an array of [x, y] points (normalized 0-300)
-const STROKE_DATA = {
+export const STROKE_DATA = {
   // ── Basic Consonants ──
   "ก": [
     [[60, 80], [60, 220]],                             // vertical left

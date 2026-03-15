@@ -509,6 +509,18 @@
 .sa-unavailable{text-align:center;padding:24px;background:var(--sur2);border:1px dashed var(--bdr);border-radius:var(--radius-md)}
 .sa-unavailable-text{font-size:13px;color:var(--t3)}
 
+.sa-char-picker{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:4px}
+.sa-char-btn{width:48px;height:48px;border-radius:var(--radius-sm);border:2px solid var(--bdr);background:var(--sur);font-family:var(--thai);font-size:24px;cursor:pointer;transition:all .15s ease;color:var(--t1);display:flex;align-items:center;justify-content:center}
+.sa-char-btn:hover:not(:disabled){border-color:var(--olive);transform:translateY(-1px)}
+.sa-char-btn.on{border-color:var(--olive);background:var(--olive-soft);border-bottom:3px solid var(--olive-dark)}
+.sa-char-btn.dim{opacity:.3;cursor:default}
+
+/* ── Script Quiz Display ── */
+.script-quiz-display{text-align:center;padding:16px;margin-bottom:12px}
+.script-quiz-char{font-family:var(--thai);font-size:56px;font-weight:500;line-height:1.2;color:var(--t1);margin-bottom:4px}
+.script-quiz-phonetic{font-size:28px;font-weight:700;color:var(--olive);margin-bottom:4px}
+.script-quiz-prompt{font-size:13px;color:var(--t3);font-weight:600}
+
 .hw-mode-toggle{display:flex;gap:4px;justify-content:center;margin-bottom:16px;background:var(--sur2);border-radius:var(--radius-sm);padding:3px;border:1px solid var(--bdr)}
 .hw-mode-btn{flex:1;padding:8px 16px;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--t2);transition:all .2s;font-family:var(--body)}
 .hw-mode-btn.on{background:var(--sur);color:var(--olive-dark);box-shadow:var(--shadow-xs)}

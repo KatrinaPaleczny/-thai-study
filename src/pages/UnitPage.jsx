@@ -18,6 +18,9 @@ import { loadUnitTests } from "../utils/unitTests";
 import { MiniAudioQuiz } from "../components/MiniAudioQuiz";
 import { MiniPronunciation } from "../components/MiniPronunciation";
 import { MatchingGame } from "../components/MatchingGame";
+import { ScriptMatchingGame } from "../components/ScriptMatchingGame";
+import { ScriptMiniQuiz } from "../components/ScriptMiniQuiz";
+import { StrokeAnimation, STROKE_DATA } from "../components/StrokeAnimation";
 
 /* ── Section divider (accordion) ── */
 function Section({ icon, title, children, defaultOpen = false }) {
@@ -149,10 +152,52 @@ function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confiden
   );
 }
 
+/* ── Stroke Animation Picker ── */
+function StrokeAnimationPicker({ characters }) {
+  const charsWithStrokes = characters.filter(c => {
+    const cleaned = c.char.replace(/◌/g, "");
+    return cleaned.length === 1 && STROKE_DATA[cleaned];
+  });
+  const [selectedChar, setSelectedChar] = useState(charsWithStrokes[0]?.char.replace(/◌/g, "") || null);
+
+  if (charsWithStrokes.length === 0) return null;
+
+  return (
+    <div>
+      <div className="sa-char-picker">
+        {characters.map(c => {
+          const cleaned = c.char.replace(/◌/g, "");
+          const hasStroke = cleaned.length === 1 && STROKE_DATA[cleaned];
+          return (
+            <button
+              key={c.char}
+              className={`sa-char-btn${selectedChar === cleaned ? " on" : ""}${!hasStroke ? " dim" : ""}`}
+              onClick={() => hasStroke && setSelectedChar(cleaned)}
+              disabled={!hasStroke}
+              title={hasStroke ? c.phonetic : "No stroke data yet"}
+            >
+              {c.char}
+            </button>
+          );
+        })}
+      </div>
+      {selectedChar && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
+          <StrokeAnimation key={selectedChar} char={selectedChar} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Script Lesson Content ── */
 function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
   const chars = lesson.characters || [];
   const hasUnstudied = chars.some(c => !scriptStudied.has(c.char));
+  const charsWithStrokes = chars.filter(c => {
+    const cleaned = c.char.replace(/◌/g, "");
+    return cleaned.length === 1 && STROKE_DATA[cleaned];
+  });
 
   return (
     <div className="unit-lesson-content">
@@ -171,6 +216,21 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
       <Section icon="📝" title="Characters" defaultOpen={!hasUnstudied}>
         <ScriptCards characters={chars} studied={scriptStudied} onToggle={toggleScriptStudied} />
       </Section>
+      {charsWithStrokes.length > 0 && (
+        <Section icon="✍️" title="Stroke Order">
+          <StrokeAnimationPicker key={`sa-${lesson.id}`} characters={chars} />
+        </Section>
+      )}
+      {chars.length >= 4 && (
+        <Section icon="🔗" title="Matching Game">
+          <ScriptMatchingGame key={`smg-${lesson.id}`} characters={chars} />
+        </Section>
+      )}
+      {chars.length >= 4 && (
+        <Section icon="🧠" title="Quick Quiz">
+          <ScriptMiniQuiz key={`sq-${lesson.id}`} characters={chars} />
+        </Section>
+      )}
     </div>
   );
 }
