@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import { NUMBERS_DATA } from "../data/numbersData";
+import { TIME_SYSTEM_NOTES, TIME_DRILLS } from "../data/timeData";
 import { speakThai } from "../utils/speech";
 
 const NUM_SEGMENTS = [
@@ -81,6 +82,115 @@ function NumberFlashcards() {
   );
 }
 
+/* ── Clock face SVG for visual time display ── */
+function ClockFace({ hour }) {
+  const h12 = hour % 12;
+  const angle = (h12 / 12) * 360 - 90;
+  const hx = 50 + 28 * Math.cos(angle * Math.PI / 180);
+  const hy = 50 + 28 * Math.sin(angle * Math.PI / 180);
+  return (
+    <svg viewBox="0 0 100 100" width="120" height="120" style={{ display: "block", margin: "0 auto 12px" }}>
+      <circle cx="50" cy="50" r="46" fill="var(--sur2)" stroke="var(--bor)" strokeWidth="2" />
+      {[...Array(12)].map((_, i) => {
+        const a = ((i + 1) / 12) * 360 - 90;
+        const x = 50 + 38 * Math.cos(a * Math.PI / 180);
+        const y = 50 + 38 * Math.sin(a * Math.PI / 180);
+        return <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize="8" fill="var(--t2)">{i + 1}</text>;
+      })}
+      {/* minute hand at 12 */}
+      <line x1="50" y1="50" x2="50" y2="16" stroke="var(--t2)" strokeWidth="1.5" strokeLinecap="round" />
+      {/* hour hand */}
+      <line x1="50" y1="50" x2={hx} y2={hy} stroke="var(--pri)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="50" cy="50" r="3" fill="var(--pri)" />
+    </svg>
+  );
+}
+
+/* ── Telling Time tab content ── */
+function TellingTime() {
+  const [mode, setMode] = useState("guide"); // guide | drill
+  const [tIdx, setTIdx] = useState(() => Math.floor(Math.random() * TIME_DRILLS.length));
+  const [revealed, setRevealed] = useState(false);
+  const [streak, setStreak] = useState(0);
+
+  const curr = TIME_DRILLS[tIdx];
+  const nextQ = () => { setTIdx(Math.floor(Math.random() * TIME_DRILLS.length)); setRevealed(false); };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 18, justifyContent: "center" }}>
+        <button className={`vt-btn${mode === "guide" ? " on" : ""}`} onClick={() => setMode("guide")}>Guide</button>
+        <button className={`vt-btn${mode === "drill" ? " on" : ""}`} onClick={() => setMode("drill")}>Practice</button>
+      </div>
+
+      {mode === "guide" && (
+        <div>
+          <p style={{ fontSize: 13, color: "var(--t2)", textAlign: "center", marginBottom: 16 }}>
+            Thai splits the day into periods — each with its own word. It's different from the 12-hour AM/PM system.
+          </p>
+          <div className="num-grid" style={{ gridTemplateColumns: "1fr" }}>
+            {TIME_SYSTEM_NOTES.map((t, i) => (
+              <div key={i} className="num-card" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "0 14px", alignItems: "center", textAlign: "left" }}>
+                <div style={{ fontSize: 12, color: "var(--t3)", fontWeight: 600, whiteSpace: "nowrap" }}>{t.period}</div>
+                <div>
+                  <span style={{ fontFamily: "var(--thai)", fontSize: 20 }}>{t.word}</span>
+                  <span style={{ fontSize: 12, color: "var(--t3)", marginLeft: 8 }}>{t.phonetics}</span>
+                </div>
+                <div></div>
+                <div style={{ fontSize: 12, color: "var(--t2)" }}>{t.note}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ marginTop: 24 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, textAlign: "center" }}>All 24 Hours</div>
+            <div className="num-grid">
+              {TIME_DRILLS.map((t, i) => (
+                <div key={i} className="num-card">
+                  <div className="num-val" style={{ fontSize: 14 }}>{t.display}</div>
+                  <div className="num-th">{t.thai}</div>
+                  <div className="num-ph">{t.phonetics}</div>
+                  <button className="num-speak" onClick={() => speakThai(t.thai)} title="Hear pronunciation">🔊</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mode === "drill" && (
+        <div className="num-drill">
+          <div style={{ marginBottom: 8, fontSize: 12, color: "var(--t2)", textAlign: "center" }}>
+            See the clock — say the time in Thai, then reveal to check.
+          </div>
+
+          <div className="num-q">
+            <ClockFace hour={curr.hour} />
+            <div className="num-disp" style={{ fontSize: 22 }}>{curr.display}</div>
+            <div className="num-ql">How do you say this in Thai?</div>
+
+            {revealed && (
+              <div style={{ marginTop: 12, padding: "10px 14px", background: "var(--sur2)", borderRadius: 8 }}>
+                <div style={{ fontFamily: "var(--thai)", fontSize: 24 }}>{curr.thai}</div>
+                <div style={{ fontSize: 12, color: "var(--t3)", marginTop: 4 }}>{curr.phonetics}</div>
+                <button className="num-speak" onClick={() => speakThai(curr.thai)} style={{ marginTop: 6 }} title="Hear pronunciation">🔊</button>
+              </div>
+            )}
+          </div>
+
+          {!revealed
+            ? <div style={{ textAlign: "center" }}><button className="num-b p" onClick={() => setRevealed(true)}>Reveal</button></div>
+            : <div className="qf-btns">
+                <button className="qf-btn miss" onClick={() => { setStreak(0); nextQ(); }}>✗ Missed it</button>
+                <button className="qf-btn got" onClick={() => { setStreak(s => s + 1); nextQ(); }}>✓ Got it</button>
+              </div>}
+          <div className="qf-streak">Streak: <strong>{streak}</strong></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function NumbersPage() {
   const [tab, setTab] = useState("reference");
   const [dir, setDir] = useState("num-to-thai");
@@ -105,9 +215,9 @@ export function NumbersPage() {
 
   return (
     <div className="page">
-      <div className="ph"><div className="ph-t">ตัวเลข — Numbers</div></div>
+      <div className="ph"><div className="ph-t">ตัวเลข — Numbers & Time</div></div>
       <div className="tabs">
-        {[["reference","Reference"],["flashcards","🃏 Flashcards"],["drill","Type Drill"],["quickfire","⚡ Quick Fire"]].map(([k,l])=>
+        {[["reference","Reference"],["flashcards","🃏 Flashcards"],["drill","Type Drill"],["quickfire","⚡ Quick Fire"],["time","🕐 Telling Time"]].map(([k,l])=>
           <button key={k} className={`tab${tab===k?" on":""}`} onClick={()=>setTab(k)}>{l}</button>)}
       </div>
 
@@ -197,6 +307,8 @@ export function NumbersPage() {
           <div className="qf-streak">Streak: <strong>{streak}</strong></div>
         </div>
       )}
+
+      {tab==="time" && <TellingTime />}
     </div>
   );
 }

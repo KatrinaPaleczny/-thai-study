@@ -68,6 +68,10 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
   const confCounts = confidence ? [0, 0, 0, 0] : null;
   if (confCounts) words.forEach(w => { const c = confidence[w.id] || 0; confCounts[c]++; });
 
+  // Hide emoji on front for categories where it gives away the answer
+  const HIDE_EMOJI_FRONT = new Set(["Colours", "Numbers"]);
+  const hideEmoji = HIDE_EMOJI_FRONT.has(word.category);
+
   // Determine front/back content based on thaiFirst toggle
   const frontContent = thaiFirst ? (
     <>
@@ -79,8 +83,14 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
   ) : (
     <>
       <div className="fc-cat">{word.category}</div>
-      <div className="fc-ej">{word.emoji}</div>
-      <div className="fc-front-ph">{word.phonetics}</div>
+      {hideEmoji ? (
+        <div className="fc-front-ph" style={{ fontSize: 28 }}>{word.phonetics}</div>
+      ) : (
+        <>
+          <div className="fc-ej">{word.emoji}</div>
+          <div className="fc-front-ph">{word.phonetics}</div>
+        </>
+      )}
       <div className="fc-front-lbl">tap to reveal</div>
     </>
   );
@@ -96,6 +106,7 @@ export function FlashcardDeck({ words, studied, toggleStudied, confidence = {}, 
       <div className="fc-thai">{word.thai}</div>
       <div className="fc-rev-ph">{word.phonetics}</div>
       <div className="fc-en">{word.english}</div>
+      {hideEmoji && <div className="fc-ej" style={{ marginTop: 4 }}>{word.emoji}</div>}
       <button className="fc-speak-btn" onClick={e => { e.stopPropagation(); speakThai(word.thai); }}>🔊</button>
     </div>
   );

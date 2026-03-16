@@ -148,7 +148,7 @@ export function Sidebar() {
         <div className="sb-lbl">Reference</div>
         {btn("/grammar","grammar","📐","Grammar")}
         {btn("/grammarbank","grammarbank","📋","Grammar Bank")}
-        {btn("/numbers","numbers","🔢","Numbers")}
+        {btn("/numbers","numbers","🔢","Numbers & Time")}
       </>}
 
       {/* After 60 words */}
