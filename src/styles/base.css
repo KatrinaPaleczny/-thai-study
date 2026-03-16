@@ -153,9 +153,10 @@ button:focus-visible{outline:2px solid var(--olive);outline-offset:2px;border-ra
   .ph-t{font-size:22px}
   .ph-s{font-size:12px}
 
-  /* Compact tabs */
-  .tabs{margin-bottom:12px;gap:0}
-  .tab{padding:8px 12px;font-size:12px}
+  /* Compact tabs — scrollable on mobile */
+  .tabs{margin-bottom:12px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 12px;font-size:12px;white-space:nowrap;flex-shrink:0}
 
   /* Horizontal-scroll chips instead of wrapping */
   .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-bottom:10px;gap:6px;padding-bottom:2px}
