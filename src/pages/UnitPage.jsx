@@ -20,6 +20,7 @@ import { MiniPronunciation } from "../components/MiniPronunciation";
 import { MatchingGame } from "../components/MatchingGame";
 import { ScriptMatchingGame } from "../components/ScriptMatchingGame";
 import { ScriptMiniQuiz } from "../components/ScriptMiniQuiz";
+import { ScriptIntroDrill } from "../components/ScriptIntroDrill";
 import { StrokeAnimation, STROKE_DATA } from "../components/StrokeAnimation";
 
 /* ── Section divider (accordion) ── */
@@ -211,6 +212,11 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
       {chars.length > 0 && (
         <Section icon="🃏" title="Flashcards" defaultOpen={hasUnstudied}>
           <ScriptFlashcardDeck key={`sfc-${lesson.id}`} characters={chars} studied={scriptStudied} onToggle={toggleScriptStudied} />
+        </Section>
+      )}
+      {chars.length >= 3 && (
+        <Section icon="🎯" title="Intro Drill" defaultOpen={hasUnstudied}>
+          <ScriptIntroDrill key={`sid-${lesson.id}`} characters={chars} />
         </Section>
       )}
       <Section icon="📝" title="Characters" defaultOpen={!hasUnstudied}>

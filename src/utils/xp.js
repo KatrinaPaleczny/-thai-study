@@ -43,6 +43,8 @@ function today() {
  * - pronunciation_attempt: 3
  * - daily_session: 10
  * - scene_word: 2
+ * - script_drill_correct: 3
+ * - script_drill_attempt: 1
  */
 const XP_VALUES = {
   vocab_study: 2,
@@ -63,6 +65,8 @@ const XP_VALUES = {
   ai_explain: 2,
   audio_quiz_correct: 5,
   audio_quiz_attempt: 1,
+  script_drill_correct: 3,
+  script_drill_attempt: 1,
   script_quiz_correct: 5,
   script_quiz_attempt: 1,
   mistake_quiz_correct: 5,
