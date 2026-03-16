@@ -11,12 +11,12 @@ function shuffle(arr) {
 }
 
 function generateQuestions(characters, count = 5) {
-  if (characters.length < 4) return [];
+  if (characters.length < 3) return [];
   const picked = shuffle(characters).slice(0, Math.min(count, characters.length));
 
   return picked.map((ch, i) => {
     const others = characters.filter(c => c.char !== ch.char && c.phonetic !== ch.phonetic);
-    const distractors = shuffle(others).slice(0, 3);
+    const distractors = shuffle(others).slice(0, Math.min(3, others.length));
 
     if (i % 2 === 0) {
       // char → sound
@@ -67,8 +67,8 @@ export function ScriptMiniQuiz({ characters }) {
     setPhase("playing");
   }, [characters]);
 
-  if (characters.length < 4) {
-    return <div className="mini-aq-msg">Need at least 4 characters for a quiz.</div>;
+  if (characters.length < 3) {
+    return <div className="mini-aq-msg">Need at least 3 characters for a quiz.</div>;
   }
 
   if (phase === "ready") {

@@ -37,8 +37,8 @@ export function ScriptMatchingGame({ characters }) {
     if (characters && characters.length > 0) startNewRound();
   }, [characters, startNewRound]);
 
-  if (!characters || characters.length < 4) {
-    return <div className="match-game">Need at least 4 characters for matching.</div>;
+  if (!characters || characters.length < 3) {
+    return <div className="match-game">Need at least 3 characters for matching.</div>;
   }
 
   const handleCharClick = (c) => {

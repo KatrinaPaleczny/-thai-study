@@ -9,7 +9,7 @@ import { BuildTab } from "../components/BuildTab";
 import { ConversationSection } from "../components/ConversationSection";
 import { WordBankBuilder } from "../components/WordBankBuilder";
 import { FlashcardDeck } from "../components/FlashcardDeck";
-import { ScriptFlashcardDeck } from "../components/ScriptFlashcardDeck";
+import { SCRIPT_LESSONS } from "../data/scriptData";
 import { CulturalNotes } from "../components/CulturalNotes";
 import { CULTURAL_NOTES } from "../data/culturalNotes";
 import { PassageCard } from "../components/ReadingPractice";
@@ -209,14 +209,11 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
           </div>
         </Section>
       )}
-      {chars.length > 0 && (
-        <Section icon="🃏" title="Flashcards" defaultOpen={hasUnstudied}>
-          <ScriptFlashcardDeck key={`sfc-${lesson.id}`} characters={chars} studied={scriptStudied} onToggle={toggleScriptStudied} />
-        </Section>
-      )}
       {chars.length >= 3 && (
         <Section icon="🎯" title="Intro Drill" defaultOpen={hasUnstudied}>
-          <ScriptIntroDrill key={`sid-${lesson.id}`} characters={chars} />
+          <ScriptIntroDrill key={`sid-${lesson.id}`} characters={chars}
+            onComplete={(cs) => cs.forEach(c => { if (!scriptStudied.has(c.char)) toggleScriptStudied(c.char); })}
+          />
         </Section>
       )}
       <Section icon="📝" title="Characters" defaultOpen={!hasUnstudied}>
@@ -227,12 +224,12 @@ function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
           <StrokeAnimationPicker key={`sa-${lesson.id}`} characters={chars} />
         </Section>
       )}
-      {chars.length >= 4 && (
+      {chars.length >= 3 && (
         <Section icon="🔗" title="Matching Game">
           <ScriptMatchingGame key={`smg-${lesson.id}`} characters={chars} />
         </Section>
       )}
-      {chars.length >= 4 && (
+      {chars.length >= 3 && (
         <Section icon="🧠" title="Quick Quiz">
           <ScriptMiniQuiz key={`sq-${lesson.id}`} characters={chars} />
         </Section>
@@ -248,6 +245,23 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
   const testResults = loadUnitTests()[unit.id];
   const lessons = unit.lessons || [];
   const lesson = lessons[activeTab];
+
+  // All characters in this script unit (for unit review)
+  const allScriptChars = useMemo(
+    () => isScript ? lessons.flatMap(l => l.characters || []) : [],
+    [isScript, lessons]
+  );
+
+  // Previous script unit's characters (for review section)
+  const prevScriptUnit = useMemo(() => {
+    if (!isScript) return null;
+    const idx = SCRIPT_LESSONS.findIndex(s => s.id === unit.id);
+    return idx > 0 ? SCRIPT_LESSONS[idx - 1] : null;
+  }, [isScript, unit.id]);
+  const prevScriptChars = useMemo(
+    () => prevScriptUnit ? (prevScriptUnit.lessons || []).flatMap(l => l.characters || []) : [],
+    [prevScriptUnit]
+  );
 
   // Compute overall progress for this unit
   const progress = useMemo(() => {
@@ -304,6 +318,13 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
         <div className="path-pbar"><div className="path-pfill" style={{ width: progress.pct + "%" }} /></div>
       </div>
 
+      {/* Previous script unit review */}
+      {isScript && prevScriptChars.length >= 3 && (
+        <Section icon="🔙" title={`Review: ${prevScriptUnit.title}`} defaultOpen={false}>
+          <ScriptMiniQuiz key={`prev-review-${unit.id}`} characters={prevScriptChars} />
+        </Section>
+      )}
+
       {/* Lesson tabs */}
       {lessons.length > 1 && (
         <div className="unit-tabs">
@@ -349,6 +370,13 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
       {!isScript && CULTURAL_NOTES[unit.id] && (
         <Section icon="🏛️" title="Culture & Customs">
           <CulturalNotes notes={CULTURAL_NOTES[unit.id]} />
+        </Section>
+      )}
+
+      {/* Unit Review — combines all sub-lessons */}
+      {isScript && lessons.length > 1 && allScriptChars.length >= 3 && (
+        <Section icon="🔄" title="Unit Review Quiz" defaultOpen={false}>
+          <ScriptMiniQuiz key={`ur-quiz-${unit.id}`} characters={allScriptChars} />
         </Section>
       )}
 

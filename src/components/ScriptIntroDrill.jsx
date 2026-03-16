@@ -69,7 +69,7 @@ function generateSteps(characters) {
   return steps;
 }
 
-export function ScriptIntroDrill({ characters }) {
+export function ScriptIntroDrill({ characters, onComplete }) {
   const [steps, setSteps] = useState(() => generateSteps(characters));
   const [stepIdx, setStepIdx] = useState(0);
   const [qIdx, setQIdx] = useState(0);
@@ -125,6 +125,7 @@ export function ScriptIntroDrill({ characters }) {
   const advanceStep = () => {
     if (stepIdx + 1 >= steps.length) {
       setPhase("done");
+      if (onComplete) onComplete(characters);
     } else {
       setStepIdx(stepIdx + 1);
       setQIdx(0);
