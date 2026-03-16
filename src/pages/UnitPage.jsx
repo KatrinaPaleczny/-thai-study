@@ -373,8 +373,13 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
         </Section>
       )}
 
-      {/* Unit Review — combines all sub-lessons */}
-      {isScript && lessons.length > 1 && allScriptChars.length >= 3 && (
+      {/* Unit Review — only show when user has studied chars from 2+ sub-lessons */}
+      {isScript && lessons.length > 1 && allScriptChars.length >= 3 && (() => {
+        const lessonsWithStudied = lessons.filter(l =>
+          (l.characters || []).some(c => scriptStudied.has(c.char))
+        ).length;
+        return lessonsWithStudied >= 2;
+      })() && (
         <Section icon="🔄" title="Unit Review Quiz" defaultOpen={false}>
           <ScriptMiniQuiz key={`ur-quiz-${unit.id}`} characters={allScriptChars} />
         </Section>
