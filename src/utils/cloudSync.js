@@ -1,4 +1,7 @@
 import { supabase, isSupabaseConfigured } from "./supabase";
+import { invalidateSRSCache } from "./srs";
+import { invalidateAdaptiveCache } from "./adaptive";
+import { invalidateMistakesCache } from "./mistakes";
 
 // Keys that contain arrays (merged by union)
 const ARRAY_KEYS = [
@@ -170,6 +173,9 @@ export async function syncOnLogin(userId) {
 
   const cloudData = await pullCloudData(userId);
 
+  // Collect all rows to upsert in a single batch
+  const upsertRows = [];
+
   for (const key of ALL_SYNC_KEYS) {
     let local = null;
     try {
@@ -183,10 +189,23 @@ export async function syncOnLogin(userId) {
     if (merged != null) {
       // Write merged to localStorage
       localStorage.setItem(key, JSON.stringify(merged));
-      // Write merged to cloud
-      await pushCloudData(userId, key, merged);
+      // Collect for batch upsert
+      upsertRows.push({ user_id: userId, data_key: key, data_value: merged, updated_at: new Date().toISOString() });
     }
   }
+
+  // Batch upsert all keys in a single query instead of N individual calls
+  if (upsertRows.length > 0) {
+    const { error } = await supabase
+      .from("user_data")
+      .upsert(upsertRows, { onConflict: "user_id,data_key" });
+    if (error) console.error("Cloud batch sync failed:", error.message);
+  }
+
+  // Invalidate in-memory caches since localStorage was updated externally
+  invalidateSRSCache();
+  invalidateAdaptiveCache();
+  invalidateMistakesCache();
 }
 
 /**
@@ -195,13 +214,21 @@ export async function syncOnLogin(userId) {
 export async function pushAllToCloud(userId) {
   if (!isSupabaseConfigured() || !userId) return;
 
+  const rows = [];
   for (const key of ALL_SYNC_KEYS) {
     try {
       const raw = localStorage.getItem(key);
       if (raw !== null) {
-        await pushCloudData(userId, key, JSON.parse(raw));
+        rows.push({ user_id: userId, data_key: key, data_value: JSON.parse(raw), updated_at: new Date().toISOString() });
       }
     } catch { /* ignore */ }
+  }
+
+  if (rows.length > 0) {
+    const { error } = await supabase
+      .from("user_data")
+      .upsert(rows, { onConflict: "user_id,data_key" });
+    if (error) console.error("Cloud batch push failed:", error.message);
   }
 }
 

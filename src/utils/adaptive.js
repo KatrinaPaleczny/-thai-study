@@ -11,13 +11,21 @@ export const K_ADAPTIVE = "katthai_adaptive_v1";
  * Schema: { [category]: { correct: n, wrong: n, lastSeen: ISO } }
  */
 
+// In-memory cache to avoid repeated localStorage JSON.parse calls
+let _adaptiveCache = null;
+
 export function loadAdaptive() {
-  return loadLS(K_ADAPTIVE, {});
+  if (_adaptiveCache === null) _adaptiveCache = loadLS(K_ADAPTIVE, {});
+  return _adaptiveCache;
 }
 
 export function saveAdaptive(data) {
+  _adaptiveCache = data;
   saveLS(K_ADAPTIVE, data);
 }
+
+/** Clear the in-memory cache (call after external data changes, e.g. cloud sync) */
+export function invalidateAdaptiveCache() { _adaptiveCache = null; }
 
 export function recordCategoryResult(category, isCorrect) {
   const data = loadAdaptive();
@@ -34,18 +42,12 @@ export function recordCategoryResult(category, isCorrect) {
  */
 export function getCategoryWeights(categories) {
   const data = loadAdaptive();
-  const mistakes = loadMistakes();
   const weights = {};
 
   for (const cat of categories) {
     const catData = data[cat] || { correct: 0, wrong: 0, lastSeen: null };
     const total = catData.correct + catData.wrong;
     const accuracy = total > 0 ? catData.correct / total : 0.5; // default 50% for unseen
-
-    // Count active mistakes in this category
-    const catMistakes = mistakes.filter(m =>
-      m.correctAnswer && !m.reviewed
-    ).length;
 
     // Lower accuracy = higher weight (struggles)
     // Never-seen categories get a moderate boost
@@ -85,38 +87,16 @@ export function selectAdaptiveWords(allVocab, count = 10) {
   const categories = [...new Set(allVocab.map(v => v.category))];
   const weights = getCategoryWeights(categories);
 
-  // Build weighted pool
-  const weighted = allVocab.map(word => ({
+  // Weighted Fisher-Yates: shuffle with bias toward weak categories
+  const pool = allVocab.map(word => ({
     word,
-    weight: weights[word.category] || 1,
+    sortKey: Math.random() ** (1 / (weights[word.category] || 1)),
   }));
 
-  const totalWeight = weighted.reduce((sum, w) => sum + w.weight, 0);
-  const selected = [];
-  const usedIds = new Set();
+  // Higher weight → higher sortKey on average → picked first
+  pool.sort((a, b) => b.sortKey - a.sortKey);
 
-  while (selected.length < count && selected.length < allVocab.length) {
-    let r = Math.random() * totalWeight;
-    for (const item of weighted) {
-      if (usedIds.has(item.word.id)) continue;
-      r -= item.weight;
-      if (r <= 0) {
-        selected.push(item.word);
-        usedIds.add(item.word.id);
-        break;
-      }
-    }
-    // Safety: if random didn't pick (rounding), pick first unused
-    if (selected.length < count) {
-      const unused = weighted.find(w => !usedIds.has(w.word.id));
-      if (unused && !usedIds.has(unused.word.id)) {
-        selected.push(unused.word);
-        usedIds.add(unused.word.id);
-      }
-    }
-  }
-
-  return selected;
+  return pool.slice(0, count).map(p => p.word);
 }
 
 /**

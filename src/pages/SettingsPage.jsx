@@ -142,23 +142,31 @@ export function SettingsPage() {
         )}
       </div>
 
-      {/* API Proxy */}
+      {/* AI Access */}
       <div className="sett-section">
-        <h2 className="sett-h">API Proxy</h2>
-        <p className="sett-desc">Use a Cloudflare Worker proxy to keep your API key off the browser entirely. See the <code>worker/README.md</code> file for setup instructions.</p>
-        <div className="sett-proxy-row">
-          <input
-            type="text"
-            className="sett-proxy-input"
-            value={proxyInput}
-            onChange={e => { setProxyInput(e.target.value); setProxySaved(false); }}
-            placeholder="https://katthai-api-proxy.your-subdomain.workers.dev"
-          />
-          <button className="btn btn-pri" onClick={() => { setProxyUrl(proxyInput); setProxySaved(true); setMsg({ type: "success", text: proxyInput ? "Proxy URL saved!" : "Proxy removed." }); }}>
-            {proxyInput ? "Save" : "Clear"}
-          </button>
-        </div>
-        {getProxyUrl() && <div className="sett-proxy-status">Proxy active — AI Chat will use this instead of a browser API key.</div>}
+        <h2 className="sett-h">AI Access</h2>
+        {isAuthenticated ? (
+          <div className="sett-proxy-status" style={{ marginBottom: 12 }}>Signed in — AI features use the secure server-side proxy. No API key needed in your browser.</div>
+        ) : (
+          <p className="sett-desc">Sign in to use AI features securely via the server-side proxy, or configure a custom proxy URL below.</p>
+        )}
+        <details style={{ marginTop: 8 }}>
+          <summary style={{ cursor: "pointer", fontSize: 13, color: "var(--t3)", fontWeight: 500 }}>Custom proxy URL (advanced)</summary>
+          <p className="sett-desc" style={{ marginTop: 8 }}>Use a Cloudflare Worker or other proxy to keep your API key off the browser. See <code>worker/README.md</code> for setup.</p>
+          <div className="sett-proxy-row">
+            <input
+              type="text"
+              className="sett-proxy-input"
+              value={proxyInput}
+              onChange={e => { setProxyInput(e.target.value); setProxySaved(false); }}
+              placeholder="https://katthai-api-proxy.your-subdomain.workers.dev"
+            />
+            <button className="btn btn-pri" onClick={() => { setProxyUrl(proxyInput); setProxySaved(true); setMsg({ type: "success", text: proxyInput ? "Proxy URL saved!" : "Proxy removed." }); }}>
+              {proxyInput ? "Save" : "Clear"}
+            </button>
+          </div>
+          {getProxyUrl() && <div className="sett-proxy-status">Custom proxy active — AI Chat will use this instead of the default.</div>}
+        </details>
       </div>
 
       {/* Danger Zone */}

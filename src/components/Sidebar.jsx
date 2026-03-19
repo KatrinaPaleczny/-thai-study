@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { useAuth } from "../context/AuthContext";
@@ -20,6 +20,8 @@ const ROUTE_MAP = {
   "/frequency": "frequency", "/audioquiz": "audioquiz", "/settings": "settings", "/account": "account",
 };
 
+const PAGE_LABELS = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", grammarbank:"Grammar Bank", numbers:"Numbers & Time", frequency:"Core Words", audioquiz:"Audio Quiz", settings:"Settings" };
+
 export function Sidebar() {
   const { allVocab, studied } = useApp();
   const { isAuthenticated, user, syncing } = useAuth();
@@ -28,27 +30,35 @@ export function Sidebar() {
   const navigate = useNavigate();
   const [pathOpen, setPathOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [xpInfo, setXpInfo] = useState({ todayXP: 0, dailyGoal: 50, progress: 0, totalXP: 0 });
-  const [streakInfo, setStreakInfo] = useState({ streak: 0 });
-  const [levelInfo, setLevelInfo] = useState({ level: 1, title: "Newcomer" });
-  const [srsdue, setSrsdue] = useState(0);
-  const [unreviewedMistakes, setUnreviewedMistakes] = useState(0);
+  const [sidebarData, setSidebarData] = useState(() => ({
+    xpInfo: { todayXP: 0, dailyGoal: 50, progress: 0, totalXP: 0 },
+    streakInfo: { streak: 0 },
+    levelInfo: { level: 1, title: "Newcomer" },
+    srsdue: 0,
+    unreviewedMistakes: 0,
+  }));
 
   const page = location.pathname.startsWith("/unit/") ? "mypath" : (ROUTE_MAP[location.pathname] || "mypath");
 
-  useEffect(() => {
-    const refresh = () => {
-      const tp = getTodayProgress();
-      setXpInfo(tp);
-      setStreakInfo(getStreak());
-      setLevelInfo(getLevel(tp.totalXP));
-      if (allVocab && allVocab.length) setSrsdue(getSRSStats(allVocab).dueNow);
-      setUnreviewedMistakes(getMistakeStats().unreviewed);
-    };
-    refresh();
-    const interval = setInterval(refresh, 10000);
-    return () => clearInterval(interval);
+  const refresh = useCallback(() => {
+    const tp = getTodayProgress();
+    const si = getStreak();
+    const li = getLevel(tp.totalXP);
+    const srs = (allVocab && allVocab.length) ? getSRSStats(allVocab).dueNow : 0;
+    const um = getMistakeStats().unreviewed;
+    setSidebarData({ xpInfo: tp, streakInfo: si, levelInfo: li, srsdue: srs, unreviewedMistakes: um });
   }, [allVocab]);
+
+  // Refresh on mount and on route changes (instead of every 10 seconds)
+  useEffect(() => { refresh(); }, [location.pathname, refresh]);
+
+  // Also refresh when the window regains focus (user comes back to tab)
+  useEffect(() => {
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, [refresh]);
+
+  const { xpInfo, streakInfo, levelInfo, srsdue, unreviewedMistakes } = sidebarData;
 
   const go = (path) => { navigate(path); setMobileOpen(false); };
 
@@ -61,8 +71,7 @@ export function Sidebar() {
 
   let vocabUnitNum = 0;
 
-  const pageLabels = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", grammarbank:"Grammar Bank", numbers:"Numbers", frequency:"Core Words", audioquiz:"Audio Quiz", settings:"Settings" };
-  const currentLabel = pageLabels[page] || "My Path";
+  const currentLabel = PAGE_LABELS[page] || "My Path";
 
   return (
     <>

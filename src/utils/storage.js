@@ -1,6 +1,22 @@
 import { useState } from "react";
 import { pushCloudData } from "./cloudSync";
 
+// Debounced cloud sync — batches all writes within a 2-second window
+let _pendingCloudWrites = new Map();
+let _cloudDebounceTimer = null;
+function debouncedCloudPush(userId, key, val) {
+  _pendingCloudWrites.set(key, { userId, val });
+  if (_cloudDebounceTimer) clearTimeout(_cloudDebounceTimer);
+  _cloudDebounceTimer = setTimeout(() => {
+    const batch = new Map(_pendingCloudWrites);
+    _pendingCloudWrites.clear();
+    _cloudDebounceTimer = null;
+    for (const [k, { userId: uid, val: v }] of batch) {
+      pushCloudData(uid, k, v).catch(() => {});
+    }
+  }, 2000);
+}
+
 export const K_FAV = "katthai_favs_v2";
 export const K_STU = "katthai_studied_v2";
 export const K_CUSTOM = "katthai_custom_v1";
@@ -100,9 +116,9 @@ export function loadLS(key, fallback) {
 }
 export function saveLS(key, val) {
   localStorage.setItem(key, JSON.stringify(val));
-  // Also push to cloud if user is authenticated (fire-and-forget)
+  // Debounced cloud push — batches writes within a 2-second window
   if (_currentUserId) {
-    pushCloudData(_currentUserId, key, val).catch(() => {});
+    debouncedCloudPush(_currentUserId, key, val);
   }
 }
 

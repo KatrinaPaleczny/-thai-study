@@ -1,39 +1,45 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useApp } from "./context/AppContext";
 import { FULL_PATH } from "./data/curriculumData";
 import { Sidebar } from "./components/Sidebar";
-import { VocabPage } from "./pages/VocabPage";
-import { GrammarPage } from "./pages/GrammarPage";
-import { NumbersPage } from "./pages/NumbersPage";
-import { MyPathPage } from "./pages/MyPathPage";
-import { UnitPage } from "./pages/UnitPage";
-import { FlashcardPage } from "./pages/FlashcardPage";
-import { PracticePage } from "./pages/PracticePage";
-import { RolePlayPage } from "./pages/RolePlayPage";
-import { SRSPage } from "./pages/SRSPage";
-import { MistakesPage } from "./pages/MistakesPage";
-import { WritingPage } from "./pages/WritingPage";
-import { ScenesPage } from "./pages/ScenesPage";
-import { PronunciationPage } from "./pages/PronunciationPage";
-import { AnalyticsPage } from "./pages/AnalyticsPage";
-import { SentenceBuilderPage } from "./pages/SentenceBuilderPage";
-import { DailyChallengePage } from "./pages/DailyChallengePage";
-import { AIConversationPage } from "./pages/AIConversationPage";
-import { HandwritingPage } from "./pages/HandwritingPage";
-import { StoryPage } from "./pages/StoryPage";
-import { ListeningPage } from "./pages/ListeningPage";
-import { MatchPage } from "./pages/MatchPage";
-import { ImageVocabPage } from "./pages/ImageVocabPage";
-import { FrequencyPage } from "./pages/FrequencyPage";
-import { GrammarBankPage } from "./pages/GrammarBankPage";
-import { AudioQuizPage } from "./pages/AudioQuizPage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { AuthPage } from "./pages/AuthPage";
-import { PlacementTestPage } from "./pages/PlacementTestPage";
-import { UnitTestPage } from "./pages/UnitTestPage";
 import { isUnitUnlocked, loadUnitTests } from "./utils/unitTests";
 import { DailySession } from "./components/DailySession";
+
+// Lazy-loaded pages — only downloaded when visited
+const MyPathPage = lazy(() => import("./pages/MyPathPage").then(m => ({ default: m.MyPathPage })));
+const UnitPage = lazy(() => import("./pages/UnitPage").then(m => ({ default: m.UnitPage })));
+const VocabPage = lazy(() => import("./pages/VocabPage").then(m => ({ default: m.VocabPage })));
+const FlashcardPage = lazy(() => import("./pages/FlashcardPage").then(m => ({ default: m.FlashcardPage })));
+const GrammarPage = lazy(() => import("./pages/GrammarPage").then(m => ({ default: m.GrammarPage })));
+const NumbersPage = lazy(() => import("./pages/NumbersPage").then(m => ({ default: m.NumbersPage })));
+const PracticePage = lazy(() => import("./pages/PracticePage").then(m => ({ default: m.PracticePage })));
+const RolePlayPage = lazy(() => import("./pages/RolePlayPage").then(m => ({ default: m.RolePlayPage })));
+const SRSPage = lazy(() => import("./pages/SRSPage").then(m => ({ default: m.SRSPage })));
+const MistakesPage = lazy(() => import("./pages/MistakesPage").then(m => ({ default: m.MistakesPage })));
+const WritingPage = lazy(() => import("./pages/WritingPage").then(m => ({ default: m.WritingPage })));
+const ScenesPage = lazy(() => import("./pages/ScenesPage").then(m => ({ default: m.ScenesPage })));
+const PronunciationPage = lazy(() => import("./pages/PronunciationPage").then(m => ({ default: m.PronunciationPage })));
+const AnalyticsPage = lazy(() => import("./pages/AnalyticsPage").then(m => ({ default: m.AnalyticsPage })));
+const SentenceBuilderPage = lazy(() => import("./pages/SentenceBuilderPage").then(m => ({ default: m.SentenceBuilderPage })));
+const DailyChallengePage = lazy(() => import("./pages/DailyChallengePage").then(m => ({ default: m.DailyChallengePage })));
+const AIConversationPage = lazy(() => import("./pages/AIConversationPage").then(m => ({ default: m.AIConversationPage })));
+const HandwritingPage = lazy(() => import("./pages/HandwritingPage").then(m => ({ default: m.HandwritingPage })));
+const StoryPage = lazy(() => import("./pages/StoryPage").then(m => ({ default: m.StoryPage })));
+const ListeningPage = lazy(() => import("./pages/ListeningPage").then(m => ({ default: m.ListeningPage })));
+const MatchPage = lazy(() => import("./pages/MatchPage").then(m => ({ default: m.MatchPage })));
+const ImageVocabPage = lazy(() => import("./pages/ImageVocabPage").then(m => ({ default: m.ImageVocabPage })));
+const FrequencyPage = lazy(() => import("./pages/FrequencyPage").then(m => ({ default: m.FrequencyPage })));
+const GrammarBankPage = lazy(() => import("./pages/GrammarBankPage").then(m => ({ default: m.GrammarBankPage })));
+const AudioQuizPage = lazy(() => import("./pages/AudioQuizPage").then(m => ({ default: m.AudioQuizPage })));
+const SettingsPage = lazy(() => import("./pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
+const AuthPage = lazy(() => import("./pages/AuthPage").then(m => ({ default: m.AuthPage })));
+const PlacementTestPage = lazy(() => import("./pages/PlacementTestPage").then(m => ({ default: m.PlacementTestPage })));
+const UnitTestPage = lazy(() => import("./pages/UnitTestPage").then(m => ({ default: m.UnitTestPage })));
+
+function PageLoader() {
+  return <div className="page"><div className="empty">Loading...</div></div>;
+}
 
 function UnitPageWrapper() {
   const { allVocab, studied, toggleStudied, scriptStudied, toggleScriptStudied, confidence, updateConfidence } = useApp();
@@ -91,6 +97,7 @@ export default function App() {
             onClose={() => setShowSession(false)}
           />
         ) : (
+          <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<MyPathPage />} />
             <Route path="/unit/:unitId" element={<UnitPageWrapper />} />
@@ -123,6 +130,7 @@ export default function App() {
             <Route path="/unit-test/:unitId" element={<UnitTestPage />} />
             <Route path="*" element={<div className="page"><div className="empty">Coming soon</div></div>} />
           </Routes>
+          </Suspense>
         )}
       </div>
     </div>

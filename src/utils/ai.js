@@ -1,4 +1,6 @@
 import { getProxyUrl } from "./storage";
+import { supabase, isSupabaseConfigured } from "./supabase";
+import { getCurrentUserId } from "./storage";
 
 export const MODELS = {
   HAIKU: "claude-haiku-4-5-20251001",
@@ -13,30 +15,54 @@ export function getApiKey() {
 }
 
 /**
- * Check if the user has AI access (API key or proxy configured).
+ * Check if the user has AI access via any available method:
+ * 1. Supabase Edge Function (authenticated user)
+ * 2. Custom proxy URL
+ * 3. Direct browser API key
  */
 export function hasAIAccess() {
-  return !!(getApiKey() || getProxyUrl());
+  return !!(getSupabaseFunctionUrl() || getApiKey() || getProxyUrl());
+}
+
+/**
+ * Get the Supabase Edge Function URL if available (user is authenticated).
+ */
+function getSupabaseFunctionUrl() {
+  if (!isSupabaseConfigured() || !getCurrentUserId()) return null;
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  if (!url) return null;
+  return `${url}/functions/v1/claude-proxy`;
 }
 
 /**
  * Call Claude API with the given system prompt and messages.
- * Supports both direct API and proxy modes.
- *
- * @param {Object} opts
- * @param {string} opts.system - System prompt
- * @param {Array<{role: string, content: string}>} opts.messages - Conversation messages
- * @param {string} [opts.model] - Model to use (default: Sonnet)
- * @param {number} [opts.maxTokens] - Max tokens (default: 300)
- * @returns {Promise<string>} The assistant's reply text
+ * Priority: Supabase Edge Function > proxy URL > direct browser key.
  */
+// Rate limiting: minimum 3 seconds between API calls
+let _lastCallTime = 0;
+let _callInFlight = false;
+
 export async function callClaude({ system, messages, model = MODELS.SONNET, maxTokens = 300 }) {
+  if (_callInFlight) {
+    throw new Error("An AI request is already in progress. Please wait.");
+  }
+
+  const now = Date.now();
+  const elapsed = now - _lastCallTime;
+  if (elapsed < 3000 && _lastCallTime > 0) {
+    throw new Error("Please wait a moment before making another AI request.");
+  }
+
+  const supabaseFnUrl = getSupabaseFunctionUrl();
   const proxyUrl = getProxyUrl();
   const apiKey = getApiKey();
 
-  if (!proxyUrl && !apiKey) {
-    throw new Error("No API key configured. Set up your Claude API key in AI Chat settings.");
+  if (!supabaseFnUrl && !proxyUrl && !apiKey) {
+    throw new Error("No API key configured. Sign in for server-side AI, or set up an API key in Settings.");
   }
+
+  _callInFlight = true;
+  _lastCallTime = now;
 
   const payload = {
     model,
@@ -45,13 +71,31 @@ export async function callClaude({ system, messages, model = MODELS.SONNET, maxT
     messages,
   };
 
-  const res = proxyUrl
-    ? await fetch(proxyUrl, {
+  try {
+    let res;
+
+    if (supabaseFnUrl) {
+      // Mode 1: Supabase Edge Function (most secure — key stays server-side)
+      const { data: { session } } = await supabase.auth.getSession();
+      res = await fetch(supabaseFnUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token}`,
+          "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify(payload),
+      });
+    } else if (proxyUrl) {
+      // Mode 2: Custom proxy (Cloudflare Worker etc.)
+      res = await fetch(proxyUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-      })
-    : await fetch("https://api.anthropic.com/v1/messages", {
+      });
+    } else {
+      // Mode 3: Direct browser API call (least secure)
+      res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,12 +105,16 @@ export async function callClaude({ system, messages, model = MODELS.SONNET, maxT
         },
         body: JSON.stringify(payload),
       });
+    }
 
-  if (!res.ok) {
-    const errData = await res.json().catch(() => ({}));
-    throw new Error(errData.error?.message || `API error ${res.status}`);
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.content?.[0]?.text || "...";
+  } finally {
+    _callInFlight = false;
   }
-
-  const data = await res.json();
-  return data.content?.[0]?.text || "...";
 }

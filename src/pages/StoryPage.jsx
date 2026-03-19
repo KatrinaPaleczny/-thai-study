@@ -35,7 +35,7 @@ export function StoryPage() {
       const context = gatherStoryContext(allVocab, studied, level);
       const story = await generateAIStory(context);
       saveGeneratedStory(story);
-      setGenStories(getGeneratedStories());
+      setGenStories(prev => [...prev, story]);
       awardXP("ai_explain");
     } catch (err) {
       setGenError(err.message);
@@ -47,7 +47,7 @@ export function StoryPage() {
   const handleDelete = (e, id) => {
     e.stopPropagation();
     deleteGeneratedStory(id);
-    setGenStories(getGeneratedStories());
+    setGenStories(prev => prev.filter(s => s.id !== id));
   };
 
   // ─── Story picker ───

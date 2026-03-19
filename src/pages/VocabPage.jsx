@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import { HeartIcon, CheckIcon, SearchIcon, PlusIcon, XIcon, PinIcon, SpeakerIcon } from "../components/Icons";
 import { saveLS, K_CUSTOM } from "../utils/storage";
 import { useApp } from "../context/AppContext";
@@ -59,7 +59,7 @@ function AddWordModal({ cats, onSave, onClose }) {
 }
 
 
-function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, togglePin, onDelete, expanded, toggle }) {
+const VocabCard = memo(function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, togglePin, onDelete, expanded, toggle }) {
   const [speaking, setSpeaking] = useState(false);
   const speak = e => {
     e.stopPropagation();
@@ -101,7 +101,7 @@ function VocabCard({ v, isFav, isStudied, isPinned, toggleFav, toggleStudied, to
       )}
     </div>
   );
-}
+});
 
 export function VocabPage() {
   const { allVocab, customWords, setCustomWords, hideWord, cats, levels, favs, toggleFav, studied, toggleStudied, pinned, togglePin } = useApp();

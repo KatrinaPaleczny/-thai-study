@@ -18,24 +18,34 @@ export const K_MISTAKES = "katthai_mistakes_v1";
  * }
  */
 
+// In-memory cache to avoid repeated localStorage JSON.parse calls
+let _mistakesCache = null;
+
 export function loadMistakes() {
+  if (_mistakesCache !== null) return _mistakesCache;
   const raw = loadLS(K_MISTAKES, []);
   // Defensive: cloud sync may have corrupted array to object — always return array
   if (!Array.isArray(raw)) {
-    // Attempt to recover values from corrupted object
     if (raw && typeof raw === "object") {
       const recovered = Object.values(raw).filter(v => v && typeof v === "object" && v.prompt);
+      _mistakesCache = recovered;
       saveLS(K_MISTAKES, recovered);
       return recovered;
     }
+    _mistakesCache = [];
     return [];
   }
+  _mistakesCache = raw;
   return raw;
 }
 
 export function saveMistakes(data) {
+  _mistakesCache = data;
   saveLS(K_MISTAKES, data);
 }
+
+/** Clear the in-memory cache (call after external data changes, e.g. cloud sync) */
+export function invalidateMistakesCache() { _mistakesCache = null; }
 
 /**
  * Record a mistake. Deduplicates by prompt+correctAnswer (updates existing entry).
@@ -45,9 +55,10 @@ export function recordMistake({ source, wordId, prompt, userAnswer, correctAnswe
   if (!prompt && !correctAnswer) return;
 
   const mistakes = loadMistakes();
-  const existing = mistakes.find(
+  const existingIdx = mistakes.findIndex(
     m => m.prompt === prompt && m.correctAnswer === correctAnswer
   );
+  const existing = existingIdx >= 0 ? mistakes[existingIdx] : null;
 
   if (existing) {
     // Update existing: keep the most recent attempt

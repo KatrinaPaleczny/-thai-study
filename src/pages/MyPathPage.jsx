@@ -41,7 +41,7 @@ function greeting() {
 
 /* ── Main Page ── */
 export function MyPathPage() {
-  const { allVocab, studied, toggleStudied, scriptStudied, streakData, confidence = {}, showSession, setShowSession } = useApp();
+  const { allVocab, studied, toggleStudied, scriptStudied, cats, streakData, confidence = {}, showSession, setShowSession } = useApp();
   const navigate = useNavigate();
   const [showReview, setShowReview] = useState(false);
   const [showCurriculum, setShowCurriculum] = useState(false);
@@ -50,17 +50,17 @@ export function MyPathPage() {
   const [aiPlanError, setAiPlanError] = useState(null);
   const testResults = useMemo(() => loadUnitTests(), []);
 
-  const unitProgress = useMemo(() => {
+  const { unitProgress, totalItems, totalDone, totalPct } = useMemo(() => {
     const map = {};
+    let items = 0, done = 0;
     FULL_PATH.forEach(unit => {
-      map[unit.id] = getUnitProgress(unit, allVocab, studied, scriptStudied);
+      const p = getUnitProgress(unit, allVocab, studied, scriptStudied);
+      map[unit.id] = p;
+      items += p.total;
+      done += p.done;
     });
-    return map;
+    return { unitProgress: map, totalItems: items, totalDone: done, totalPct: items ? Math.round((done / items) * 100) : 0 };
   }, [allVocab, studied, scriptStudied]);
-
-  const totalItems = Object.values(unitProgress).reduce((s, u) => s + u.total, 0);
-  const totalDone = Object.values(unitProgress).reduce((s, u) => s + u.done, 0);
-  const totalPct = totalItems ? Math.round((totalDone / totalItems) * 100) : 0;
 
   const continueUnit = FULL_PATH.find(u => {
     if (unitProgress[u.id].pct >= 100) return false;
@@ -80,7 +80,6 @@ export function MyPathPage() {
   const levelInfo = getLevel(xpProgress.totalXP);
   const srsStats = getSRSStats(allVocab);
   const mistakeStats = getMistakeStats();
-  const cats = useMemo(() => [...new Set(allVocab.map(v => v.category))].sort(), [allVocab]);
   const weakAreas = useMemo(() => getAdaptiveSummary(cats).filter(c => c.total > 0 && c.accuracy !== null && c.accuracy < 70).slice(0, 3), [cats]);
 
   // Load cached AI plan on mount

@@ -24,13 +24,21 @@ const DEFAULT_ENTRY = {
   streak: 0,
 };
 
+// In-memory cache to avoid repeated localStorage JSON.parse calls
+let _srsCache = null;
+
 export function loadSRS() {
-  return loadLS(K_SRS, {});
+  if (_srsCache === null) _srsCache = loadLS(K_SRS, {});
+  return _srsCache;
 }
 
 export function saveSRS(data) {
+  _srsCache = data;
   saveLS(K_SRS, data);
 }
+
+/** Clear the in-memory cache (call after external data changes, e.g. cloud sync) */
+export function invalidateSRSCache() { _srsCache = null; }
 
 /** SRS settings (daily new card limit) */
 export function loadSRSSettings() {

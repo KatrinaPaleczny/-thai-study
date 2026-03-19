@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { GRAMMAR_DATA } from "../data/grammarData";
 import { ChevD } from "../components/Icons";
 import { BuildTab } from "../components/BuildTab";
@@ -6,7 +6,7 @@ import { speakThai } from "../utils/speech";
 import { levelStyle } from "../appStyles";
 
 // ── Grammar Card ──────────────────────────────────────────────────────────────
-function GrammarCard({ g }) {
+const GrammarCard = memo(function GrammarCard({ g }) {
   const [open, setOpen] = useState(false);
   const [tab,  setTab]  = useState("understand");
 
@@ -100,7 +100,7 @@ function GrammarCard({ g }) {
       )}
     </div>
   );
-}
+});
 
 // ── Grammar Page ──────────────────────────────────────────────────────────────
 export function GrammarPage() {
