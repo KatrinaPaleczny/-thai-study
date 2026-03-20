@@ -155,18 +155,18 @@ export const CURRICULUM = [
       {
         id: "u7-l1", title: "Relationship Vocab",
         grammar: "อ้อน = to act cute/clingy — very common in Thai couples. ใจร้าย is playful teasing, not genuinely mean.",
-        vocabIds: [282, 287, 298, 317, 318, 319, 321, 322, 323, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 1016, 1017, 1018, 1019, 1022, 1023, 1024],
+        vocabIds: [282, 287, 298, 317, 318, 319, 321, 322, 323, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 1016, 1017, 1018, 1019, 1022, 1023, 1024, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1050, 1052],
         grammarIds: ["g14"], sentenceIds: ["s17"]
       },
       {
         id: "u7-l2", title: "When Ya Is งอน 🥺",
         grammar: "งอน (ngɔɔn) = to sulk/pout — very common in Thai couples. ง้อ = to make up after a fight. ปลอบ = to comfort. Use นะ to soften anything.",
-        vocabIds: [356, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1020, 1021, 1029]
+        vocabIds: [356, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1020, 1021, 1029, 1045, 1046, 1047, 1048, 1049, 1051, 1053]
       },
       {
         id: "u7-l3", title: "Naked & Naughty 🔥",
         grammar: "โป๊ is the casual word for naked. เปลือย/เปลือยกาย are more formal. แก้ผ้า = undress. ล่อนจ้อน = stark naked (very informal/funny).",
-        vocabIds: [297, 324, 325, 326, 327, 328, 1025, 1026, 1027, 1028, 289, 290, 299, 300, 366]
+        vocabIds: [297, 324, 325, 326, 327, 328, 1025, 1026, 1027, 1028, 289, 290, 299, 300, 366, 1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037]
       },
       {
         id: "u7-l4", title: "Gen Z & Texting Slang",
