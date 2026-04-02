@@ -38,7 +38,26 @@
       "Bash(python3 -c \":*)",
       "Bash(sips -z 192 192 --out pwa-192x192.png pwa-512x512.png)",
       "Bash(sips -z 180 180 --out apple-touch-icon-180x180.png pwa-512x512.png)",
-      "Bash(ls -la pwa-*.png apple-touch-icon-*.png)"
+      "Bash(ls -la pwa-*.png apple-touch-icon-*.png)",
+      "Bash(python3:*)",
+      "Bash(grep -l \"vocab\\\\|word\" /Users/katrina.paleczny/thai-study/src/components/*.jsx)",
+      "Bash(git checkout:*)",
+      "Bash(grep -rn CSS /Users/katrina.paleczny/thai-study/src/App.jsx /Users/katrina.paleczny/thai-study/src/context/*.jsx /Users/katrina.paleczny/thai-study/src/main.jsx)",
+      "Bash(find /Users/katrina.paleczny/thai-study -name *.css -type f)",
+      "Bash(grep -n \"@media\" /Users/katrina.paleczny/thai-study/src/styles/*.css)",
+      "WebFetch(domain:www.thaipod101.com)",
+      "WebFetch(domain:www.learn2speakthai.net)",
+      "WebFetch(domain:www.bananathaischool.com)",
+      "Bash(grep -E \"Page\\\\.jsx$\")",
+      "WebSearch",
+      "Bash(head -50 /Users/katrina.paleczny/thai-study/src/styles/*.js)",
+      "Bash(grep -r \"export const\\\\|export function\" /Users/katrina.paleczny/thai-study/src/data/*.js)",
+      "Bash(node --input-type=module -e \":*)",
+      "Bash(jq \".[] | select\\(.category == \"\"Colors\"\" or .category == \"\"Numbers\"\"\\) | {id, thai, english, emoji, category}\" /Users/katrina.paleczny/thai-study/src/data/vocabData.js)",
+      "Bash(cat /Users/katrina.paleczny/thai-study/vite.config.*)",
+      "Bash(grep -l \"syncOnLogin\\\\|pushCloudData\\\\|pullCloudData\\\\|saveLS\\\\|loadLS\" /Users/katrina.paleczny/thai-study/src/pages/*.jsx)",
+      "Bash(ls -lh /Users/katrina.paleczny/thai-study/src/data/*.js)",
+      "Bash(node add_vocab.mjs)"
     ]
   }
 }

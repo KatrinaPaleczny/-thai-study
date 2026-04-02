@@ -45,7 +45,7 @@ export async function generateAIStory(context) {
     system: SYSTEM_PROMPT,
     messages: [{ role: "user", content: JSON.stringify(context) }],
     model: MODELS.HAIKU,
-    maxTokens: 1500,
+    maxTokens: 2048,
   });
 
   const cleaned = text.replace(/```json?\s*/g, "").replace(/```\s*/g, "").trim();
