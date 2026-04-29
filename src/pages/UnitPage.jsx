@@ -1,9 +1,8 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { GRAMMAR_DATA } from "../data/grammarData";
 import { SCENARIOS_DATA } from "../data/scenariosData";
 import { SENTENCE_EXERCISES } from "../data/sentenceExercises";
 import { VocabTable } from "../components/VocabTable";
-import { ScriptCards } from "../components/ScriptCards";
 import { GrammarLearn } from "../components/GrammarLearn";
 import { BuildTab } from "../components/BuildTab";
 import { ConversationSection } from "../components/ConversationSection";
@@ -18,30 +17,8 @@ import { loadUnitTests } from "../utils/unitTests";
 import { MiniAudioQuiz } from "../components/MiniAudioQuiz";
 import { MiniPronunciation } from "../components/MiniPronunciation";
 import { MatchingGame } from "../components/MatchingGame";
-import { ScriptMatchingGame } from "../components/ScriptMatchingGame";
 import { ScriptMiniQuiz } from "../components/ScriptMiniQuiz";
-import { ScriptIntroDrill } from "../components/ScriptIntroDrill";
-import { StrokeAnimation, STROKE_DATA } from "../components/StrokeAnimation";
-
-/* ── Section divider (accordion) ── */
-function Section({ icon, title, children, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen);
-  const toggle = useCallback(() => setOpen(o => !o), []);
-  return (
-    <div className="unit-section">
-      <button
-        className="unit-section-hdr"
-        onClick={toggle}
-        aria-expanded={open}
-      >
-        <span>{icon}</span>
-        <span>{title}</span>
-        <span className="unit-section-chev" aria-hidden="true">{open ? "▾" : "▸"}</span>
-      </button>
-      {open && <div className="unit-section-body">{children}</div>}
-    </div>
-  );
-}
+import { Section, ScriptLessonView } from "../components/ScriptLessonView";
 
 /* ── Vocab Lesson Content ── */
 function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confidence, updateConfidence, scriptStudied }) {
@@ -147,91 +124,6 @@ function VocabLessonContent({ lesson, allVocab, studied, toggleStudied, confiden
           {UNIT_READINGS[lesson.id].map(passage => (
             <PassageCard key={passage.id} passage={passage} level={1} />
           ))}
-        </Section>
-      )}
-    </div>
-  );
-}
-
-/* ── Stroke Animation Picker ── */
-function StrokeAnimationPicker({ characters }) {
-  const charsWithStrokes = characters.filter(c => {
-    const cleaned = c.char.replace(/◌/g, "");
-    return cleaned.length === 1 && STROKE_DATA[cleaned];
-  });
-  const [selectedChar, setSelectedChar] = useState(charsWithStrokes[0]?.char.replace(/◌/g, "") || null);
-
-  if (charsWithStrokes.length === 0) return null;
-
-  return (
-    <div>
-      <div className="sa-char-picker">
-        {characters.map(c => {
-          const cleaned = c.char.replace(/◌/g, "");
-          const hasStroke = cleaned.length === 1 && STROKE_DATA[cleaned];
-          return (
-            <button
-              key={c.char}
-              className={`sa-char-btn${selectedChar === cleaned ? " on" : ""}${!hasStroke ? " dim" : ""}`}
-              onClick={() => hasStroke && setSelectedChar(cleaned)}
-              disabled={!hasStroke}
-              title={hasStroke ? c.phonetic : "No stroke data yet"}
-            >
-              {c.char}
-            </button>
-          );
-        })}
-      </div>
-      {selectedChar && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-          <StrokeAnimation key={selectedChar} char={selectedChar} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ── Script Lesson Content ── */
-function ScriptLessonContent({ lesson, scriptStudied, toggleScriptStudied }) {
-  const chars = lesson.characters || [];
-  const hasUnstudied = chars.some(c => !scriptStudied.has(c.char));
-  const charsWithStrokes = chars.filter(c => {
-    const cleaned = c.char.replace(/◌/g, "");
-    return cleaned.length === 1 && STROKE_DATA[cleaned];
-  });
-
-  return (
-    <div className="unit-lesson-content">
-      {lesson.intro && (
-        <Section icon="📖" title="About">
-          <div className="path-grammar">
-            <div className="path-grammar-body">{lesson.intro}</div>
-          </div>
-        </Section>
-      )}
-      {chars.length >= 3 && (
-        <Section icon="🎯" title="Intro Drill" defaultOpen={hasUnstudied}>
-          <ScriptIntroDrill key={`sid-${lesson.id}`} characters={chars}
-            onComplete={(cs) => cs.forEach(c => { if (!scriptStudied.has(c.char)) toggleScriptStudied(c.char); })}
-          />
-        </Section>
-      )}
-      <Section icon="📝" title="Characters" defaultOpen={!hasUnstudied}>
-        <ScriptCards characters={chars} studied={scriptStudied} onToggle={toggleScriptStudied} />
-      </Section>
-      {charsWithStrokes.length > 0 && (
-        <Section icon="✍️" title="Stroke Order">
-          <StrokeAnimationPicker key={`sa-${lesson.id}`} characters={chars} />
-        </Section>
-      )}
-      {chars.length >= 3 && (
-        <Section icon="🔗" title="Matching Game">
-          <ScriptMatchingGame key={`smg-${lesson.id}`} characters={chars} />
-        </Section>
-      )}
-      {chars.length >= 3 && (
-        <Section icon="🧠" title="Quick Quiz">
-          <ScriptMiniQuiz key={`sq-${lesson.id}`} characters={chars} />
         </Section>
       )}
     </div>
@@ -347,7 +239,7 @@ export function UnitPage({ unit, allVocab, studied, toggleStudied, scriptStudied
 
       {/* Lesson content */}
       {(isScript || lesson.type === "script") ? (
-        <ScriptLessonContent
+        <ScriptLessonView
           key={lesson.id}
           lesson={lesson}
           scriptStudied={scriptStudied}

@@ -36,6 +36,8 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage").then(m => ({ defa
 const AuthPage = lazy(() => import("./pages/AuthPage").then(m => ({ default: m.AuthPage })));
 const PlacementTestPage = lazy(() => import("./pages/PlacementTestPage").then(m => ({ default: m.PlacementTestPage })));
 const UnitTestPage = lazy(() => import("./pages/UnitTestPage").then(m => ({ default: m.UnitTestPage })));
+const ScriptPlanPage = lazy(() => import("./pages/ScriptPlanPage").then(m => ({ default: m.ScriptPlanPage })));
+const ScriptPlanDayPage = lazy(() => import("./pages/ScriptPlanPage").then(m => ({ default: m.ScriptPlanDayPage })));
 
 function PageLoader() {
   return <div className="page"><div className="empty">Loading...</div></div>;
@@ -128,6 +130,8 @@ export default function App() {
             <Route path="/account" element={<AuthPage />} />
             <Route path="/placement" element={<PlacementTestPage />} />
             <Route path="/unit-test/:unitId" element={<UnitTestPage />} />
+            <Route path="/script30" element={<ScriptPlanPage />} />
+            <Route path="/script30/day/:n" element={<ScriptPlanDayPage />} />
             <Route path="*" element={<div className="page"><div className="empty">Coming soon</div></div>} />
           </Routes>
           </Suspense>

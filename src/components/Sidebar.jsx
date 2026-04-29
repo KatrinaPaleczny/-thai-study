@@ -18,12 +18,14 @@ const ROUTE_MAP = {
   "/daily": "daily", "/mistakes": "mistakes", "/analytics": "analytics",
   "/grammar": "grammar", "/grammarbank": "grammarbank", "/numbers": "numbers",
   "/frequency": "frequency", "/audioquiz": "audioquiz", "/settings": "settings", "/account": "account",
+  "/script30": "script30",
 };
 
-const PAGE_LABELS = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", grammarbank:"Grammar Bank", numbers:"Numbers & Time", frequency:"Core Words", audioquiz:"Audio Quiz", settings:"Settings" };
+const PAGE_LABELS = { mypath:"My Path", placement:"Placement Test", vocab:"Vocabulary", flashcards:"Flashcards", srs:"SRS Review", practice:"Practice", sentences:"Sentences", roleplay:"Role-Play", aichat:"AI Chat", writing:"Writing", handwriting:"Handwriting", scenes:"Scenes", stories:"Stories", pronunciation:"Pronunciation", listening:"Listening", match:"Match Pairs", imagevocab:"Image Vocab", daily:"Daily Word", mistakes:"Mistakes", analytics:"Analytics", grammar:"Grammar", grammarbank:"Grammar Bank", numbers:"Numbers & Time", frequency:"Core Words", audioquiz:"Audio Quiz", settings:"Settings", script30:"30-Day Script" };
 
 export function Sidebar() {
-  const { allVocab, studied } = useApp();
+  const { allVocab, studied, scriptPlanData } = useApp();
+  const scriptDaysRemaining = Math.max(0, 30 - ((scriptPlanData?.completedDays || []).length));
   const { isAuthenticated, user, syncing } = useAuth();
   const studiedCount = allVocab ? allVocab.filter(v => studied.has(v.id)).length : 0;
   const location = useLocation();
@@ -133,6 +135,7 @@ export function Sidebar() {
       </div>
 
       {/* Always visible */}
+      {btn("/script30","script30","อ","30-Day Script", scriptDaysRemaining)}
       {btn("/vocab","vocab","📖","Vocabulary")}
       {btn("/frequency","frequency","📊","Core Words")}
       {btn("/flashcards","flashcards",<FlashcardIcon />,"Flashcards")}

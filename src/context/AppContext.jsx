@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { VOCAB_DATA } from "../data/vocabData";
-import { loadLS, saveLS, useLocalSet, K_FAV, K_STU, K_CUSTOM, K_PINNED, K_HIDDEN, K_SCRIPT, K_STREAK, K_CONFIDENCE } from "../utils/storage";
+import { loadLS, saveLS, useLocalSet, K_FAV, K_STU, K_CUSTOM, K_PINNED, K_HIDDEN, K_SCRIPT, K_STREAK, K_CONFIDENCE, K_SCRIPT_PLAN } from "../utils/storage";
+import { awardXP } from "../utils/xp";
 import { recordCategoryResult } from "../utils/adaptive";
 import { migrateExistingProgress } from "../utils/unitTests";
 import { addToSRS } from "../utils/srs";
@@ -17,6 +18,7 @@ export function AppProvider({ children }) {
   const [scriptStudied, toggleScriptStudied] = useLocalSet(K_SCRIPT);
   const [streakData, setStreakData] = useState(() => loadLS(K_STREAK, { streak: 0, lastDate: null }));
   const [confidence, setConfidence] = useState(() => loadLS(K_CONFIDENCE, {}));
+  const [scriptPlanData, setScriptPlanData] = useState(() => loadLS(K_SCRIPT_PLAN, { startDate: null, completedDays: [], dayScores: {}, history: [] }));
 
   const recordActivity = useCallback(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -27,6 +29,37 @@ export function AppProvider({ children }) {
     const newData = { streak: newStreak, lastDate: today };
     saveLS(K_STREAK, newData);
     setStreakData(newData);
+  }, []);
+
+  const recordDayScore = useCallback((day, score) => {
+    const prev = loadLS(K_SCRIPT_PLAN, { startDate: null, completedDays: [], dayScores: {}, history: [] });
+    const prevBest = prev.dayScores?.[day] || 0;
+    if (score <= prevBest) return;
+    const next = { ...prev, dayScores: { ...(prev.dayScores || {}), [day]: score } };
+    saveLS(K_SCRIPT_PLAN, next);
+    setScriptPlanData(next);
+  }, []);
+
+  const markDayComplete = useCallback((day) => {
+    const prev = loadLS(K_SCRIPT_PLAN, { startDate: null, completedDays: [], dayScores: {}, history: [] });
+    if ((prev.completedDays || []).includes(day)) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const next = {
+      ...prev,
+      startDate: prev.startDate || today,
+      completedDays: [...(prev.completedDays || []), day].sort((a, b) => a - b),
+      history: [...(prev.history || []), { day, date: today, score: prev.dayScores?.[day] || 0 }],
+    };
+    saveLS(K_SCRIPT_PLAN, next);
+    setScriptPlanData(next);
+    awardXP("script_day_complete");
+    recordActivity();
+  }, [recordActivity]);
+
+  const resetScriptPlan = useCallback(() => {
+    const fresh = { startDate: null, completedDays: [], dayScores: {}, history: [] };
+    saveLS(K_SCRIPT_PLAN, fresh);
+    setScriptPlanData(fresh);
   }, []);
 
   const handleToggleStudied = id => {
@@ -80,11 +113,13 @@ export function AppProvider({ children }) {
     streakData,
     confidence, updateConfidence,
     showSession, setShowSession,
+    scriptPlanData, recordDayScore, markDayComplete, resetScriptPlan,
   }), [
     allVocab, cats, levels, studied, favs, pinned, customWords, hiddenIds,
     scriptStudied, streakData, confidence, showSession,
     handleToggleStudied, handleToggleScriptStudied, hideWord,
     toggleFav, togglePin, updateConfidence,
+    scriptPlanData, recordDayScore, markDayComplete, resetScriptPlan,
   ]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

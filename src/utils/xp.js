@@ -70,6 +70,7 @@ const XP_VALUES = {
   script_quiz_correct: 5,
   script_quiz_attempt: 1,
   mistake_quiz_correct: 5,
+  script_day_complete: 15,
 };
 
 export function awardXP(action) {

@@ -30,6 +30,7 @@ export const K_STREAK = "katthai_streak_v1";
 export const K_CONFIDENCE = "katthai_confidence_v1";
 export const K_ROLEPLAY = "katthai_roleplay_v1";
 export const K_UNIT_TESTS = "katthai_unit_tests_v1";
+export const K_SCRIPT_PLAN = "katthai_script_plan_v1";
 
 // Cloud sync: set by AuthContext when user logs in/out
 let _currentUserId = null;
@@ -45,6 +46,7 @@ const ALL_DATA_KEYS = [
   "katthai_mistakes_v1", "katthai_adaptive_v1", "katthai_daily_v1",
   "katthai_placement_v1",
   "katthai_unit_tests_v1",
+  "katthai_script_plan_v1",
 ];
 
 export function exportAllData() {

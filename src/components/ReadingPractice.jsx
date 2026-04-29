@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { speakThai } from "../utils/speech";
 
-const PASSAGES = [
+export const PASSAGES = [
   {
     id: "r1", title: "At the Market", level: 1,
     segments: [

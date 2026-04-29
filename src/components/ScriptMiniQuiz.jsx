@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { awardXP } from "../utils/xp";
 
 function shuffle(arr) {
@@ -48,12 +48,13 @@ function generateQuestions(characters, count = 5) {
   });
 }
 
-export function ScriptMiniQuiz({ characters }) {
+export function ScriptMiniQuiz({ characters, onComplete }) {
   const [phase, setPhase] = useState("ready"); // ready | playing | answered | done
   const [questions, setQuestions] = useState([]);
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
+  const firedRef = useRef(false);
 
   const current = questions[idx] || null;
 
@@ -64,8 +65,17 @@ export function ScriptMiniQuiz({ characters }) {
     setIdx(0);
     setSelected(null);
     setScore(0);
+    firedRef.current = false;
     setPhase("playing");
   }, [characters]);
+
+  // Fire onComplete exactly once when the quiz reaches "done"
+  useEffect(() => {
+    if (phase === "done" && !firedRef.current && questions.length > 0) {
+      firedRef.current = true;
+      onComplete?.({ score, total: questions.length });
+    }
+  }, [phase, score, questions.length, onComplete]);
 
   if (characters.length < 3) {
     return <div className="mini-aq-msg">Need at least 3 characters for a quiz.</div>;
